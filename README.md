@@ -13,6 +13,7 @@ Sming Develop branch dd 26/11/15
 Usage : 
 
 - Clone this repository.
+- Copy files from sdk_updates directory into corresponding SDK directories
 - Set SDK location in makefile
 - Set WIFI_SSID & WIFI_PWD in environment variables
 - Compile & flash
