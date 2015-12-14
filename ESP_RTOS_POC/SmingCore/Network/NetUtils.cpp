@@ -113,7 +113,7 @@ String NetUtils::pbufStrCopy(pbuf *buf, int startPos, int length)
 	return res;
 }
 
-/*
+
 
 bool NetUtils::FixNetworkRouting()
 {
@@ -139,6 +139,7 @@ bool NetUtils::FixNetworkRouting()
 //	return false;
 	return true; // Should work on standard lwip
 }
+/*
 
 /////////////////////////////////
 

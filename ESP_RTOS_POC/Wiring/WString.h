@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include "esp_common.h"
 #include "string.h"
+#include "WVector.h"
 /*
 #ifndef __GXX_EXPERIMENTAL_CXX0X__
 #define __GXX_EXPERIMENTAL_CXX0X__
@@ -245,11 +246,11 @@ class String
     // parsing/conversion
     long toInt(void) const;
     float toFloat(void) const;
-/*
+
     friend int splitString(String &what, int delim, Vector<long> &splits);
     friend int splitString(String &what, int delim, Vector<int> &splits);
     friend int splitString(String &what, int delim, Vector<String> &splits);
-*/
+
     //void printTo(Print &p) const;
 
 

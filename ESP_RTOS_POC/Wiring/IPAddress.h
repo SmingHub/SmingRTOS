@@ -49,6 +49,7 @@ public:
     IPAddress(ip_addr address);
     IPAddress(const uint8_t *address);
     IPAddress(const String address);
+    IPAddress(ipX_addr_t address);
 
     // Overloaded cast operator to allow IPAddress objects to be used where a pointer
     // to a four-byte uint8_t array is expected

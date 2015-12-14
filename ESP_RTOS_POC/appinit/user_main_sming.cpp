@@ -27,6 +27,8 @@
 #include "../SmingCore/Network/TcpClient.h"
 #include "../SmingCore/Network/FtpServer.h"
 #include "../SmingCore/Network/HttpServer.h"
+#include "../SmingCore/Network/TelnetServer.h"
+#include "../SmingCore/Temp_HardwareSerial.h"
 
 #include "../SmingCore/FileSystem.h"
 
@@ -382,6 +384,8 @@ TcpServer tcpServer(tcpServerClientConnected, tcpServerClientReceive, tcpServerC
 
 HttpServer http;
 
+TelnetServer tnet;
+
 void connectOk()
 {
 	printf("I'm CONNECTED\r\n");
@@ -421,6 +425,8 @@ void init()
 	http.addPath("/", onIndex);
 	http.setDefaultHandler(onDefault);
 
+	tnet.listen(23);
+
     int i = TCP_SND_BUF;
 
 //	ftp.listen(21);
@@ -434,6 +440,9 @@ void init()
 
     printf("Buf size = %d\r\n",TCP_SND_BUF);
     printf("Queue length = %d\r\n",TCP_SND_QUEUELEN);
+
+    Serial.println("This is a Serial line");
+    Serial.printf("This is the printf command\r\n");
 
 
 

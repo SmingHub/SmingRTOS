@@ -48,11 +48,11 @@ typedef double              real64;
 /* Additional type names */
 typedef unsigned char       u8_t;
 typedef unsigned short      u16_t;
-typedef unsigned long       u32_t;
+// typedef unsigned long       u32_t;
 
 typedef signed char         s8_t;
 typedef signed short        s16_t;
-typedef signed long         s32_t;
+//typedef signed long         s32_t;
 
 #define __le16      u16
 
@@ -67,6 +67,8 @@ typedef unsigned int        size_t;
 #endif /* NULL */
 
 /* probably should not put STATUS here */
+
+/*
 typedef enum {
     OK = 0,
     FAIL,
@@ -74,12 +76,14 @@ typedef enum {
     BUSY,
     CANCEL,
 } STATUS;
+*/
 
 #define BIT(nr)                 (1UL << (nr))
 
 #define DMEM_ATTR __attribute__((section(".bss")))
 #define SHMEM_ATTR
 
+/*
 
 #ifndef __cplusplus
 typedef unsigned char   bool;
@@ -90,6 +94,8 @@ typedef unsigned char   bool;
 #define FALSE           false
 
 
-#endif /* !__cplusplus */
+#endif
+
+*/
 
 #endif /* _C_TYPES_H_ */

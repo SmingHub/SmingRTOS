@@ -119,15 +119,15 @@ TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
 # MODULES = third_party/freertos
-MODULES	= user system appinit SmingCore RTOS_EC Wiring SmingCore/Platform SmingCore/Network $(filter %/, $(wildcard Services/*/))
+MODULES	= user system appinit SmingCore RTOS_EC Wiring SmingCore\Platform SmingCore\Network $(filter %/, $(wildcard Services/*/))
 # MODULES	= user appinit 
 # MODULES	+=	$(SDK_BASE)\third_party\freertos
 
 
 EXTRA_INCDIR = include 
-EXTRA_INCDIR += $(SDK_BASE)/include/freertos
-EXTRA_INCDIR += $(SDK_BASE)/include/espressif
-EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266 
+EXTRA_INCDIR += $(SDK_BASE)\include\freertos
+EXTRA_INCDIR += $(SDK_BASE)\include\espressif
+EXTRA_INCDIR += $(SDK_BASE)\include\espressif\esp8266 
 
 #LIBS       = cirom gccirom hal phy pp net80211 wpa main freertos lwip udhcp
 # linking libgccirom.a instead of libgcc.a causes reset when working with flash memory (ie spi_flash_erase_sector)
@@ -138,7 +138,6 @@ LIBS		= microc microgcc gcc hal phy pp net80211 wpa crypto main freertos lwip mi
 CFLAGS		= -Os -g -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)
 # CFLAGS		= -Os -g -Wpointer-arith -Wundef -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)
 
-
 WIFI_SSID ?= ""
 WIFI_PWD ?= ""
 ifneq ($(WIFI_SSID), "")
@@ -147,6 +146,8 @@ endif
 ifneq ($(WIFI_PWD), "")
 	CFLAGS += -DWIFI_PWD=\"$(WIFI_PWD)\"
 endif
+
+
 
 CFLAGS		+= -DNDEBUG=1
 CFLAGS		+= -DLWIP_DEBUG=0
@@ -203,11 +204,9 @@ endif
 vpath %.c $(SRC_DIR)
 vpath %.cpp $(SRC_DIR)
 
-$(vecho) "Compiler = " $(CC) 
-
 define compile-objects
 $1/%.o: %.c
-	$(vecho) "CC $$<" 
+	$(vecho) "CC $$<"
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
 $1/%.o: %.cpp
 	$(vecho) "C+ $$<"

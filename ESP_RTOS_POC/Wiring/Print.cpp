@@ -209,7 +209,7 @@ size_t Print::printf(const char *fmt, ...)
 		char tempBuff[buffSize];
 		va_list va;
 		va_start(va, fmt);
-//		sz = vsnprintf(tempBuff,buffSize, fmt, va);
+		sz = m_vsnprintf(tempBuff,buffSize, fmt, va);
 		va_end(va);
 		if (sz > (buffSize -1))
 		{

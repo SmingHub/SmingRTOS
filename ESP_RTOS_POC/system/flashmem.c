@@ -1,6 +1,11 @@
 #include "flashmem.h"
 #include <stdlib.h>
 
+#include "c_types.h"
+#include "eagle_soc.h"
+
+#include "c_types_compatible.h"
+
 // Based on NodeMCU platform_flash
 // https://github.com/nodemcu/nodemcu-firmware
 

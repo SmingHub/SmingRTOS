@@ -50,6 +50,11 @@ IPAddress::IPAddress(const uint8_t *address)
     memcpy(_address, address, sizeof(_address));
 }
 
+IPAddress::IPAddress(ipX_addr_t address)
+{
+	memcpy(_address, &address, sizeof(_address));
+}
+
 void IPAddress::fromString(const String& address)
 {
 	int p = -1;
