@@ -1,6 +1,6 @@
 # Sming_RTOS_POC
 
-Very early Proof of Concept for Sming based on Espressif RTOS SDK.
+Proof of Concept for Sming based on Espressif RTOS SDK.
 
 Based on : 
 
@@ -17,12 +17,22 @@ Usage :
 - Set SDK location in makefile
 - Set WIFI_SSID & WIFI_PWD in environment variables
 - Compile & flash
-- Serial baudrate 74880
+- Serial baudrate 115200 (when using example application)
 
 Applications : 
 
-- Minimal RTOS example, TCP Connection -> for bugfixing network issue
-- Trial Sming examples, showing some Sming basic fuctionalities -> Network not running correct
-- Focus first on networking but basic_blink working
+- Application which includes HttpAjax & HWPwm example source.
+- HttpAjax -> works
+- HWPWm, -> compiles, not tested on hardware
+
+Known limitations : 
+
+- No framework/application but one "all in one" 
+- HardwareSerial -> only print(f)(ln).. and begin()
+- No AccessPoint
+- Interrupts not yet implemented
+- Only limited testing done
+
+
 
 
