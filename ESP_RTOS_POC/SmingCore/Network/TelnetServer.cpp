@@ -7,6 +7,7 @@
 
 #include "TelnetServer.h"
 #include "TcpServer.h"
+#include "Debug.h"
 
 TelnetServer::TelnetServer() : TcpServer()
 {
@@ -24,11 +25,11 @@ void TelnetServer::enableDebug(bool reqStatus)
 	telnetDebug = reqStatus;
 	if (telnetDebug && curClient) /* only setSetDebug when already connected */
 	{
-//		Debug.setDebug(DebugPrintCharDelegate(&TelnetServer::wrchar,this));
+		Debug.setDebug(DebugPrintCharDelegate(&TelnetServer::wrchar,this));
 	}
 	else
 	{
-//		Debug.setDebug(Serial);
+		Debug.setDebug(Serial);
 	}
 }
 
@@ -69,9 +70,9 @@ void TelnetServer::onClient(TcpClient *client)
 		}
 		if (telnetDebug)
 		{
-//			Debug.setDebug(DebugPrintCharDelegate(&TelnetServer::wrchar,this));
+			Debug.setDebug(DebugPrintCharDelegate(&TelnetServer::wrchar,this));
 		}
-//		Debug.printf("This is debug after telnet start\r\n");
+		Debug.printf("This is debug after telnet start\r\n");
 	}
 }
 
@@ -91,7 +92,7 @@ void TelnetServer::onClientComplete(TcpClient& client, bool succesfull)
 
 	debugf("TelnetServer onClientComplete %s", client.getRemoteIp().toString().c_str() );
 	TcpServer::onClientComplete(client, succesfull);
-//	Debug.setDebug(Serial);
+	Debug.setDebug(Serial);
 }
 
 void TelnetServer::wrchar(char c)

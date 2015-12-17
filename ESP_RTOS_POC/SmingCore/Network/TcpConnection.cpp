@@ -161,10 +161,10 @@ int TcpConnection::write(const char* data, int len, uint8_t apiflags /* = TCP_WR
 
    if (err == ERR_OK)
    {
-		//debugf("TCP connection send: %d (%d)", len, original);
+		debugf("TCP connection send: %d ", len);
 		return len;
    } else {
-		//debugf("TCP connection failed with err %d (\"%s\")", err, lwip_strerr(err));
+		debugf("TCP connection failed with err %d ", err);
 		return -1;
    }
 }
@@ -177,7 +177,6 @@ int TcpConnection::write(IDataSourceStream* stream)
 	int available;
 	int total = 0;
 	char buffer[NETWORK_SEND_BUFFER_SIZE];
-
 	do
 	{
 		space = (tcp_sndqueuelen(tcp) < TCP_SND_QUEUELEN);
@@ -198,7 +197,6 @@ int TcpConnection::write(IDataSourceStream* stream)
 				available = stream->readMemoryBlock(buffer, read);
 			else
 				available = 0;
-
 			if (available > 0)
 			{
 				int written = write(buffer, available, TCP_WRITE_FLAG_COPY | TCP_WRITE_FLAG_MORE);
@@ -377,7 +375,6 @@ err_t TcpConnection::staticOnSent(void *arg, tcp_pcb *tcp, uint16_t len)
 
 err_t TcpConnection::staticOnPoll(void *arg, tcp_pcb *tcp)
 {
-	debugf("Statis OnPoll buf = %d", tcp_sndbuf(tcp));
 	TcpConnection* con = (TcpConnection*)arg;
 
 	if (con == NULL)
@@ -398,7 +395,6 @@ err_t TcpConnection::staticOnPoll(void *arg, tcp_pcb *tcp)
 
 void TcpConnection::staticOnError(void *arg, err_t err)
 {
-
 	debugf("Static OnError");
 	TcpConnection* con = (TcpConnection*)arg;
 	if (con == NULL) return;

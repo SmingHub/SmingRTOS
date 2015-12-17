@@ -8,7 +8,7 @@
 #include "WebSocket.h"
 #include "../../Services/WebHelpers/aw-sha1.h"
 #include "../../Services/WebHelpers/base64.h"
-//#include "../../Services/CommandProcessing/CommandExecutor.h"
+#include "../../Services/CommandProcessing/CommandExecutor.h"
 
 WebSocket::WebSocket(HttpServerConnection* conn)
 {
@@ -17,12 +17,12 @@ WebSocket::WebSocket(HttpServerConnection* conn)
 
 WebSocket::~WebSocket()
 {
-	/*
+
 	if (commandExecutor)
 	{
 		delete commandExecutor;
 	}
-	*/
+
 }
 
 bool WebSocket::initialize(HttpRequest& request, HttpResponse& response)
@@ -68,10 +68,10 @@ void WebSocket::sendBinary(const uint8_t* data, int size)
 
 void WebSocket::enableCommand()
 {
-	/*
+
 	if (!commandExecutor)
 	{
 		commandExecutor = new CommandExecutor(this);
 	}
-	*/
+
 }

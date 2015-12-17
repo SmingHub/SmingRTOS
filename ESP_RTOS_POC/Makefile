@@ -36,7 +36,7 @@ SPI_MODE ?= qio
 # 4 : 4096 KB (512 KB + 512 KB)
 # 5 : 2048 KB (1024 KB + 1024 KB)
 # 6 : 4096 KB (1024 KB + 1024 KB)
-SPI_SIZE_MAP ?= 0
+SPI_SIZE_MAP ?= 6
 
 ifeq ($(SPI_SPEED), 26.7)
     freqdiv = 1
@@ -122,7 +122,7 @@ TARGET		= app
 MODULES	= user system appinit SmingCore RTOS_EC Wiring SmingCore/Platform SmingCore/Network $(filter %/, $(wildcard Services/*/))
 # MODULES	= user appinit 
 # MODULES	+=	$(SDK_BASE)\third_party\freertos
-
+MODULES		+= rboot/appcode
 
 EXTRA_INCDIR = include 
 EXTRA_INCDIR += $(SDK_BASE)/include/freertos
@@ -131,7 +131,7 @@ EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266
 
 #LIBS       = cirom gccirom hal phy pp net80211 wpa main freertos lwip udhcp
 # linking libgccirom.a instead of libgcc.a causes reset when working with flash memory (ie spi_flash_erase_sector)
-LIBS		= microc microgcc gcc hal phy pp net80211 wpa crypto main freertos lwip minic
+LIBS		= microc microgcc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm
 
 # compiler flags using during compilation of source files
 #CFLAGS		= -g -save-temps -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -mno-serialize-volatile -D__ets__ -DICACHE_FLASH
@@ -252,7 +252,11 @@ flashonefile: all
 	$(ESPTOOL) -p $(ESPPORT) -b $(BAUD) write_flash $(flashimageoptions) 0x00000 $(FW_BASE)/eagle.app.flash.bin
 
 flash: all
-	$(ESPTOOL) -p $(ESPPORT) -b $(BAUD) write_flash $(flashimageoptions) 0x00000 $(FW_BASE)/0x00000.bin 0x09000 $(FW_BASE)/0x09000.bin
+	$(ESPTOOL) -p $(ESPPORT) -b $(BAUD) write_flash $(flashimageoptions) 0x00000 $(FW_BASE)/0x00000.bin 0x0A000 $(FW_BASE)/0x0A000.bin
+
+flashspiffy : all
+	$(ESPTOOL) -p $(ESPPORT) -b $(BAUD) write_flash $(flashimageoptions) 0x00000 $(FW_BASE)/0x00000.bin 0x0A000 $(FW_BASE)/0x0A000.bin 0x300000 $(CURDIR)/spiff_rom.rom
+
 
 # ===============================================================
 # From http://bbs.espressif.com/viewtopic.php?f=10&t=305

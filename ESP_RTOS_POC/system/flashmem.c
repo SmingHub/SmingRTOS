@@ -59,6 +59,7 @@ uint32_t flashmem_write( const void *from, uint32_t toaddr, uint32_t size )
 
 uint32_t flashmem_read( void *to, uint32_t fromaddr, uint32_t size )
 {
+
   uint32_t temp, rest, ssize = size;
   unsigned i;
   char tmpdata[ INTERNAL_FLASH_READ_UNIT_SIZE ];
@@ -206,12 +207,12 @@ uint32_t flashmem_read_internal( void *to, uint32_t fromaddr, uint32_t size )
 {
   fromaddr -= INTERNAL_FLASH_START_ADDRESS;
   SpiFlashOpResult r;
-  WRITE_PERI_REG(0x60000914, 0x73);
+//  WRITE_PERI_REG(0x60000914, 0x73);
   r = spi_flash_read(fromaddr, (uint32 *)to, size);
   if(SPI_FLASH_RESULT_OK == r)
     return size;
   else{
-	SYSTEM_ERROR( "ERROR in flash_read: r=%d at %08X\n", ( int )r, ( unsigned )fromaddr+INTERNAL_FLASH_START_ADDRESS );
+	SYSTEM_ERROR( "ERROR in flash_read: r=%d at %08X, size = %d, id = %d \r\n", ( int )r, ( unsigned )fromaddr, size, spi_flash_get_id ());
     return 0;
   }
 }

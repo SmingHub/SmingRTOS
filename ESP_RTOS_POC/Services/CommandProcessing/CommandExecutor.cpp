@@ -6,7 +6,7 @@
  */
 
 #include "CommandExecutor.h"
-#include "Temp_HardwareSerial.h"
+#include "HardwareSerial.h"
 
 CommandExecutor::CommandExecutor()
 {

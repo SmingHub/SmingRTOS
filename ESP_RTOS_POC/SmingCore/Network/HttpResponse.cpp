@@ -114,7 +114,9 @@ void HttpResponse::sendString(const char* string)
 	}
 
 	if (stream == NULL)
+	{
 		stream = new MemoryDataStream();
+	}
 
 	MemoryDataStream *writable = (MemoryDataStream*)stream;
 	writable->write((const uint8_t*)string, strlen(string));
@@ -220,9 +222,14 @@ void HttpResponse::sendHeader(HttpServerConnection &connection)
 
 bool HttpResponse::sendBody(HttpServerConnection &connection)
 {
-	if (!headerSent) sendHeader(connection);
+	if (!headerSent)
+	{
+		debugf("HttpResponse : SendHeader");
+		sendHeader(connection);
+	};
 	if (stream == NULL) return true;
 
+	debugf("HttpResponse write stream");
 	connection.write(stream);
 
 	if (stream->isFinished())

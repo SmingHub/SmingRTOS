@@ -13,7 +13,7 @@
 #include "../Wiring/WHashMap.h"
 //#include "SystemClock.h"
 #include <stdio.h>
-#include "Temp_HardwareSerial.h"
+#include "HardwareSerial.h"
 
 typedef enum {VERBOSE,SILENT} VerboseMode;
 

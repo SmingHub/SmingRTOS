@@ -49,29 +49,29 @@ class SystemClass
 {
 public:
 	SystemClass();
-	void initialize();
+//	void initialize();
 
-	bool isReady(); // System initialization was completed?
+//	bool isReady(); // System initialization was completed?
 	void restart();
 
 	void setCpuFrequency(CpuFrequency freq);
 	CpuFrequency getCpuFrequency();
 	bool deepSleep(uint32 timeMilliseconds, DeepSleepOptions options = eDSO_RF_CAL_BY_INIT_DATA);
 
-	void onReady(SystemReadyDelegate readyHandler);
-	void onReady(ISystemReadyHandler* readyHandler);
+//	void onReady(SystemReadyDelegate readyHandler);
+//	void onReady(ISystemReadyHandler* readyHandler);
 
-	void applyFirmwareUpdate(uint32_t readFlashOffset, uint32_t targetFlashOffset, int firmwareSize);
+//	void applyFirmwareUpdate(uint32_t readFlashOffset, uint32_t targetFlashOffset, int firmwareSize);
 
 private:
-	static void staticReadyHandler();
-	void readyHandler();
+//	static void staticReadyHandler();
+//	void readyHandler();
 	void IRAM_ATTR internalApplyFirmwareUpdate(uint32_t readFlashOffset, uint32_t targetFlashOffset, int firmwareSize, bool outputDebug);
 
 private:
-	Vector<SystemReadyDelegate> readyHandlers;
-	Vector<ISystemReadyHandler*> readyInterfaces;
-	SystemState state;
+//	Vector<SystemReadyDelegate> readyHandlers;
+//	Vector<ISystemReadyHandler*> readyInterfaces;
+//	SystemState state;
 };
 
 extern SystemClass System;

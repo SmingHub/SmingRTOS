@@ -27,7 +27,7 @@
 
 // A class to make it easier to handle and pass around IP addresses
 
-class IPAddress   // : public Printable
+class IPAddress   //  : public Printable
 {
 private:
     uint8_t _address[4];  // IPv4 address

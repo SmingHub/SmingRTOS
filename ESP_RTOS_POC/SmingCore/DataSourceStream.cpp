@@ -47,7 +47,7 @@ size_t MemoryDataStream::write(const uint8_t* data, size_t len)
 		if (required > capacity)
 		{
 			capacity = required < 256 ? required + 128 : required + 64;
-			debugf("realloc %d -> %d", size, capacity);
+//			debugf("realloc %d -> %d", size, capacity);
 			buf = (char*)realloc(buf, capacity);
 		}
 		buf[cur + len] = '\0';
@@ -301,4 +301,3 @@ uint16_t JsonObjectStream::readMemoryBlock(char* data, int bufSize)
 
 	return MemoryDataStream::readMemoryBlock(data, bufSize);
 }
-
