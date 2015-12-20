@@ -39,8 +39,8 @@
 #include "Digital.h"
 #include "Delegate.h"
 
-#include "../RTOS_EC/cqueue.h"
-#include "../RTOS_EC/ctask.h"
+//#include "../RTOS_EC/cqueue.h"
+//#include "../RTOS_EC/ctask.h"
 #include "../Wiring/WString.h"
 #include "../Wiring/Stream.h"
 #include "../Wiring/WVector.h"
