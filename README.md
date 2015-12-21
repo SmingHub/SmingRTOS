@@ -19,6 +19,11 @@ Usage :
 - Compile & flash
 - Serial baudrate 115200 (when using example application)
 
+Include files
+
+Due to the interaction between all components I have not yet a "SmingCore.h"
+Each component and application needs to "include" all components used.
+
 Applications : 
 
 - Application which includes HttpAjax & HWPwm example source.
