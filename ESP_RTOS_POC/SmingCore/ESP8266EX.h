@@ -15,7 +15,7 @@
 #include "../Wiring/WConstants.h"
 #include "espressif/esp8266/gpio_register.h"
 #include "pins_arduino.h"
-#include "../Wiring/Bitmanipulations.h"
+#include "../Wiring/BitManipulations.h"
 
 #define TOTAL_PINS              16
 #define NUM_DIGITAL_PINS		TOTAL_PINS

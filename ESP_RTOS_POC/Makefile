@@ -151,12 +151,12 @@ endif
 CFLAGS		+= -DNDEBUG=1
 CFLAGS		+= -DLWIP_DEBUG=0
 # CXXFLAGS	= $(CFLAGS) -std=c++11 -fno-rtti -fno-exceptions
-CXXFLAGS	= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -felide-constructors
+CXXFLAGS	= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -felide-constructors -Wno-literal-suffix
 # linker flags used to generate the main object file
 LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,-Map=firmware.map
 
 # linker script used for the above linkier step
-//LD_SCRIPT	= eagle.app.v6.ld
+#LD_SCRIPT	= eagle.app.v6.ld
 LD_SCRIPT = eagle.app.v6.hr.ld
 # various paths from the SDK used in this project
 SDK_LIBDIR	= lib
@@ -203,7 +203,7 @@ endif
 vpath %.c $(SRC_DIR)
 vpath %.cpp $(SRC_DIR)
 
-$(vecho) "Compiler = " $(CC) 
+#$(vecho) "Compiler = " $(CC) 
 
 define compile-objects
 $1/%.o: %.c
