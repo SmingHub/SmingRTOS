@@ -237,6 +237,13 @@ $(APP_AR): $(OBJ)
 	$(vecho) "AR $@"
 	$(Q) $(AR) cru $@ $^
 
+spiffy: spiffy/spiffy
+
+spiffy/spiffy:
+	$(vecho) "Making spiffy utility"
+	$(Q) $(MAKE) --no-print-directory -C spiffy V=$(V)
+	$(vecho) "Done"
+
 checkdirs: $(BUILD_DIR) $(FW_BASE)
 
 $(BUILD_DIR):
