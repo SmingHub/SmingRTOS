@@ -18,7 +18,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-#include "I2cMaster.h"
+#include "I2CMaster.h"
 
 #include "../SmingCore/Clock.h"
 #include "../SmingCore/Digital.h"

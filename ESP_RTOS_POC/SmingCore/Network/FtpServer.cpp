@@ -5,11 +5,11 @@
  * All files of the Sming Core are provided under the LGPL v3 license.
  ****/
 
-#include "FTPServer.h"
+#include "FtpServer.h"
 
 #include "HttpRequest.h"
 #include "HttpResponse.h"
-#include "FTPServerConnection.h"
+#include "FtpServerConnection.h"
 #include "TcpClient.h"
 #include "../Wiring/WString.h"
 

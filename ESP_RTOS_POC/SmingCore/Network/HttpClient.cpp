@@ -10,7 +10,7 @@
 //#include "../SmingCore.h"
 #include "URL.h"
 #include "FileSystem.h"
-#include "Webconstants.h"
+#include "WebConstants.h"
 #include "NetUtils.h"
 #include "HttpRequest.h"
 

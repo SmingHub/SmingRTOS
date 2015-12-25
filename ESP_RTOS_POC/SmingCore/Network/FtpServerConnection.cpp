@@ -1,5 +1,5 @@
-#include "FTPServerConnection.h"
-#include "FTPServer.h"
+#include "FtpServerConnection.h"
+#include "FtpServer.h"
 #include "NetUtils.h"
 #include "TcpConnection.h"
 #include "../FileSystem.h"
