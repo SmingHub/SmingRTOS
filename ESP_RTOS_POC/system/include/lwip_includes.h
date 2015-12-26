@@ -8,7 +8,7 @@
 #ifndef SYSTEM_INCLUDE_ESPINC_LWIP_INCLUDES_H_
 #define SYSTEM_INCLUDE_ESPINC_LWIP_INCLUDES_H_
 
-#include "../lwipopts.h"
+#include <lwipopts.h>
 #include <lwip/init.h>
 #include <lwip/debug.h>
 #include <lwip/stats.h>

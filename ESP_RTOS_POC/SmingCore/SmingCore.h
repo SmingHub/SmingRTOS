@@ -38,7 +38,7 @@
 #include "Network/HttpServer.h"
 #include "Network/HttpRequest.h"
 #include "Network/HttpResponse.h"
-#include "Network/FTPServer.h"
+#include "Network/FtpServer.h"
 #include "Network/NetUtils.h"
 #include "Network/TcpClient.h"
 #include "Network/TcpConnection.h"
@@ -46,6 +46,8 @@
 //#include "Network/HttpFirmwareUpdate.h"
 #include "Network/rBootHttpUpdate.h"
 #include "Network/URL.h"
+#include "Network/TcpServer.h"
+#include "Network/TelnetServer.h"
 
 #include "../Services/ArduinoJson/include/ArduinoJson.h"
 #include "../Services/DateTime/DateTime.h"

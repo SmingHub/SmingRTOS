@@ -12,8 +12,8 @@
 #include "../Wiring/Stream.h"
 #include "../SmingCore/Delegate.h"
 //#include "../Services/CommandProcessing/CommandProcessingIncludes.h"
-#include "uart_register.h"
-#include "pin_mux_register.h"
+#include "espressif/esp8266/uart_register.h"
+#include "espressif/esp8266/pin_mux_register.h"
 
 
 #define UART_ID_0   0
