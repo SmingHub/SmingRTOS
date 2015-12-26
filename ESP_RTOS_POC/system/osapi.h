@@ -33,14 +33,14 @@
 
 #define os_sprintf  ets_sprintf
 
-#ifdef USE_OPTIMIZE_PRINTF
-#define os_printf(fmt, ...) do {	\
-	static const char flash_str[] ICACHE_RODATA_ATTR STORE_ATTR = fmt;	\
-	os_printf_plus(flash_str, ##__VA_ARGS__);	\
-	} while(0)
-#else
-#define os_printf	os_printf_plus
-#endif
+//#ifdef USE_OPTIMIZE_PRINTF
+//#define os_printf(fmt, ...) do {	\
+//	static const char flash_str[] ICACHE_RODATA_ATTR STORE_ATTR = fmt;	\
+//	os_printf_plus(flash_str, ##__VA_ARGS__);	\
+//	} while(0)
+//#else
+//#define os_printf	os_printf_plus
+//#endif
 
 unsigned long os_random(void);
 int os_get_random(unsigned char *buf, size_t len);

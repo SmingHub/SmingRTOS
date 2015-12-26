@@ -1,66 +1,8 @@
-/******************************************************************************
- * Copyright 2013-2014 Espressif Systems (Wuxi)
- *
- * FileName: user_main.c
- *
- * Description: entry file of user application
- *
- * Modification history:
- *     2014/12/1, v1.0 create this file.
-*******************************************************************************/
 
+#include "SmingCore/WifiStation.h"
+#include "espressif/esp_common.h"
 
-#include "../SmingCore/WifiStation.h"
-#include "esp_common.h"
-
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
-//#include "lwip/sockets.h"
-//#include "lwip/dns.h"
-//#include "lwip/netdb.h"
-
-//#include "../system/include/lwip_includes.h"
-
-#include "../SmingCore/Network/UdpConnection.h"
-#include "../SmingCore/Network/TcpServer.h"
-#include "../SmingCore/Network/TcpClient.h"
-#include "../SmingCore/Network/FtpServer.h"
-#include "../SmingCore/Network/HttpServer.h"
-#include "../SmingCore/Network/TelnetServer.h"
-#include "../SmingCore/HardwareSerial.h"
-#include "../SmingCore/HardwarePWM.h"
-
-#include "../SmingCore/FileSystem.h"
-#include "../SmingCore/SmingCore.h"
-
-//#define __forceinline __attribute__((always_inline)) inline
-
-#include "ESP8266EX.h"
-#include "Digital.h"
-#include "Delegate.h"
-
-//#include "../RTOS_EC/cqueue.h"
-//#include "../RTOS_EC/ctask.h"
-#include "../Wiring/WString.h"
-#include "../Wiring/Stream.h"
-#include "../Wiring/WVector.h"
-#include "../Wiring/IPAddress.h"
-
-#include "Timer.h"
-//#include "Station.h"
-
-
-//#include "c_types_compatible.h"
-
-
-
-void procTask(void *pvParameters)
-{
-    while (1) {
-
-    }
-}
+#include <SmingCore.h>
 
 // If you want, you can define WiFi settings globally in Eclipse Environment Variables
 #ifndef WIFI_SSID
@@ -258,12 +200,3 @@ void init()
 
 }
 
-
-extern "C" void user_init(void)
-{
-    printf("Sming RTOS Proof of Concept \r\n");
-	printf("SDK version:%s\n", system_get_sdk_version());
-    printf("FreeHeapSize = %d\r\n",xPortGetFreeHeapSize());
-    init();
-    xTaskCreate(procTask,(signed char *) "procTask", 256, NULL, 2, NULL);
-}
