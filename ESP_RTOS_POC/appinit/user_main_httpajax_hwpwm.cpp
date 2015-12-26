@@ -32,6 +32,7 @@
 #include "../SmingCore/HardwarePWM.h"
 
 #include "../SmingCore/FileSystem.h"
+#include "../SmingCore/SmingCore.h"
 
 //#define __forceinline __attribute__((always_inline)) inline
 

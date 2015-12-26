@@ -52,6 +52,14 @@ Known limitations :
 - Interrupts not yet implemented
 - Only limited testing done
 
+Known RTOS/NONOS differences with application consequences
+
+- No WDT routines
+- Soft timer only on milli and not on micro level
+
+Open Conversion Questions
+
+- Should we make OneWire a Core functionality instead of library (other libs are dependent).
 
 
 

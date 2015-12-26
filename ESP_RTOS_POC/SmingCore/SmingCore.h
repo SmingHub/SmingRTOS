@@ -10,10 +10,10 @@
 
 #define SMING_VERSION 140 // Major Minor Sub
 
-#include "../Wiring/WiringFrameworkIncludes.h"
+//#include "../Wiring/WiringFrameworkIncludes.h"
 
 #include "Delegate.h"
-#include "Boards.h"
+//#include "Boards.h"
 #include "Clock.h"
 #include "SystemClock.h"
 #include "Digital.h"
@@ -21,7 +21,7 @@
 #include "FileSystem.h"
 #include "HardwareSerial.h"
 #include "Interrupts.h"
-#include "DriverPWM.h"
+//#include "DriverPWM.h"
 #include "HardwarePWM.h"
 #include "Timer.h"
 #include "Wire.h"
@@ -29,8 +29,8 @@
 
 #include "Platform/System.h"
 #include "Platform/Station.h"
-#include "Platform/AccessPoint.h"
-#include "Platform/WDT.h"
+//#include "Platform/AccessPoint.h"
+//#include "Platform/WDT.h"
 
 #include "Network/HttpClient.h"
 #include "Network/MqttClient.h"
@@ -43,7 +43,7 @@
 #include "Network/TcpClient.h"
 #include "Network/TcpConnection.h"
 #include "Network/UdpConnection.h"
-#include "Network/HttpFirmwareUpdate.h"
+//#include "Network/HttpFirmwareUpdate.h"
 #include "Network/rBootHttpUpdate.h"
 #include "Network/URL.h"
 

@@ -12,10 +12,11 @@ FW_BASE		= firmware
 TOOLS_ROOT ?= c:/Espressif
 
 # Base directory for the compiler
-XTENSA_TOOLS_ROOT ?= c:/Espressif/xtensa-lx106-elf/bin
+XTENSA_TOOLS_ROOT ?= c:/Espressif/xtensa-esp108-elf/bin
+
 
 # base directory of the ESP8266 SDK package, absolute
-SDK_BASE	?= c:/Espressif/ESP8266_RTOS_SDK
+SDK_BASE	?= c:/Espressif/ESP32_RTOS_SDK
 SDK_TOOLS	?= c:/Espressif/utils
 
 # esptool path and port
@@ -119,7 +120,7 @@ TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
 # MODULES = third_party/freertos
-MODULES	= user system appinit SmingCore RTOS_EC Wiring SmingCore/Platform SmingCore/Network $(filter %/, $(wildcard Services/*/))  $(filter %/, $(wildcard Libraries/*/))
+MODULES	= user system appinit SmingCore RTOS_EC Wiring SmingCore/Platform SmingCore/Network $(filter %/, $(wildcard Services/*/))
 # MODULES	= user appinit 
 # MODULES	+=	$(SDK_BASE)\third_party\freertos
 MODULES		+= rboot/appcode
@@ -127,11 +128,11 @@ MODULES		+= rboot/appcode
 EXTRA_INCDIR = include 
 EXTRA_INCDIR += $(SDK_BASE)/include/freertos
 EXTRA_INCDIR += $(SDK_BASE)/include/espressif
-EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266 
+EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp32 
 
 #LIBS       = cirom gccirom hal phy pp net80211 wpa main freertos lwip udhcp
 # linking libgccirom.a instead of libgcc.a causes reset when working with flash memory (ie spi_flash_erase_sector)
-LIBS		= microc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm
+LIBS		= microc microgcc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm
 
 # compiler flags using during compilation of source files
 #CFLAGS		= -g -save-temps -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -mno-serialize-volatile -D__ets__ -DICACHE_FLASH
@@ -151,12 +152,12 @@ endif
 CFLAGS		+= -DNDEBUG=1
 CFLAGS		+= -DLWIP_DEBUG=0
 # CXXFLAGS	= $(CFLAGS) -std=c++11 -fno-rtti -fno-exceptions
-CXXFLAGS	= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -felide-constructors -Wno-literal-suffix
+CXXFLAGS	= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -felide-constructors
 # linker flags used to generate the main object file
-LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,-Map=$(BUILD_BASE)/firmware.map
+LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,-Map=firmware.map
 
 # linker script used for the above linkier step
-#LD_SCRIPT	= eagle.app.v6.ld
+//LD_SCRIPT	= eagle.app.v6.ld
 LD_SCRIPT = eagle.app.v6.hr.ld
 # various paths from the SDK used in this project
 SDK_LIBDIR	= lib
@@ -164,17 +165,16 @@ SDK_LDDIR	= ld
 SDK_INCDIR	= extra_include include include/espressif include/json include/udhcp include/lwip include/lwip/lwip include/lwip/ipv4 include/lwip/ipv6 include/freertos
 
 # select which tools to use as compiler, librarian and linker
-CC		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
-CXX		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-g++
-AR		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-ar
-LD		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
-OBJCOPY := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-objcopy
-OBJDUMP := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-objdump
+CC		:= $(XTENSA_TOOLS_ROOT)/xtensa-esp108-elf-gcc
+CXX		:= $(XTENSA_TOOLS_ROOT)/xtensa-esp108-elf-g++
+AR		:= $(XTENSA_TOOLS_ROOT)/xtensa-esp108-elf-ar
+LD		:= $(XTENSA_TOOLS_ROOT)/xtensa-esp108-elf-gcc
+OBJCOPY := $(XTENSA_TOOLS_ROOT)/xtensa-esp108-elf-objcopy
+OBJDUMP := $(XTENSA_TOOLS_ROOT)/xtensa-esp108-elf-objdump
 
 SRC_DIR		:= $(MODULES)
 BUILD_DIR	:= $(addprefix $(BUILD_BASE)/,$(MODULES))
 
-USER_LIBDIR	:= compiler/lib
 SDK_LIBDIR	:= $(addprefix $(SDK_BASE)/,$(SDK_LIBDIR))
 SDK_INCDIR	:= $(addprefix -I$(SDK_BASE)/,$(SDK_INCDIR))
 
@@ -186,7 +186,7 @@ LIBS		:= $(addprefix -l,$(LIBS))
 APP_AR		:= $(addprefix $(BUILD_BASE)/,$(TARGET)_app.a)
 TARGET_OUT	:= $(addprefix $(BUILD_BASE)/,$(TARGET).out)
 
-LD_SCRIPT	:= $(addprefix -Tcompiler/ld/,$(LD_SCRIPT))
+LD_SCRIPT	:= $(addprefix -T$(SDK_BASE)/$(SDK_LDDIR)/,$(LD_SCRIPT))
 
 INCDIR	:= $(addprefix -I,$(SRC_DIR))
 EXTRA_INCDIR	:= $(addprefix -I,$(EXTRA_INCDIR))
@@ -204,7 +204,7 @@ endif
 vpath %.c $(SRC_DIR)
 vpath %.cpp $(SRC_DIR)
 
-#$(vecho) "Compiler = " $(CC) 
+$(vecho) "Compiler = " $(CC) 
 
 define compile-objects
 $1/%.o: %.c
@@ -221,7 +221,7 @@ all: checkdirs $(TARGET_OUT)
 
 $(TARGET_OUT): $(APP_AR)
 	$(vecho) "LD $@"
-	$(Q) $(LD) -L$(SDK_LIBDIR) -L$(USER_LIBDIR) $(LD_SCRIPT) $(LDFLAGS) -Wl,--start-group $(LIBS) $(APP_AR) -Wl,--end-group -o $@
+	$(Q) $(LD) -L$(SDK_LIBDIR) $(LD_SCRIPT) $(LDFLAGS) -Wl,--start-group $(LIBS) $(APP_AR) -Wl,--end-group -o $@
 	$(vecho) "------------------------------------------------------------------------------"
 	$(vecho) "Section info:"
 	$(Q) $(OBJDUMP) -h -j .data -j .rodata -j .bss -j .text -j .irom0.text $@

@@ -8,7 +8,6 @@
 #include "TcpConnection.h"
 
 #include "../../SmingCore/DataSourceStream.h"
-#include "../../SmingCore/Platform/WDT.h"
 #include "NetUtils.h"
 #include "../Wiring/WString.h"
 #include "../Wiring/IPAddress.h"
@@ -156,7 +155,6 @@ int TcpConnection::write(const char* data, int len, uint8_t apiflags /* = TCP_WR
 		   len = available;
    }
 
-//   WDT.alive();
    err_t err = tcp_write(tcp, data, len, apiflags);
 
    if (err == ERR_OK)
