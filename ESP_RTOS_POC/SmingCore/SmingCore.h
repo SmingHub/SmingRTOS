@@ -10,7 +10,7 @@
 
 #define SMING_VERSION 140 // Major Minor Sub
 
-//#include "../Wiring/WiringFrameworkIncludes.h"
+#include "../Wiring/WiringFrameworkIncludes.h"
 
 #include "Delegate.h"
 //#include "Boards.h"

@@ -135,7 +135,11 @@ TARGET		= app
 # define your custom directories in the project's own Makefile before including this one
 MODULES      ?= app     # default to app if not set by user
 EXTRA_INCDIR ?= include # default to include if not set by user
-EXTRA_INCDIR += $(SMING_HOME)/compiler/include $(SMING_HOME)/include $(SDK_BASE)/include/lwip/ipv4 $(SDK_BASE)/include/lwip/ipv6 $(SMING_HOME)/ $(SMING_HOME)/system/include $(SMING_HOME)/Wiring $(SMING_HOME)/Libraries $(SMING_HOME)/SmingCore $(SDK_BASE)/include $(SDK_BASE)/extra_include $(SDK_BASE)/include/lwip $(SMING_HOME)/rboot $(SMING_HOME)/rboot/appcode
+EXTRA_INCDIR += $(SMING_HOME)/compiler/include $(SMING_HOME)/include $(SDK_BASE)/include/espressif $(SDK_BASE)/include/lwip/ipv4 $(SDK_BASE)/include/lwip/ipv6 $(SMING_HOME)/ $(SMING_HOME)/system/include $(SMING_HOME)/Wiring $(SMING_HOME)/Libraries $(SMING_HOME)/SmingCore $(SDK_BASE)/include $(SDK_BASE)/extra_include $(SDK_BASE)/include/lwip $(SMING_HOME)/rboot $(SMING_HOME)/rboot/appcode
+
+EXTRA_INCDIR += $(SDK_BASE)/include/freertos
+EXTRA_INCDIR += $(SDK_BASE)/include/espressif
+EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266
 
 # libraries used in this project, mainly provided by the SDK
 USER_LIBDIR = $(SMING_HOME)/compiler/lib/
@@ -256,8 +260,9 @@ $1/%.o: %.c
 	$(vecho) "CC $$<"
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS) -c $$< -o $$@	
 $1/%.o: %.cpp
+	$(vecho) "Compiling"
 	$(vecho) "C+ $$<" 
-	$(Q) $(CXX) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS) -c $$< -o $$@
+	$(Q) $(CXX) -v $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS) -c $$< -o $$@
 endef
 
 .PHONY: all checkdirs spiff_update spiff_clean clean
