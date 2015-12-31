@@ -17,7 +17,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include "c_types.h"
-#include "ets_sys.h"
+#include "espressif/esp8266/ets_sys.h"
 #include "espressif/esp_libc.h"
 
 #include <user_config.h>
