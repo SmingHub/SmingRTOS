@@ -8,7 +8,7 @@
 #include "rBootHttpUpdate.h"
 #include "../Platform/System.h"
 #include "URL.h"
-#include "../Platform/WDT.h"
+//#include "../Platform/WDT.h"
 
 rBootHttpUpdate::rBootHttpUpdate() {
 	currentItem = 0;
