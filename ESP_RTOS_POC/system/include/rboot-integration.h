@@ -5,7 +5,8 @@
 #define __USER_CONFIG_H__
 
 // mark functions that need to be in iram
-#define IRAM_ATTR __attribute__((section(".iram.text")))
+// (alreayd defined in the rtos sdk)
+//#define IRAM_ATTR __attribute__((section(".iram.text")))
 
 // missing prototypes for sdk functions
 #include <esp_systemapi.h>

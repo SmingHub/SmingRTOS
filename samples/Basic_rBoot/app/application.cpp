@@ -186,7 +186,7 @@ void init() {
 #else
 	debugf("spiffs disabled");
 #endif
-	WifiAccessPoint.enable(false);
+	//WifiAccessPoint.enable(false);
 	
 	Serial.printf("\r\nCurrently running rom %d.\r\n", slot);
 	Serial.println("Type 'help' and press enter for instructions.");

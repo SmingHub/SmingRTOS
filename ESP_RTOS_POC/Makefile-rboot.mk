@@ -136,8 +136,25 @@ TARGET		= app
 MODULES      ?= app     # default to app if not set by user
 MODULES      += $(SMING_HOME)/rboot/appcode
 EXTRA_INCDIR ?= include # default to include if not set by user
-#EXTRA_INCDIR += $(SMING_HOME)/include $(SMING_HOME)/ $(SMING_HOME)/system/include $(SMING_HOME)/Wiring $(SMING_HOME)/Libraries $(SMING_HOME)/SmingCore $(SDK_BASE)/../include $(SMING_HOME)/rboot $(SMING_HOME)/rboot/appcode
-EXTRA_INCDIR += $(SMING_HOME)/compiler/include $(SMING_HOME)/include $(SDK_BASE)/include/lwip/ipv4 $(SDK_BASE)/include/lwip/ipv6 $(SMING_HOME)/ $(SMING_HOME)/system/include $(SMING_HOME)/Wiring $(SMING_HOME)/Libraries $(SMING_HOME)/SmingCore $(SDK_BASE)/include $(SDK_BASE)/extra_include $(SDK_BASE)/include/espressif $(SDK_BASE)/include/espressif/esp8266 $(SDK_BASE)/include/lwip $(SMING_HOME)/rboot $(SMING_HOME)/rboot/appcode
+EXTRA_INCDIR += $(SMING_HOME)
+EXTRA_INCDIR += $(SMING_HOME)/include
+EXTRA_INCDIR += $(SMING_HOME)/compiler/include
+EXTRA_INCDIR += $(SMING_HOME)/system/include
+EXTRA_INCDIR += $(SMING_HOME)/Wiring
+EXTRA_INCDIR += $(SMING_HOME)/Libraries
+EXTRA_INCDIR += $(SMING_HOME)/SmingCore
+EXTRA_INCDIR += $(SMING_HOME)/rboot
+EXTRA_INCDIR += $(SMING_HOME)/rboot/appcode
+#EXTRA_INCDIR += $(SMING_HOME)/compiler/include/lwip/ipv4
+#EXTRA_INCDIR += $(SMING_HOME)/compiler/include/lwip/ipv6
+EXTRA_INCDIR += $(SDK_BASE)/include
+EXTRA_INCDIR += $(SDK_BASE)/extra_include
+EXTRA_INCDIR += $(SDK_BASE)/include/lwip
+EXTRA_INCDIR += $(SDK_BASE)/include/lwip/ipv4
+EXTRA_INCDIR += $(SDK_BASE)/include/lwip/ipv6
+EXTRA_INCDIR += $(SDK_BASE)/include/freertos
+EXTRA_INCDIR += $(SDK_BASE)/include/espressif
+EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266
 
 # compiler flags using during compilation of source files
 CFLAGS		= -Os -g -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)

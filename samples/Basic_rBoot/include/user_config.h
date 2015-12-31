@@ -15,10 +15,8 @@ extern "C" {
 	// Default types
 	#define __CORRECT_ISO_CPP_STDLIB_H_PROTO
 	#include <limits.h>
-	#include <stdint.h>
 
-	// Override c_types.h include and remove buggy espconn
-	#define _C_TYPES_H_
+	// Remove buggy espconn
 	#define _NO_ESPCON_
 
 	// Updated, compatible version of c_types.h
