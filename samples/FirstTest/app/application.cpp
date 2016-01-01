@@ -3,6 +3,7 @@
 //#include "espressif/esp_common.h"
 
 #include <SmingCore.h>
+#include "freertos/timers.h"
 
 // If you want, you can define WiFi settings globally in Eclipse Environment Variables
 #ifndef WIFI_SSID
@@ -12,6 +13,7 @@
 
 HttpServer server;
 FTPServer ftp;
+TelnetServer telnet;
 
 int inputs[] = {0, 2}; // Set input GPIO pins here
 Vector<String> namesInput;
@@ -106,6 +108,12 @@ void startFTP()
 	ftp.addUser("me", "123"); // FTP account
 }
 
+void startTelnet()
+{
+	telnet.listen(23);
+	telnet.enableCommand(true);
+}
+
 
 uint8_t pins[8] = { 4, 5, 0, 2, 15, 13, 12, 14 }; // List of pins that you want to connect to pwm
 HardwarePWM HW_pwm(pins, 8);
@@ -147,8 +155,24 @@ void HWPWM_init() {
 	procTimer.initializeMs(100, doPWM).start();
 }
 
+Timer heapTimer;
+int heapSize = 0;
+int pm = millis();
 
-
+void printHeap()
+{
+	int h = xPortGetFreeHeapSize();
+	int pm1 = millis();
+	if ( h != heapSize)
+		{
+		Serial.printf("New Heap size: %d, diff = %d\r\n",h,pm1-pm );
+		pm = pm1;
+		heapSize = h;
+//		Serial.printf("Memp %x\r\n",MEMP_NUM_TCP_PCB);
+//		NetUtils nu;
+//		nu.debugPrintTcpList();
+		}
+}
 
 // Will be called when WiFi station was connected to AP
 void connectOk()
@@ -157,12 +181,14 @@ void connectOk()
 
 	startFTP();
 	startWebServer();
+	startTelnet();
 }
-
 
 void init()
 {
 	Serial.begin(115200);
+
+	Serial.commandProcessing(true);
 
     Serial.printf("Mounting FS\r\n");
     spiffs_mount_manual(0x40500000, 65536);
@@ -186,6 +212,8 @@ void init()
 	WifiStation.enable(true);
 	WifiStation.config(WIFI_SSID, WIFI_PWD);
 //	WifiAccessPoint.enable(false);
+
+	heapTimer.initializeMs(500,printHeap).start();
 /*
 	for (int i = 0; i < countInputs; i++)
 	{
@@ -198,5 +226,6 @@ void init()
 
 	HWPWM_init();
 
+	xTimerHandle testTimer = xTimerCreate((const signed char*)"testTimer", 1, 1, NULL, NULL);
 }
 

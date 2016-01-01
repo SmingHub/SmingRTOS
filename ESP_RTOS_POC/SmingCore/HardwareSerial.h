@@ -11,27 +11,22 @@
 //#include "../Wiring/WiringFrameworkDependencies.h"
 #include "../Wiring/Stream.h"
 #include "../SmingCore/Delegate.h"
-//#include "../Services/CommandProcessing/CommandProcessingIncludes.h"
+#include "../Services/CommandProcessing/CommandProcessingIncludes.h"
 #include "espressif/esp8266/uart_register.h"
 #include "espressif/esp8266/pin_mux_register.h"
-
+#include "../SmingCore/CircularBuffer.h"
 
 #define UART_ID_0   0
 #define UART_ID_1   1
 
 #define NUMBER_UARTS 2
 
+#define RX_BUFF_SIZE 0x100
+
 // Delegate constructor usage: (&YourClass::method, this)
 typedef Delegate<void(Stream &source, char arrivedChar, uint16_t availableCharsCount)> StreamDataReceivedDelegate;
 
-//class CommandExecutor;
-
-typedef struct
-{
-	StreamDataReceivedDelegate HWSDelegate;
-	bool useRxBuff;
-//	CommandExecutor* commandExecutor = nullptr;
-} HWSerialMemberData;
+class CommandExecutor;
 
 class HardwareSerial : public Stream
 {
@@ -58,7 +53,12 @@ public:
 
 private:
 	int uart;
-	static HWSerialMemberData memberData[NUMBER_UARTS];
+	StreamDataReceivedDelegate HWSDelegate = NULL;
+	bool useRxBuff = true;
+	CommandExecutor* commandExecutor = nullptr;
+	CircularBuffer<int, char, 256> rxBuffer;
+
+	static HardwareSerial* hardwareSerialObjects[NUMBER_UARTS];
 
 };
 
