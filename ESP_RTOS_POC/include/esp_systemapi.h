@@ -74,7 +74,7 @@ extern int ets_vsnprintf(char * s, size_t n, const char * format, va_list arg) _
 
 extern void *pvPortMalloc(size_t xWantedSize, const char *file, uint32 line);
 extern void *pvPortZalloc(size_t xWantedSize, const char *file, uint32 line);
-//extern void pvPortFree(void *ptr);
+extern void pvPortFree(void *ptr);
 extern void vPortFree(void *ptr, const char *file, uint32 line);
 extern void *vPortMalloc(size_t xWantedSize);
 
