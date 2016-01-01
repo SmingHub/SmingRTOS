@@ -18,6 +18,8 @@ extern "C" {
 
 	// Remove buggy espconn
 	#define _NO_ESPCON_
+	// Remove rtos built in spiffs
+	#define __ESP_SPIFFS_H__
 
 	// Updated, compatible version of c_types.h
 	// Just removed types declared in <stdint.h>
