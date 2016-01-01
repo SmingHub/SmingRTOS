@@ -4,6 +4,7 @@
 
 #include <SmingCore.h>
 #include "freertos/timers.h"
+#include "freertos/task.h"
 
 // If you want, you can define WiFi settings globally in Eclipse Environment Variables
 #ifndef WIFI_SSID
@@ -174,6 +175,23 @@ void printHeap()
 		}
 }
 
+void exampleTask( void *pvParameters )
+{
+    for( ;; )
+    {
+//        -- Task application code here. --
+		vTaskDelay(10);
+    }
+
+    /* Tasks must not attempt to return from their implementing
+    function or otherwise exit.  In newer FreeRTOS port
+    attempting to do so will result in an configASSERT() being
+    called if it is defined.  If it is necessary for a task to
+    exit then have the task call vTaskDelete( NULL ) to ensure
+    its exit is clean. */
+    vTaskDelete( NULL );
+}
+
 // Will be called when WiFi station was connected to AP
 void connectOk()
 {
@@ -227,5 +245,10 @@ void init()
 	HWPWM_init();
 
 	xTimerHandle testTimer = xTimerCreate((const signed char*)"testTimer", 1, 1, NULL, NULL);
+
+	xTaskCreate( exampleTask, (const signed char*)"Example", 256, NULL, tskIDLE_PRIORITY, NULL);
+
+
+
 }
 
