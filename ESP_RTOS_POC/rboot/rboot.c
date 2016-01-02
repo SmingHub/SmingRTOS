@@ -265,9 +265,6 @@ uint32 NOINLINE find_image() {
 		ets_memset(romconf, 0x00, sizeof(rboot_config));
 		romconf->magic = BOOT_CONFIG_MAGIC;
 		romconf->version = BOOT_CONFIG_VERSION;
-		romconf->current_rom = 0;
-		romconf->reqRom = 0xff;
-		romconf->nextRom = 0xff;
 		romconf->count = 2;
 		romconf->roms[0] = SECTOR_SIZE * (BOOT_CONFIG_SECTOR + 1);
 		romconf->roms[1] = (flashsize / 2) + (SECTOR_SIZE * (BOOT_CONFIG_SECTOR + 1));
@@ -279,36 +276,23 @@ uint32 NOINLINE find_image() {
 		SPIWrite(BOOT_CONFIG_SECTOR * SECTOR_SIZE, buffer, SECTOR_SIZE);
 	}
 	
-	ets_printf("current = %d, req = %d, next = %d\r\n", romconf->current_rom, romconf->reqRom,romconf->nextRom);
-
-	romToBoot = 255;
 	// if gpio mode enabled check status of the gpio
 	if ((romconf->mode & MODE_GPIO_ROM) && (get_gpio16() == 0)) {
 		ets_printf("Booting GPIO-selected.\r\n");
 		romToBoot = romconf->gpio_rom;
 		gpio_boot = TRUE;
-	} else if (romconf->reqRom >= romconf->count) {
-		romToBoot = romconf->current_rom;
-	} else {
 		updateConfig = TRUE;
-		romToBoot = romconf->reqRom;
-		romconf->current_rom = romconf->reqRom;
-		if (romconf->nextRom != 0xff)
-		{
-			romconf->reqRom = romconf->nextRom;
-			romconf->nextRom = 0xff;
-		}
-	};
-
-
-	if (romToBoot == 255){
+	} else if (romconf->current_rom >= romconf->count) {
 		// if invalid rom selected try rom 0
 		ets_printf("Invalid rom selected, defaulting.\r\n");
 		romToBoot = 0;
 		romconf->current_rom = 0;
 		updateConfig = TRUE;
+	} else {
+		// try rom selected in the config
+		romToBoot = romconf->current_rom;
 	}
-
+	
 	// try to find a good rom
 	do {
 		runAddr = check_image(romconf->roms[romToBoot]);
@@ -332,7 +316,6 @@ uint32 NOINLINE find_image() {
 			}
 		}
 	} while (runAddr == 0);
-	ets_printf("bootrom = %d, current = %d, req = %d, next = %d\r\n", romToBoot, romconf->current_rom, romconf->reqRom,romconf->nextRom);
 	
 	// re-write config, if required
 	if (updateConfig) {
