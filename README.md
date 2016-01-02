@@ -2,28 +2,23 @@
 
 Proof of Concept for Sming based on Espressif RTOS SDK.
 
-Based on : 
+Based on: Sming Develop branch 26/11/15
 
-Sming Develop branch dd 26/11/15
-
+Requirements:
 - Espressif RTOS_SDK 1.3.0
-- UDK 2.0.9 for toolchain and SDK (Be sure to have a "clean" espressif without updates.
-- Only used on Windows, unknow Unix/Mac behavior
+- UDK 2.0.9 for toolchain and SDK on Windows or esp-open-sdk on Linux
+  - Be sure to have a "clean" sdk without previously applied updates
+- Tested on Windows and Linux, BSD/Mac untested but should work
 
-Usage : 
+Usage:
 
 - Clone this repository.
-- Set SDK location in makefile
+- Set SDK location in Makefile-<platform> or as environment variables
 - Set WIFI_SSID & WIFI_PWD in environment variables
 - Compile & flash
 - Serial baudrate 115200 (when using example application)
 
-Include files
-
-Due to the interaction between all components I have not yet a "SmingCore.h"
-Each component and application needs to "include" all components used.
-
-Applications : 
+Applications:
 
 - Application which includes HttpAjax & HWPwm example source.
 - HttpAjax -> works
@@ -31,8 +26,7 @@ Applications :
 
 Spiffs/Spiffy
 
-Spiffs Filesystem in included in the POC
-Building spiffy and creating spiffs_rom.bin is not.
+Spiffs Filesystem is included in the POC
 
 The example is made for using on a 32MBit, 4Mbyte ESP.
 You need to adapt if using other.
@@ -43,10 +37,8 @@ Spiffs : The file spiffs_rom.rom (beware of the .rom extension) to 0x300000
 In the application there is a mount_manual for a spiffs FS of 64K at this location.
 If you only update application, no need to flash spiffs again -> use flash target
 
-
 Known limitations : 
 
-- No framework/application but one "all in one" 
 - HardwareSerial -> only print(f)(ln).. and begin()
 - No AccessPoint
 - Interrupts not yet implemented
