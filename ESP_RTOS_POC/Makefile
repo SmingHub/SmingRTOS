@@ -41,9 +41,8 @@ FW_BASE    = firmware
 # which modules (subdirectories) of the project to include in compiling
 MODULES = user system appinit SmingCore RTOS_EC Wiring SmingCore/Platform SmingCore/Network $(filter %/, $(wildcard Services/*/))  $(filter %/, $(wildcard Libraries/*/))
 # MODULES += $(SDK_BASE)\third_party\freertos
-MODULES += rboot/appcode
 
-EXTRA_INCDIR = include 
+EXTRA_INCDIR = include rboot rboot/appcode
 EXTRA_INCDIR += $(SDK_BASE)/include/freertos
 EXTRA_INCDIR += $(SDK_BASE)/include/espressif
 EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266
