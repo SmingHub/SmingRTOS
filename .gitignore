@@ -1,3 +1,7 @@
+out
 build
 firmware
 language.settings.xml
+.settings
+nbproject
+
