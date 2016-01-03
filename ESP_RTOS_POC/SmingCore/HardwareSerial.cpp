@@ -14,6 +14,8 @@
 #include "../SmingCore/Clock.h"
 #include "../SmingCore/Interrupts.h"
 #include "uart.h"
+#include "freertos/queue.h"
+#include "freertos/task.h"
 
 
 //set m_printf callback
@@ -180,6 +182,42 @@ void HardwareSerial::uart0_rx_intr_handler(void *para)
     	  Self->commandExecutor->executorReceive(RcvChar);
       }
     }
+}
+
+void HardwareSerial::DelegateTask(void *pvParameters)
+{
+	SerialDelegateMessage serialDelegateMessage;
+
+	for (;;)
+    {
+        if (xQueueReceive(serialDelegateQueue, (void *)&serialDelegateMessage, (portTickType)portMAX_DELAY))
+        {
+        	uint8 rcvChar = serialDelegateMessage.rcvChar;
+        	uint16 charCount = serialDelegateMessage.charCount ;
+        	switch (serialDelegateMessage.type)
+        	{
+				case SERIAL_SIGNAL_DELEGATE:
+
+					if (memberData[UART_ID_0].HWSDelegate) //retest for thread safety
+					{
+						memberData[UART_ID_0].HWSDelegate(Serial, rcvChar, charCount );
+					}
+					break;
+
+				case SERIAL_SIGNAL_COMMAND:
+
+					if (memberData[UART_ID_0].commandExecutor)  //retest for thread safety
+					{
+						memberData[UART_ID_0].commandExecutor->executorReceive(rcvChar);
+					}
+					break;
+
+				default:
+					break;
+        	}
+        }
+    }
+    vTaskDelete(NULL);
 }
 
 
