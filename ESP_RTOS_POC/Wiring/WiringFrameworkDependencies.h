@@ -19,7 +19,7 @@
 
 #include "WConstants.h"
 #include "BitManipulations.h"
-//#include "FakePgmSpace.h"
+#include "FakePgmSpace.h"
 #include "../SmingCore/pins_arduino.h"
 
 #endif /* WIRING_WIRINGFRAMEWORKDEPENDENCIES_H_ */
