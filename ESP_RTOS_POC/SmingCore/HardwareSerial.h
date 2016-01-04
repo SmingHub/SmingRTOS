@@ -15,7 +15,9 @@
 #include "espressif/esp8266/uart_register.h"
 #include "espressif/esp8266/pin_mux_register.h"
 #include "../SmingCore/CircularBuffer.h"
-#include "freertos/queue.h"
+//#include "freertos/queue.h"
+#include "../SmingCore/SmingCore.h"
+
 
 #define UART_ID_0   0
 #define UART_ID_1   1
@@ -45,7 +47,8 @@ class HardwareSerial : public Stream
 {
 public:
 	HardwareSerial(const int uartPort);
-	~HardwareSerial() {}
+
+	~HardwareSerial();
 
 	void begin(const uint32_t baud = 9600);
 
@@ -62,7 +65,7 @@ public:
 	void setCallback(StreamDataReceivedDelegate reqCallback, bool useSerialRxBuffer = true);
 	void resetCallback();
 
-	static void IRAM_ATTR uart0_rx_intr_handler(void *para);
+	static void IRAM_ATTR uartReceiveInterruptHandler(void *para);
 
 private:
 	int uart;
@@ -72,9 +75,10 @@ private:
 	CircularBuffer<int, char, 256> rxBuffer;
 
 	static HardwareSerial* hardwareSerialObjects[NUMBER_UARTS];
-	void DelegateTask(void *pvParameters);
+	static void DelegateTask(void *pvParameters);
 
-	xQueueHandle serialDelegateQueue;
+	static xQueueHandle serialDelegateQueue; // one queue for all uarts, uart is selected in message
+	static xTaskHandle  serialDelegateTask;
 
 };
 

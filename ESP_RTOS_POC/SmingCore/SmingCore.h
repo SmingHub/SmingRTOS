@@ -10,6 +10,10 @@
 
 #define SMING_VERSION 140 // Major Minor Sub
 
+#include "FreeRTOS.h"
+#include "freertos/queue.h"
+#include "freertos/task.h"
+
 #include "../Wiring/WiringFrameworkIncludes.h"
 
 #include "Delegate.h"
