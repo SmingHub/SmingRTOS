@@ -15,6 +15,9 @@
 #include "espressif/esp8266/uart_register.h"
 #include "espressif/esp8266/pin_mux_register.h"
 #include "../SmingCore/CircularBuffer.h"
+//#include "freertos/queue.h"
+#include "../SmingCore/SmingCore.h"
+
 
 #define UART_ID_0   0
 #define UART_ID_1   1
@@ -26,13 +29,26 @@
 // Delegate constructor usage: (&YourClass::method, this)
 typedef Delegate<void(Stream &source, char arrivedChar, uint16_t availableCharsCount)> StreamDataReceivedDelegate;
 
+typedef struct
+{
+   int uart;
+   int type;
+   char rcvChar;
+   int charCount;
+} SerialDelegateMessage;
+
+#define SERIAL_SIGNAL_DELEGATE	0
+#define SERIAL_SIGNAL_COMMAND	1
+#define SERIAL_QUEUE_LEN		10
+
 class CommandExecutor;
 
 class HardwareSerial : public Stream
 {
 public:
 	HardwareSerial(const int uartPort);
-	~HardwareSerial() {}
+
+	~HardwareSerial();
 
 	void begin(const uint32_t baud = 9600);
 
@@ -49,7 +65,7 @@ public:
 	void setCallback(StreamDataReceivedDelegate reqCallback, bool useSerialRxBuffer = true);
 	void resetCallback();
 
-	static void IRAM_ATTR uart0_rx_intr_handler(void *para);
+	static void IRAM_ATTR uartReceiveInterruptHandler(void *para);
 
 private:
 	int uart;
@@ -59,6 +75,10 @@ private:
 	CircularBuffer<int, char, 256> rxBuffer;
 
 	static HardwareSerial* hardwareSerialObjects[NUMBER_UARTS];
+	static void DelegateTask(void *pvParameters);
+
+	static xQueueHandle serialDelegateQueue; // one queue for all uarts, uart is selected in message
+	static xTaskHandle  serialDelegateTask;
 
 };
 

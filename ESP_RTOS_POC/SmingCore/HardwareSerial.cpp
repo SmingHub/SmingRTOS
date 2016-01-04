@@ -14,24 +14,56 @@
 #include "../SmingCore/Clock.h"
 #include "../SmingCore/Interrupts.h"
 #include "uart.h"
+#include "freertos/queue.h"
+#include "freertos/task.h"
 
 
 //set m_printf callback
 extern void setMPrintfPrinterCbc(void (*callback)(char));
 
 HardwareSerial* HardwareSerial::hardwareSerialObjects[NUMBER_UARTS];
+xQueueHandle HardwareSerial::serialDelegateQueue = NULL;
+xTaskHandle  HardwareSerial::serialDelegateTask = NULL;
 
-HardwareSerial::HardwareSerial(const int uartPort)
-	: uart(uartPort)
+HardwareSerial::HardwareSerial(const int reqUart)
+	: uart(reqUart)
 {
 	resetCallback();
-	hardwareSerialObjects[uartPort] = this;
+	hardwareSerialObjects[reqUart] = this;
+	if (!serialDelegateQueue){
+		serialDelegateQueue = xQueueCreate( SERIAL_QUEUE_LEN, sizeof(SerialDelegateMessage) );
+		if (!serialDelegateQueue)
+		{
+			debugf("HardwareSerial uart %d, serialQueue creation failed ",reqUart);
+		}
+		else
+		{
+			debugf("HardwareSerial uart %d, serialQueue creation ok ",reqUart);
+		}
+	}
+	if (!serialDelegateTask)
+	{
+		xTaskCreate( DelegateTask, (const signed char*)"DelegateTask", 256, NULL, tskIDLE_PRIORITY, &serialDelegateTask);
+		if (!serialDelegateTask)
+		{
+			debugf("HardwareSerial uart %d, serialTask creation failed ",reqUart);
+		}
+		else
+		{
+			debugf("HardwareSerial uart %d, serialTask creation ok ",reqUart);
+		}
+	}
+}
+
+HardwareSerial::~HardwareSerial()
+{
+	hardwareSerialObjects[uart] = NULL;
 }
 
 void HardwareSerial::begin(const uint32_t baud/* = 9600*/)
 {
 	UART_SetBaudrate(UART0,baud);
-    UART_intr_handler_register((void *) &uart0_rx_intr_handler,NULL);
+    UART_intr_handler_register((void *) &uartReceiveInterruptHandler,NULL);
     ETS_UART_INTR_ENABLE();
 }
 
@@ -148,7 +180,7 @@ void HardwareSerial::commandProcessing(bool reqEnable)
 
 }
 
-void HardwareSerial::uart0_rx_intr_handler(void *para)
+void HardwareSerial::uartReceiveInterruptHandler(void *para)
 {
     /* uart0 and uart1 intr combine togther, when interrupt occur, see reg 0x3ff20020, bit2, bit0 represents
      * uart1 and uart0 respectively
@@ -171,15 +203,68 @@ void HardwareSerial::uart0_rx_intr_handler(void *para)
     	Self->rxBuffer.Push(RcvChar);
       }
 
-      if (Self->HWSDelegate)
-        {
-        	Self->HWSDelegate(Serial, RcvChar, Self->rxBuffer.Len());
-        }
-      if (Self->commandExecutor)
+      if ((Self->HWSDelegate) || (Self->commandExecutor))
       {
-    	  Self->commandExecutor->executorReceive(RcvChar);
+    	  SerialDelegateMessage serialDelegateMessage;
+    	  serialDelegateMessage.uart = Self->uart;
+    	  serialDelegateMessage.rcvChar = RcvChar;
+    	  serialDelegateMessage.charCount = Self->rxBuffer.Len();
+
+          if (Self->HWSDelegate)
+		  {
+//        	  system_os_post(USER_TASK_PRIO_0, SERIAL_SIGNAL_DELEGATE, serialQueueParameter);
+        	  serialDelegateMessage.type = SERIAL_SIGNAL_DELEGATE;
+        	  xQueueSendToBackFromISR ( serialDelegateQueue, &serialDelegateMessage, NULL);
+		  }
+          if (Self->commandExecutor)
+      	  {
+//        	  system_os_post(USER_TASK_PRIO_0, SERIAL_SIGNAL_COMMAND, serialQueueParameter);
+        	  serialDelegateMessage.type = SERIAL_SIGNAL_COMMAND;
+        	  xQueueSendToBackFromISR ( serialDelegateQueue, &serialDelegateMessage, NULL);
+      	  }
       }
     }
+}
+
+void HardwareSerial::DelegateTask(void *pvParameters)
+{
+	SerialDelegateMessage serialDelegateMessage;
+
+	for (;;)
+    {
+        if (xQueueReceive(serialDelegateQueue, (void *)&serialDelegateMessage, (portTickType)portMAX_DELAY))
+        {
+        	HardwareSerial* Self = hardwareSerialObjects[serialDelegateMessage.uart];
+        	if (!Self) //No Object to handle request
+        	{
+        		continue; // wait for next message to arrive
+        	}
+        	uint8 rcvChar = serialDelegateMessage.rcvChar;
+        	uint16 charCount = serialDelegateMessage.charCount ;
+        	switch (serialDelegateMessage.type)
+        	{
+				case SERIAL_SIGNAL_DELEGATE:
+
+					if (Self->HWSDelegate) //retest for thread safety
+					{
+						Self->HWSDelegate(Serial, rcvChar, charCount );
+					}
+					break;
+
+				case SERIAL_SIGNAL_COMMAND:
+
+					if (Self->commandExecutor)  //retest for thread safety
+					{
+						Self->commandExecutor->executorReceive(rcvChar);
+					}
+					break;
+
+				default:
+					break;
+        	}
+        }
+    }
+    vTaskDelete(NULL);
 }
 
 
