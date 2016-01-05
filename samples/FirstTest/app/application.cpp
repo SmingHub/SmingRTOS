@@ -1,5 +1,5 @@
 
-//#include "SmingCore/WifiStation.h"
+//#include "sming/WifiStation.h"
 //#include "espressif/esp_common.h"
 
 #include <SmingCore.h>
