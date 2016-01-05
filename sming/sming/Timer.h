@@ -39,10 +39,8 @@ public:
 	// Usually only Delegate needed
 
 	Timer& IRAM_ATTR initializeMs(uint32_t milliseconds, InterruptCallback callback = NULL); // Init in Milliseconds.
-	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, InterruptCallback callback = NULL); // Init in Microseconds.
 
 	Timer& IRAM_ATTR initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction = NULL); // Init in Milliseconds.
-	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, TimerDelegate delegateFunction = NULL); // Init in Microseconds.
 
 	void IRAM_ATTR start(bool repeating = true);
 	void __forceinline IRAM_ATTR startOnce() { start(false); }
@@ -53,7 +51,6 @@ public:
 	uint64_t getIntervalUs();
 	uint32_t getIntervalMs();
 
-    void IRAM_ATTR setIntervalUs(uint64_t microseconds = 1000000);
     void IRAM_ATTR setIntervalMs(uint32_t milliseconds = 1000000);
 
     void IRAM_ATTR setCallback(InterruptCallback interrupt = NULL);
@@ -75,6 +72,12 @@ private:
     // was added to allow for longer timer intervals.
     uint16_t long_intvl_cntr = 0;
     uint16_t long_intvl_cntr_lim = 0;
+
+    // Due to limitations of RTOS SDK make Us calls private to prevent accidental usage
+    void IRAM_ATTR setIntervalUs(uint64_t microseconds = 1000000);
+	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, InterruptCallback callback = NULL); // Init in Microseconds.
+	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, TimerDelegate delegateFunction = NULL); // Init in Microseconds.
+
 };
 
 #endif /* _SMING_CORE_Timer_H_ */

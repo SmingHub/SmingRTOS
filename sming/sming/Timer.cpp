@@ -52,16 +52,21 @@ void Timer::start(bool repeating/* = true*/)
 		return;
 
 	os_timer_setfn(&timer, (os_timer_func_t *)processing, this);
-
+/*  -> NONOS version for reference
+	ets_timer_setfn(&timer, (os_timer_func_t *)processing, this);
 	if (interval > 10000) 
 	{
-		os_timer_arm(&timer, (uint32_t)(interval / 1000),
-				(long_intvl_cntr_lim > 0 ? true : repeating)); // msec
+		ets_timer_arm_new(&timer, (uint32_t)(interval / 1000),
+				(long_intvl_cntr_lim > 0 ? true : repeating), 1); // msec
 	}
 	else 
 	{
-		os_timer_arm(&timer, (uint32_t)interval, repeating); 		  // usec
+		ets_timer_arm_new(&timer, (uint32_t)interval, repeating, 0); 		  // usec
 	}
+*/
+	os_timer_arm(&timer, (uint32_t)(interval / 1000),
+			(long_intvl_cntr_lim > 0 ? true : repeating)); // msec
+
 
 	started = true;
 }
