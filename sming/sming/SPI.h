@@ -8,7 +8,7 @@
 #ifndef _SMING_CORE_SPI_H_
 #define _SMING_CORE_SPI_H_
 
-#include "../Wiring/WiringFrameworkDependencies.h"
+#include "../wiring/WiringFrameworkDependencies.h"
 
 #define SPI_ID_MAIN         0
 #define SPI_ID_HSPI         1
