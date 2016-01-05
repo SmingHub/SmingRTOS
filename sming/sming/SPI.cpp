@@ -7,7 +7,7 @@
 
 // SPIClass code based on https://github.com/Perfer/esp8266_ili9341
 
-#include "spi_register.h"
+#include "spi_register_sming.h"
 #include "../sming/SPI.h"
 #include "../sming/Digital.h"
 
