@@ -1,7 +1,7 @@
 out
 build
 firmware
-language.settings.xml
+**/language.settings.xml
 .settings
 nbproject
 
