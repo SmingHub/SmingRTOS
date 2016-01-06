@@ -13,6 +13,7 @@
 #include "TcpClient.h"
 #include "../wiring/WString.h"
 #include "../../services/cWebsocket/websocket.h"
+#include "../../services/CommandProcessing/CommandProcessingIncludes.h"
 
 HttpServer::HttpServer()
 {
@@ -136,8 +137,8 @@ void HttpServer::processWebSocketFrame(pbuf *buf, HttpServerConnection& connecti
 		String msg;
 		msg.setString((char*)data, size);
 		debugf("WS: %s", msg.c_str());
-//		if (sock && wsMessage) wsMessage(*sock, msg);
-//		if (sock && sock->commandExecutor) sock->commandExecutor->executorReceive(msg+"\r");
+		if (sock && wsMessage) wsMessage(*sock, msg);
+		if (sock && sock->commandExecutor) sock->commandExecutor->executorReceive(msg+"\r");
 	}
 	if (frameType == WS_BINARY_FRAME)
 	{
