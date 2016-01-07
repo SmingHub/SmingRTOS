@@ -49,6 +49,10 @@ Known RTOS/NONOS differences with application consequences
 - No WDT routines
 - Soft timer only on milli and not on micro level
 
+Additional needed software
+- Spiffy  : Source included in Sming repository
+- [ESPtool2] (https://github.com/raburton/esptool2) esptool2 
+
 Open Conversion Questions
 
 - Should we make OneWire a Core functionality instead of library (other libs are dependent).
