@@ -10,5 +10,7 @@
 
 // missing prototypes for sdk functions
 #include <esp_systemapi.h>
+#include <freertos/projdefs.h>
+#include <freertos/portable.h>
 
 #endif /* __RBOOT_INTEGRATION_H__ */
