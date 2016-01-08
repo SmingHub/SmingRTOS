@@ -1,5 +1,5 @@
 #include <SmingCore.h>
-#include <Libraries/Ultrasonic/Ultrasonic.h>
+#include <libraries/Ultrasonic/Ultrasonic.h>
 
 #define TRIG_PIN 4
 #define ECHO_PIN 5
