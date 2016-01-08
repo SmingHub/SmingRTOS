@@ -1,0 +1,19 @@
+sudo: false
+language: cpp
+os:
+  - linux
+env:
+  matrix:
+    - SDK_VERSION=1.3.0
+install:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export SDK_FILE_NAME="esp-rtos-sdk-v${SDK_VERSION}-linux-x86_64.tar.bz2"; fi
+  - mkdir -p $TRAVIS_BUILD_DIR/opt/esp-rtos-sdk
+  - wget https://bintray.com/artifact/download/raburton/generic/temp/${SDK_FILE_NAME}
+  - tar -C $TRAVIS_BUILD_DIR/opt/esp-rtos-sdk -xf ${SDK_FILE_NAME}
+script:
+  - export SMING_HOME=$TRAVIS_BUILD_DIR/sming
+  - export ESP_HOME=$TRAVIS_BUILD_DIR/opt/esp-rtos-sdk
+  - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/esp-rtos-sdk/utils/
+  - export SDK_BASE=$TRAVIS_BUILD_DIR/opt/esp-rtos-sdk/sdk
+  - cd $SMING_HOME
+  - make all
