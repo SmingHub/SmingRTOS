@@ -2,7 +2,7 @@
 #include "FtpServer.h"
 #include "NetUtils.h"
 #include "TcpConnection.h"
-#include "../FileSystem.h"
+#include "../core/FileSystem.h"
 
 class FTPDataStream : public TcpConnection
 {

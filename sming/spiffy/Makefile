@@ -5,7 +5,7 @@
 CC := gcc
 LD := gcc
 
-INCDIR := -I../services/SpifFS/
+INCDIR := -I../sming/services/SpifFS/
 CFLAGS := -O2 -Wall -Wno-unused-value
 
 ifeq ("$(V)","1")
@@ -18,7 +18,7 @@ endif
 
 all: spiffy
 
-%.o: ../services/SpifFS/%.c
+%.o: ../sming/services/SpifFS/%.c
 	$(vecho) "CC $<"
 	$(Q) $(CC) $(CFLAGS) $(INCDIR) -c $< -o $@
 

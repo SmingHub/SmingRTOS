@@ -2,7 +2,7 @@
 //#include "sming/WifiStation.h"
 //#include "espressif/esp_common.h"
 
-#include <SmingCore.h>
+#include "SmingCore.h"
 #include "freertos/timers.h"
 #include "freertos/task.h"
 
@@ -204,7 +204,7 @@ void connectOk()
 
 void init()
 {
-	Serial.begin(115200);
+	Serial.begin(SERIAL_BAUD_RATE);
 
 	Serial.commandProcessing(true);
 

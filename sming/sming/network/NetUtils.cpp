@@ -10,6 +10,7 @@
 #include "../wiring/WString.h"
 #include "lwip/tcp_impl.h"
 #include "lwip/tcp.h"
+#include "../include/sming_global.h"
 
 bool NetUtils::ipClientRoutingFixed = false;
 

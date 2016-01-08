@@ -12,8 +12,8 @@
 #include "HttpServerConnection.h"
 #include "TcpClient.h"
 #include "../wiring/WString.h"
-#include "../../services/cWebsocket/websocket.h"
-#include "../../services/CommandProcessing/CommandProcessingIncludes.h"
+#include "../services/cWebsocket/websocket.h"
+#include "../commandprocessing/CommandProcessingIncludes.h"
 
 HttpServer::HttpServer()
 {

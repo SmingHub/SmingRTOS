@@ -16,16 +16,16 @@ BSD license, check license.txt for more information
 All text above, and the splash screen must be included in any redistribution
 *********************************************************************/
 
-#include <SmingCore.h>
+
 #if ARDUINO >= 100
- #include "Arduino.h"
+ #include "../../sming/include/SmingIncludes.h"
  #define WIRE_WRITE Wire.write
 #else
  #include "WProgram.h"
   #define WIRE_WRITE Wire.send
 #endif
 
-#include "../../sming/SPI.h"
+#include "sming/core/SPI.h"
 #include "../Adafruit_GFX/Adafruit_GFX.h"
 
 #ifdef __SAM3X8E__

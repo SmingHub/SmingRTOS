@@ -24,8 +24,8 @@ All text above, and the splash screen below must be included in any redistributi
 
 #include <stdlib.h>
 
-#include "../../sming/Wire.h"
 #include "../Adafruit_GFX/Adafruit_GFX.h"
+#include "sming/core/SPI.h"
 
 // the memory buffer for the LCD
 

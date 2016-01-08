@@ -7,9 +7,8 @@
 
 #include "HttpClient.h"
 
-//#include "../SmingCore.h"
 #include "URL.h"
-#include "FileSystem.h"
+#include "../core/FileSystem.h"
 #include "WebConstants.h"
 #include "NetUtils.h"
 #include "HttpRequest.h"

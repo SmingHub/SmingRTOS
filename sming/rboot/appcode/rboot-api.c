@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////
 
 #ifdef RBOOT_INTEGRATION
-#include <rboot-integration.h>
+#include "sming/include/rboot-integration.h"
 #endif
 
 #include <string.h>

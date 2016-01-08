@@ -6,7 +6,7 @@
  ****/
 
 #include "UdpConnection.h"
-#include "../../wiring/WString.h"
+#include "../wiring/WString.h"
 
 UdpConnection::UdpConnection() : onDataCallback(NULL)
 {

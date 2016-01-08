@@ -12,9 +12,9 @@
  */
 #ifndef DHT_H
 #define DHT_H
-#include <SmingCore.h>
+
 #if ARDUINO >= 100
- #include "Arduino.h"
+ #include "../../sming/include/SmingIncludes.h"
 
  #define PULLUP_PIN(x) pinMode(x, INPUT_PULLUP)
 

@@ -8,7 +8,7 @@ Descr: Low-level SDCard functions
 #ifndef _SD_CARD_
 #define _SD_CARD_
 
-#include <SmingCore.h>
+#include "../../sming/include/SmingIncludes.h"
 
 void SDCard_begin();
 

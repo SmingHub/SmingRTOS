@@ -8,8 +8,8 @@
 #ifndef READFROMDS_H_
 #define READFROMDS_H_
 
-#include "../../sming/Wire.h"
-#include "../../sming/Timer.h"
+#include "sming/core/Wire.h"
+#include "sming/core/Timer.h"
 
 #define MAX_SENSORS 4         //how many sensors reads up max
 

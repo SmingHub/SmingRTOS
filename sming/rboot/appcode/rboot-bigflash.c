@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////
 
 #ifdef RBOOT_INTEGRATION
-#include <rboot-integration.h>
+#include "sming/include/rboot-integration.h"
 #endif
 
 typedef unsigned int uint32;

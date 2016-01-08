@@ -9,7 +9,7 @@
 #include "HttpServer.h"
 #include "NetUtils.h"
 #include <stdlib.h>
-#include "../../services/WebHelpers/escape.h"
+#include "../services/WebHelpers/escape.h"
 
 HttpRequest::HttpRequest()
 {

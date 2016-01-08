@@ -3,10 +3,10 @@
 
 #include "UdpConnection.h"
 #include "../platform/System.h"
-#include "../Timer.h"
-#include "../SystemClock.h"
+#include "../core/Timer.h"
+#include "../core/SystemClock.h"
 #include "../platform/Station.h"
-#include "../Delegate.h"
+#include "../core/Delegate.h"
 
 #define NTP_PORT 123
 #define NTP_PACKET_SIZE 48
