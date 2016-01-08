@@ -47,6 +47,9 @@ EXTRA_INCDIR += $(SDK_BASE)/include/freertos
 EXTRA_INCDIR += $(SDK_BASE)/include/espressif
 EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266
 
+# sample for test building
+SAMPLES_DIRS := $(shell ls -1 ../samples)
+
 #LIBS = cirom gccirom hal phy pp net80211 wpa main freertos lwip udhcp
 # linking libgccirom.a instead of libgcc.a causes reset when working with flash memory (ie spi_flash_erase_sector)
 LIBS = microc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm
@@ -159,6 +162,17 @@ clean:
 	$(Q) rm -f $(USER_LIBDIR)/$(TARGET).a
 	$(Q) rm -rf $(BUILD_BASE)
 	$(Q) rm -rf $(FW_BASE)
+
+
+test: all spiffy samples
+
+samples: Basic_Blink HttpServer_Bootstrap Basic_rBoot
+
+recurse-samples: $(SAMPLES_DIRS)
+
+$(SAMPLES_DIRS):
+	$(Q) $(MAKE) -C $(SMING_HOME)/../samples/$@ clean
+	$(Q) $(MAKE) -C $(SMING_HOME)/../samples/$@
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
 

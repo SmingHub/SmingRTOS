@@ -21,10 +21,6 @@ extern "C" {
 	// Remove rtos built in spiffs
 	#define __ESP_SPIFFS_H__
 
-	// Updated, compatible version of c_types.h
-	// Just removed types declared in <stdint.h>
-	#include <c_types_compatible.h>
-
 	// System API declarations
 	#include <esp_systemapi.h>
 

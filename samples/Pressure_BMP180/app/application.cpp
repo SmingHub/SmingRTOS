@@ -1,5 +1,5 @@
 #include <SmingCore.h>
-#include <Libraries/BMP180/BMP180.h>
+#include <libraries/BMP180/BMP180.h>
 
 BMP180 barometer;
 void init()
