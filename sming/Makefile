@@ -162,6 +162,7 @@ clean:
 	$(Q) rm -f $(USER_LIBDIR)/$(TARGET).a
 	$(Q) rm -rf $(BUILD_BASE)
 	$(Q) rm -rf $(FW_BASE)
+	$(Q) $(MAKE) --no-print-directory -C spiffy V=$(V) clean
 
 
 test: all spiffy recurse-samples
