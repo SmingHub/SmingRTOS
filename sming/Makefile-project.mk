@@ -260,9 +260,8 @@ $1/%.o: %.c
 	$(vecho) "CC $$<"
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS) -c $$< -o $$@	
 $1/%.o: %.cpp
-	$(vecho) "Compiling"
 	$(vecho) "C+ $$<" 
-	$(Q) $(CXX) -v $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS) -c $$< -o $$@
+	$(Q) $(CXX) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS) -c $$< -o $$@
 endef
 
 .PHONY: all checkdirs spiff_update spiff_clean clean
