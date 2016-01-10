@@ -5,7 +5,7 @@
  #include <avr/io.h>
  #include <avr/pgmspace.h>
 #elif defined(__ESP8266_EX__)
- #include "../../Wiring/WiringFrameworkDependencies.h"
+ #include "../../wiring/WiringFrameworkDependencies.h"
 #else
  #define PROGMEM
 #endif
