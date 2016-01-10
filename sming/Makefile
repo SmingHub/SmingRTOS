@@ -164,7 +164,7 @@ clean:
 	$(Q) rm -rf $(FW_BASE)
 
 
-test: all spiffy samples
+test: all spiffy recurse-samples
 
 samples: Basic_Blink HttpServer_Bootstrap Basic_rBoot
 

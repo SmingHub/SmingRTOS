@@ -16,4 +16,5 @@ script:
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/esp-rtos-sdk/utils/
   - export SDK_BASE=$TRAVIS_BUILD_DIR/opt/esp-rtos-sdk/sdk
   - cd $SMING_HOME
-  - make all
+  - make test
+
