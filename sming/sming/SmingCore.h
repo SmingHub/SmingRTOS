@@ -33,7 +33,7 @@
 
 #include "platform/System.h"
 #include "platform/Station.h"
-//#include "platform/AccessPoint.h"
+#include "platform/AccessPoint.h"
 //#include "platform/WDT.h"
 
 #include "network/HttpClient.h"
