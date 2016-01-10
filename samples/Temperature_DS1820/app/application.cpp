@@ -1,6 +1,6 @@
 #include <SmingCore.h>
-#include <Libraries/OneWire/OneWire.h>
-#include <Libraries/DS18S20/ds18s20.h>
+#include <libraries/OneWire/OneWire.h>
+#include <libraries/DS18S20/ds18s20.h>
 
 DS18S20 ReadTemp;
 Timer procTimer;
@@ -69,5 +69,3 @@ void init()
 
 	procTimer.initializeMs(10000, readData).start();   // every 10 seconds
 }
-
-
