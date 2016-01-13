@@ -9,9 +9,9 @@
 #define SMINGCORE_NETWORK_RBOOTHTTPUPDATE_H_
 
 #include "HttpClient.h"
-#include <Timer.h>
+#include "../core/Timer.h"
 
-#include <rboot-api.h>
+#include "rboot/appcode/rboot-api.h"
 
 #define NO_ROM_SWITCH 0xff
 

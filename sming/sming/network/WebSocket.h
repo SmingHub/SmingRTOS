@@ -10,10 +10,10 @@
 
 #include "TcpServer.h"
 #include "HttpServerConnection.h"
-#include "../../wiring/WHashMap.h"
-#include "../../wiring/WVector.h"
-#include "../Delegate.h"
-#include "../../services/cWebsocket/websocket.h"
+#include "../wiring/WHashMap.h"
+#include "../wiring/WVector.h"
+#include "../core/Delegate.h"
+#include "../services/cWebsocket/websocket.h"
 
 class HttpServer;
 class CommandExecutor;

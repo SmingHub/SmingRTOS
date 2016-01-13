@@ -1,5 +1,5 @@
 
-#include <Adafruit_NeoPixel/Adafruit_NeoPixel.h>
+#include <libraries/Adafruit_NeoPixel/Adafruit_NeoPixel.h>
 
 
 // Which pin on the Esp8266 is connected to the NeoPixels?

@@ -7,8 +7,8 @@
 
 #include "Station.h"
 //#include "../../sming/SmingCore.h"
-#include "../../sming/Timer.h"
-#include "../../sming/Clock.h"
+#include "../core/Timer.h"
+#include "../core/Clock.h"
 #include "smartconfig.h"
 
 StationClass WifiStation;

@@ -25,7 +25,7 @@
 #endif
 */
 
-#include <SmingCore.h>
+#include "../../sming/include/SmingIncludes.h"
 
 class Ultrasonic
 {

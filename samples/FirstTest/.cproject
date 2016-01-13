@@ -24,8 +24,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1168221903" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler">
 								<option id="gnu.c.compiler.option.include.paths.357494572" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}/system/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}/libraries&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP_HOME}/sdk/include&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.313321806" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -33,8 +31,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1999763015" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
 								<option id="gnu.cpp.compiler.option.include.paths.611746109" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}/system/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}/libraries&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP_HOME}/sdk/include&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1330530366" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
@@ -50,8 +46,6 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.587940548" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler">
 								<option id="gnu.both.asm.option.include.paths.1067006329" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}/system/include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${SMING_HOME}/libraries&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ESP_HOME}/sdk/include&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.651581712" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>

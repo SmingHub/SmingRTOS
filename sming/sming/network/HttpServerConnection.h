@@ -12,7 +12,7 @@
 #include "HttpResponse.h"
 #include "TcpConnection.h"
 #include "../wiring/WString.h"
-#include "../Delegate.h"
+#include "../core/Delegate.h"
 
 class HttpServer;
 

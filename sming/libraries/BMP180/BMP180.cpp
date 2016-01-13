@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "BMP180.h"
-#include "Arduino.h"
+#include "sming/wiring/Arduino.h"
 //#include <math.h>
 
 BMP180::BMP180()

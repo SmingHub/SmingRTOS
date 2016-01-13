@@ -9,9 +9,9 @@
 #define SMINGCORE_NETWORK_UDPCONNECTION_H_
 
 #include "../wiring/WiringFrameworkDependencies.h"
-#include "../Delegate.h"
-#include "IPAddress.h"
-#include "../system/include/lwip_includes.h"
+#include "../core/Delegate.h"
+#include "../wiring/IPAddress.h"
+#include "../include/lwip_includes.h"
 
 class UdpConnection;
 

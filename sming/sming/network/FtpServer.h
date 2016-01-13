@@ -9,9 +9,9 @@
 #define _SMING_CORE_FTPSERVER_H_
 
 #include "TcpServer.h"
-#include "../../wiring/WHashMap.h"
-#include "../../wiring/WVector.h"
-#include "../../wiring/WString.h"
+#include "../wiring/WHashMap.h"
+#include "../wiring/WVector.h"
+#include "../wiring/WString.h"
 
 class FTPServerConnection;
 

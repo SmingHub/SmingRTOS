@@ -39,13 +39,19 @@ BUILD_BASE = build
 FW_BASE    = firmware
 
 # which modules (subdirectories) of the project to include in compiling
-MODULES = user system appinit sming RTOS_EC wiring sming/platform sming/network $(filter %/, $(wildcard services/*/))  $(filter %/, $(wildcard libraries/*/))
-# MODULES += $(SDK_BASE)\third_party\freertos
+ 
+MODULES = sming/appinit
+MODULES += sming/core 
+MODULES += sming/system
+MODULES += sming/wiring
+MODULES += sming/platform
+MODULES += sming/network 
+MODULES += sming/commandprocessing
+MODULES += $(filter %/, $(wildcard sming/services/*/))  
+MODULES += $(filter %/, $(wildcard libraries/*/))
 
-EXTRA_INCDIR = include rboot rboot/appcode
-EXTRA_INCDIR += $(SDK_BASE)/include/freertos
-EXTRA_INCDIR += $(SDK_BASE)/include/espressif
-EXTRA_INCDIR += $(SDK_BASE)/include/espressif/esp8266
+EXTRA_INCDIR =  $(SMING_HOME)/
+EXTRA_INCDIR += $(SMING_HOME)/rboot 
 
 # sample for test building
 SAMPLES_DIRS := $(shell ls -1 ../samples)
@@ -79,7 +85,16 @@ LD_SCRIPT = eagle.app.v6.hr.ld
 # various paths from the SDK used in this project
 SDK_LIBDIR = lib
 SDK_LDDIR  = ld
-SDK_INCDIR = extra_include include include/espressif include/json include/udhcp include/lwip include/lwip/lwip include/lwip/ipv4 include/lwip/ipv6 include/freertos
+SDK_INCDIR = extra_include 
+SDK_INCDIR += include 
+SDK_INCDIR += include/espressif 
+SDK_INCDIR += include/json 
+SDK_INCDIR += include/udhcp 
+SDK_INCDIR += include/lwip 
+SDK_INCDIR += include/lwip/lwip 
+SDK_INCDIR += include/lwip/ipv4 
+SDK_INCDIR += include/lwip/ipv6 
+SDK_INCDIR += include/freertos
 
 # select which tools to use as compiler, librarian and linker
 CC  := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
@@ -127,7 +142,7 @@ $1/%.o: %.c
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
 $1/%.o: %.cpp
 	$(vecho) "C+ $$<"
-	$(Q) $(CXX) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS)  -c $$< -o $$@
+	$(Q) $(CXX) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS)  -c $$< -o $$@
 endef
 
 .PHONY: all checkdirs clean firmware flashonefile flash flashinit rebuild

@@ -8,10 +8,9 @@
 #ifndef SMINGCORE_PLATFORM_SYSTEM_H_
 #define SMINGCORE_PLATFORM_SYSTEM_H_
 
-#include <user_config.h>
-#include "../../wiring/WString.h"
-#include "../../wiring/WVector.h"
-#include "../sming/Delegate.h"
+#include "../wiring/WString.h"
+#include "../wiring/WVector.h"
+#include "../core/Delegate.h"
 
 class BssInfo;
 

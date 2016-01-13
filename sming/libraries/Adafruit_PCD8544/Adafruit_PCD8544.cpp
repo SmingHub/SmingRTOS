@@ -36,8 +36,7 @@ All text above, and the splash screen below must be included in any redistributi
 #include "Adafruit_PCD8544.h"
 
 #include <stdlib.h>
-#include <SmingCore.h>
-#include "../../sming/Wire.h"
+#include "../../sming/include/SmingIncludes.h"
 #include "../Adafruit_GFX/Adafruit_GFX.h"
 
 

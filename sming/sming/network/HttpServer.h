@@ -10,9 +10,9 @@
 
 #include "TcpServer.h"
 #include "WebSocket.h"
-#include "../../wiring/WHashMap.h"
-#include "../../wiring/WVector.h"
-#include "../Delegate.h"
+#include "../wiring/WHashMap.h"
+#include "../wiring/WVector.h"
+#include "../core/Delegate.h"
 //#include "../../services/CommandProcessing/CommandProcessingIncludes.h"
 
 class String;

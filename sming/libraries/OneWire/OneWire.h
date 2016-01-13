@@ -6,9 +6,9 @@
 #include "c_types.h"
 
 //#include "../../wiring/WProgram.h"      // for delayMicroseconds
-#include "pins_arduino.h"  // for digitalPinToBitMask, etc
+#include "sming/core/pins_arduino.h"  // for digitalPinToBitMask, etc
 
-#include "../../sming/Digital.h"
+#include "sming/core/Digital.h"
 
 // You can exclude certain features from OneWire.  In theory, this
 // might save some space.  In practice, the compiler automatically

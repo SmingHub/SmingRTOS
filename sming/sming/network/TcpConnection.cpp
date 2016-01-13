@@ -7,7 +7,7 @@
 
 #include "TcpConnection.h"
 
-#include "../../sming/DataSourceStream.h"
+#include "../core/DataSourceStream.h"
 #include "NetUtils.h"
 #include "../wiring/WString.h"
 #include "../wiring/IPAddress.h"

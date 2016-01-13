@@ -1,4 +1,4 @@
-#include "../sming/platform/RTC.h"
+#include "RTC.h"
 #include "esp_system.h"
 
 RtcClass::RtcClass() {

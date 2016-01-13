@@ -15,9 +15,9 @@ Written by Limor Fried/Ladyada  for Adafruit Industries.
 BSD license, check license.txt for more information
 All text above, and the splash screen must be included in any redistribution
 *********************************************************************/
-#include <SmingCore.h>
+
 #if ARDUINO >= 100
- #include "Arduino.h"
+ #include "../../sming/include/SmingIncludes.h"
  #define WIRE_WRITE Wire.write
 #else
  #include "WProgram.h"
@@ -32,7 +32,6 @@ All text above, and the splash screen must be included in any redistribution
   typedef uint8_t PortMask;
 #endif
 
-#include "../../sming/SPI.h"
 #include "../Adafruit_GFX/Adafruit_GFX.h"
 
 #define BLACK 0

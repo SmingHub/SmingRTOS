@@ -8,11 +8,10 @@
 #ifndef SMINGCORE_PLATFORM_ACCESSPOINT_H_
 #define SMINGCORE_PLATFORM_ACCESSPOINT_H_
 
-#include <user_config.h>
 #include "System.h"
-#include "../../wiring/WString.h"
-#include "../../wiring/WVector.h"
-#include "../../wiring/IPAddress.h"
+#include "../wiring/WString.h"
+#include "../wiring/WVector.h"
+#include "../wiring/IPAddress.h"
 
 class AccessPointClass : protected ISystemReadyHandler
 {
