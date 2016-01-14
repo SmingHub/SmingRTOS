@@ -25,7 +25,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "pwm.h"
+#include "espressif/pwm.h"
 #ifdef __cplusplus
 }
 #endif

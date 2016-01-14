@@ -6,6 +6,7 @@
  ****/
 
 #include "../sming/Timer.h"
+#include "espressif/esp_timer.h"
 
 Timer::Timer()
 {

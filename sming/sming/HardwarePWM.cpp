@@ -18,7 +18,7 @@
 //#include "../wiring/WiringFrameworkIncludes.h"
 
 #include "HardwarePWM.h"
-#include "pwm.h"
+#include "espressif/pwm.h"
 
 HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins) {
 	channel_count = no_of_pins;
@@ -33,7 +33,7 @@ HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins) {
 			channels[i] = pins[i];
 		}
 		pwm_init(1000, pwm_duty_init, no_of_pins, io_info);
-//		pwm_start();
+		pwm_start();
 		maxduty = 22222; // for period of 1000
 	}
 }
@@ -88,7 +88,7 @@ bool HardwarePWM::setDuty(uint8 pin, uint32 duty) {
 		return false;
 	} else if (duty <= maxduty) {
 		pwm_set_duty(duty, chan);
-//		pwm_start();
+		pwm_start();
 		return true;
 	} else {
 		debugf("Duty cycle value too high for current period.");
