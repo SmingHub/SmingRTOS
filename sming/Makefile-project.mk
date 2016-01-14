@@ -121,7 +121,7 @@ SPIFF_FILES ?= files
 BUILD_BASE	= out/build
 FW_BASE		= out/firmware
 
-SPIFF_START_OFFSET = $(shell printf '0x%X\n' $$(( ($$($(GET_FILESIZE) $(FW_BASE)/0x0a000.bin) + 16384 + 36864) & (0xFFFFC000) )) )
+SPIFF_START_OFFSET = $(shell printf '0x%X\n' $$(( (($$($(GET_FILESIZE) $(FW_BASE)/0x0a000.bin) - 1) & 0xFFFFF000) + 0x0a000 + 0x01000 )) )
 
 #Firmware memory layout info files
 FW_MEMINFO_NEW = $(FW_BASE)/fwMeminfo.new
