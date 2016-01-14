@@ -20,6 +20,16 @@
 #include "HardwarePWM.h"
 #include "pwm.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void pwm_start(void);
+
+#ifdef __cplusplus
+}
+#endif
+
 HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins) {
 	channel_count = no_of_pins;
 	if (no_of_pins > 0) {
@@ -33,7 +43,7 @@ HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins) {
 			channels[i] = pins[i];
 		}
 		pwm_init(1000, pwm_duty_init, no_of_pins, io_info);
-//		pwm_start();
+		pwm_start();
 		maxduty = 22222; // for period of 1000
 	}
 }
@@ -88,7 +98,7 @@ bool HardwarePWM::setDuty(uint8 pin, uint32 duty) {
 		return false;
 	} else if (duty <= maxduty) {
 		pwm_set_duty(duty, chan);
-//		pwm_start();
+		pwm_start();
 		return true;
 	} else {
 		debugf("Duty cycle value too high for current period.");
@@ -119,5 +129,5 @@ uint32 HardwarePWM::getPeriod() {
 void HardwarePWM::setPeriod(uint32 period) {
 	maxduty = (period * 1000) / 45;
 	pwm_set_period(period);
-//	pwm_start();
+	pwm_start();
 }
