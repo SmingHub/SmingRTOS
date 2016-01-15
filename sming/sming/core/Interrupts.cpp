@@ -46,19 +46,19 @@ void attachInterrupt(uint8_t pin, Delegate<void()> delegateFunction, GPIO_INT_TY
 
 void attachInterruptHandler(uint8_t pin, GPIO_INT_TYPE mode)
 {
-//	ETS_GPIO_INTR_DISABLE();
+	portENTER_CRITICAL();
 
 	if (!_gpioInterruptsInitialied)
 	{
-//		ETS_GPIO_INTR_ATTACH((void*)interruptHandler, NULL); // Register interrupt handler
-//		_gpioInterruptsInitialied = true;
+		gpio_intr_handler_register((void*)interruptHandler, NULL); // Register interrupt handler
+		_gpioInterruptsInitialied = true;
 	}
 
 	pinMode(pin, INPUT);
 
-//	gpio_pin_intr_state_set(GPIO_ID_PIN(pin), mode); // Enable GPIO pin interrupt
+	gpio_pin_intr_state_set(GPIO_ID_PIN(pin), mode); // Enable GPIO pin interrupt
 
-//	ETS_GPIO_INTR_ENABLE();
+	portEXIT_CRITICAL();
 }
 
 void detachInterrupt(uint8_t pin)
@@ -76,13 +76,12 @@ void interruptMode(uint8_t pin, uint8_t mode)
 
 void interruptMode(uint8_t pin, GPIO_INT_TYPE type)
 {
-//	ETS_GPIO_INTR_DISABLE();
+	portENTER_CRITICAL();
 
 	pinMode(pin, INPUT);
+	gpio_pin_intr_state_set(GPIO_ID_PIN(pin), type);
 
-//	gpio_pin_intr_state_set(GPIO_ID_PIN(pin), type);
-
-//	ETS_GPIO_INTR_ENABLE();
+	portEXIT_CRITICAL();
 }
 
 GPIO_INT_TYPE ConvertArduinoInterruptMode(uint8_t mode)
@@ -106,11 +105,11 @@ GPIO_INT_TYPE ConvertArduinoInterruptMode(uint8_t mode)
 
 void noInterrupts()
 {
-	ETS_INTR_LOCK();
+	portENTER_CRITICAL();
 }
 void interrupts()
 {
-	ETS_INTR_UNLOCK();
+	portEXIT_CRITICAL();
 }
 
 static void IRAM_ATTR interruptHandler(uint32 intr_mask, void *arg)

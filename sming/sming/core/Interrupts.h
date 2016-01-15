@@ -10,7 +10,7 @@
 
 #include "../wiring/WiringFrameworkDependencies.h"
 #include "Delegate.h"
-#include "../platform/gpio.h"
+#include "../system/gpio.h"
 
 #define ESP_MAX_INTERRUPTS 16
 
