@@ -64,7 +64,7 @@ extern "C"
 		({ \
 			char *__localF = (char *)malloc(strlen_P(f_P) + 1); \
 			strcpy_P(__localF, (f_P)); \
-			int __result = os_printf_plus(__localF, ##__VA_ARGS__); \
+			int __result = printf(__localF, ##__VA_ARGS__); \
 			free(__localF); \
 			__result; \
 		})
