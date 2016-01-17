@@ -3,6 +3,7 @@
 #include "NetUtils.h"
 #include "TcpConnection.h"
 #include "../core/FileSystem.h"
+#include "../core/DataSourceStream.h"
 
 class FTPDataStream : public TcpConnection
 {
@@ -59,6 +60,7 @@ public:
 		for (int i = 0; i < list.count(); i++)
 			writeString("01-01-15  01:00AM               " + String(fileGetSize(list[i])) + " " + list[i] + "\r\n");
 		completed = true;
+		finishTransfer();
 	}
 };
 
@@ -76,18 +78,19 @@ public:
 	virtual void transferData(TcpConnectionEvent sourceEvent)
 	{
 		if (completed) return;
+/*
 		int p = fileTell(file);
 		if (p == 0)
 			response(250, "Transfer started");
-
-		char buf[256];
-		int len = fileRead(file, buf, 256);
+*/
+		char * buf = new char [1024];
+		int len = fileRead(file, buf, 1024);
 		write(buf, len, TCP_WRITE_FLAG_COPY);
-
+		delete buf;
 		if (fileIsEOF(file))
 		{
 			completed = true;
-			response(226, "Transfer completed");
+			finishTransfer();
 		}
 	}
 
@@ -100,14 +103,46 @@ class FTPDataStore : public FTPDataStream
 public:
 	FTPDataStore(FTPServerConnection* connection, String fileName) : FTPDataStream(connection)
 	{
-		file = fileOpen(fileName, eFO_WriteOnly | eFO_CreateNewAlways);
+		debugf("%s",connection->server->flashDirectory);
+		if ((connection->server->flashDirectory != "") && (fileName.startsWith(connection->server->flashDirectory + "/!")))
+		{
+			// It is a rom location
+			int reqStart;
+			bool validStart = sscanf(fileName.substring(fileName.indexOf("!")+1).c_str(),"%x",&reqStart);
+//			validStart = validStart && ( (reqStart % 4096) == 0 );
+//			outputStream = new FlashStream(reqStart,0);
+			outputStream = new FlashStream();
+			validStart = validStart && ((FlashStream*)outputStream)->attach(reqStart,0);
+
+//			debugf("FTP flash put request, filename = %s, start = %x, valid = %d",fileName.c_str(),reqStart,validStart);
+		}
+		else
+		{
+			outputStream = new FileStream;
+			((FileStream*)outputStream)->attach(fileName, eFO_WriteOnly | eFO_CreateNewAlways);
+//			debugf("FTP flash file request, name = %s",fileName.c_str());
+
+		}
+//		file = fileOpen(fileName, eFO_WriteOnly | eFO_CreateNewAlways);
+//		outputStream = new FileStream;
+//		((FileStream*)outputStream)->attach(fileName, eFO_WriteOnly | eFO_CreateNewAlways);
+//		response(250, "Transfer started");
+//		outputStream = new FlashStream(0x202000,0);
+//		((FlashStream*)outputStream)->attach(0x100000);
+//		char *p;
+//		uint16_t i;
+//		sscanf(fileName.c_str(), "%x", &i);
+
 	}
 	~FTPDataStore()
 	{
-		fileClose(file);
+//		fileClose(file);
+//		debugf("File store finished, size = %d",transferSize);
 	}
 	virtual err_t onReceive(pbuf *buf)
 	{
+		int onReceiveSize = (buf == NULL) ? -1 : buf->tot_len;
+//		debugf("FTP Connection sz = %d, completed = %d", onReceiveSize, completed);
 		if (completed) return TcpConnection::onReceive(buf);
 
 		if (buf == NULL)
@@ -116,14 +151,19 @@ public:
 			response(226, "Transfer completed");
 			return TcpConnection::onReceive(buf);
 		}
-		int p = fileTell(file);
-		if (p == 0)
-			response(250, "Transfer started");
+//		int p = fileTell(file);
+//		if (p == 0)
+//		if (outputStream->size == 0)
+//		response(250, "Transfer started");
 
 		pbuf *cur = buf;
 		while (cur)
 		{
-			int len = fileWrite(file, cur->payload, cur->len);
+//			int len = fileWrite(file, cur->payload, cur->len);
+			int len = outputStream->write((uint8_t *)cur->payload,cur->len);
+//			debugf("data = %s",(uint8_t *)cur->payload);
+			transferSize += len;
+//			debugf("FTP store transfer, clen = %d, len = %d, total = %d",cur->len, len, transferSize);
 			cur = cur->next;
 		}
 
@@ -132,6 +172,8 @@ public:
 
 private:
 	file_t file;
+	IDataSourceStream* outputStream;
+	int transferSize = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,7 +194,6 @@ err_t FTPServerConnection::onReceive(pbuf *buf)
 {
 	if (buf == NULL) return ERR_OK;
 	int p = 0, prev = 0;
-
 	while (true)
 	{
 		p = NetUtils::pbufFindStr(buf, "\r\n", prev);
@@ -191,13 +232,47 @@ void FTPServerConnection::cmdPort(const String& data)
 	int p1 = ps1.toInt();
 	int p2 = ps2.toInt();
 	port = (p1 << 8) | p2;
-	debugf("connection to: %s, %d", ip.toString().c_str(), port);
+	debugf("PORT connection to: %s, %d", ip.toString().c_str(), port);
 	response(200);
+}
+
+void FTPServerConnection::cmdEPRT(const String& data)
+{
+	bool error = false;
+	String delimiter = data.substring(0,1);
+	int prtIndex = 1;
+	int ipIndex =  data.indexOf(delimiter,prtIndex)+1;
+	int portIndex = data.indexOf(delimiter,ipIndex)+1;
+	int endIndex = data.indexOf(delimiter,portIndex)+1;
+	debugf("EPRT pi = %d, ii = %d, po = %d, i = %d",prtIndex,ipIndex,portIndex,endIndex);
+	if (data.substring(prtIndex,ipIndex-1) != "1")
+	{
+		debugf("EPRT : prt = %s",data.substring(prtIndex,ipIndex-1).c_str());
+		error = true;
+	}
+	else
+	{
+		ip = data.substring(ipIndex,portIndex-1);
+		port = data.substring(portIndex,endIndex-1).toInt();
+	}
+
+	if (!error)
+	{
+		response(200);
+	}
+	else
+	{
+		response(550);
+	}
+
+
+	debugf("EPRT connection to: %s, %d", ip.toString().c_str(), port);
 }
 
 void FTPServerConnection::onCommand(String cmd, String data)
 {
 	cmd.toUpperCase();
+	debugf("FTP : cmd = %s, data = %s",cmd.c_str(),data.c_str());
 	// We ready to quit always :)
 	if (cmd == "QUIT")
 	{
@@ -246,16 +321,27 @@ void FTPServerConnection::onCommand(String cmd, String data)
 		{
 			cmdPort(data);
 		}
+		else if (cmd == "EPRT")
+		{
+			cmdEPRT(data);
+		}
 		else if (cmd == "CWD")
 		{
 			if (data == "/")
+			{
+				directoryPrefix = "";
 				response(250);
+			}
 			else
-				response(550);
+			{
+				directoryPrefix = directoryPrefix + data + "/";
+				response(250);
+			}
 		}
 		else if (cmd == "TYPE")
 		{
-			response(250);
+//			response(250);
+			response(200);
 		}
 		/*else if (cmd == "SIZE")
 		{
@@ -289,7 +375,15 @@ void FTPServerConnection::onCommand(String cmd, String data)
 		}*/
 		else if (cmd == "RETR")
 		{
-			createDataConnection(new FTPDataRetrieve(this, makeFileName(data, false)));
+			String name = makeFileName(data, false);
+			if (fileExist(name))
+			{
+				createDataConnection(new FTPDataRetrieve(this, makeFileName(data, false)));
+			}
+			else
+			{
+				response(550);
+			}
 		}
 		else if (cmd == "STOR")
 		{
@@ -334,7 +428,7 @@ String FTPServerConnection::makeFileName(String name, bool shortIt)
 
 		return name.substring(0, 16) + ext;
 	}
-	return name;
+	return directoryPrefix + name;
 }
 
 void FTPServerConnection::createDataConnection(TcpConnection* connection)

@@ -57,6 +57,7 @@ typedef struct
     } size : 4;
 } STORE_TYPEDEF_ATTR SPIFlashInfo;
 
+extern uint32_t flashmem_erase_write( const void *from, uint32_t toaddr, uint32_t size);
 extern uint32_t flashmem_write( const void *from, uint32_t toaddr, uint32_t size );
 extern uint32_t flashmem_read( void *to, uint32_t fromaddr, uint32_t size );
 extern bool flashmem_erase_sector( uint32_t sector_id );

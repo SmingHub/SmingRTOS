@@ -20,6 +20,7 @@ class FTPServerConnection : public TcpConnection
 {
 	friend class FTPDataStream;
 	friend class FTPServer;
+	friend class FTPDataStore;
 public:
 	FTPServerConnection(FTPServer *parentServer, tcp_pcb *clientTcp);
 	virtual ~FTPServerConnection();
@@ -37,6 +38,8 @@ protected:
 	String makeFileName(String name, bool shortIt);
 
 	void cmdPort(const String& data);
+	void cmdEPRT(const String& data);
+
 	void createDataConnection(TcpConnection* connection);
 	bool isCanTransfer() { return canTransfer; }
 
@@ -45,6 +48,7 @@ private:
 	FTPConnectionState state;
 	String userName;
 	String renameFrom;
+	String directoryPrefix = "";
 
 	IPAddress ip;
 	int port;

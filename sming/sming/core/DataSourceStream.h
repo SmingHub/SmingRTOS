@@ -27,6 +27,7 @@ enum StreamType
 	eSST_TepmplateFile,
 	eSST_JsonObject,
 	eSST_User,
+	eSST_Flash,
 	eSST_Unknown
 };
 
@@ -39,11 +40,34 @@ class IDataSourceStream
 public:
 	virtual ~IDataSourceStream() {}
 
-	virtual StreamType getStreamType() = 0;
+	virtual StreamType getStreamType() {return eSST_Unknown;};
 
-	virtual uint16_t readMemoryBlock(char* data, int bufSize) = 0;
-	virtual bool seek(int len) = 0;
-	virtual bool isFinished() = 0;
+	virtual uint16_t readMemoryBlock(char* data, int bufSize) {return 0;};
+	virtual size_t write(const uint8_t* data, size_t len) {return 0;}
+	virtual bool seek(int len) {return false;};
+	virtual bool isFinished() {return false;};
+};
+
+class FlashStream : public Print, public IDataSourceStream
+{
+public:
+	FlashStream();
+	FlashStream(uint32 reqStartAdress, uint32 reqFlashSize = 0xFFFF);
+	virtual ~FlashStream();
+
+	virtual StreamType getStreamType() { return eSST_Flash; }
+
+	virtual size_t write(uint8_t charToWrite);
+	virtual size_t write(const uint8_t *buffer, size_t size);
+
+	virtual uint16_t readMemoryBlock(char* data, int bufSize);
+	virtual bool seek(int len);
+	virtual bool isFinished();
+	virtual bool attach(uint32 reqStartAddress, uint32 reqFlashSize = 0xFFFF);
+private:
+	uint32 startAddress = 0;
+	uint32 currentOffset = 0;
+	uint32 streamSize = 0;
 };
 
 class MemoryDataStream : public Print, public IDataSourceStream

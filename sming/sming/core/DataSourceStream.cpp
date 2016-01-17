@@ -10,6 +10,84 @@
 #include "../network/HttpRequest.h"
 #include "../wiring/WiringFrameworkDependencies.h"
 
+FlashStream::FlashStream()
+{
+}
+
+FlashStream::FlashStream(uint32 reqStartAddress, uint32 reqStreamSize /* = 0xFFFF */)
+{
+	attach(reqStartAddress, reqStreamSize);
+	debugf("FlashStream created");
+}
+
+FlashStream::~FlashStream()
+{
+
+}
+
+bool FlashStream::attach(uint32 reqStartAddress, uint32 reqStreamSize /* 0 */)
+{
+	streamSize = reqStreamSize;
+	if ((reqStartAddress % 4096) != 0)
+	{
+		return false;
+	}
+	startAddress = reqStartAddress;
+	debugf("FlashStream attach, start = %x",reqStartAddress);
+	return true;
+}
+
+size_t FlashStream::write(uint8_t charToWrite)
+{
+	return write(&charToWrite, 1);
+}
+
+size_t FlashStream::write(const uint8_t *buffer, size_t len)
+{
+	int returnLen;
+	if ((startAddress == 0) || ((streamSize > 0) && ( (currentOffset + len) > streamSize)))
+	{
+		String s = ((currentOffset + len) > streamSize) ? "true" : "false";
+		debugf("No write : sa = %d, streamSize = %d, co = %d, l = %d, t = %s", startAddress, streamSize, currentOffset, len, s.c_str());
+		return 0;
+	}
+//	debugf("flashStream write addr = %x, size = %d",startAddress+currentOffset,len);
+	flashmem_erase_write(buffer,startAddress+currentOffset,len);
+	currentOffset = currentOffset + len;
+	//TODO
+//	Check flashmem return
+	return len;
+
+}
+
+bool FlashStream::seek(int len)
+{
+	// need to check for incomplete write
+	if ((len < 0) || ((streamSize > 0) && ( (currentOffset + len) > streamSize))) return false;
+
+	currentOffset += len;
+	return true;
+}
+
+uint16_t FlashStream::readMemoryBlock(char* data, int bufSize)
+{
+	if (streamSize > 0)
+	{
+		bufSize = min(bufSize, (streamSize - currentOffset)); // don't read behind end of stream
+	}
+	return flashmem_read( data, currentOffset, bufSize ); // offset not inc for compatibility
+}
+
+bool FlashStream::isFinished()
+{
+	if (streamSize == 0) return true;
+
+	return (currentOffset == streamSize);
+}
+
+
+///////////////////////////////////////////////////////////////////////////
+
 MemoryDataStream::MemoryDataStream()
 {
 	buf = NULL;
@@ -138,7 +216,7 @@ size_t FileStream::write(uint8_t charToWrite)
 size_t FileStream::write(const uint8_t *buffer, size_t size)
 {
 	if (!fileExist()) return 0;
-
+	debugf("Writing FileStream, size = %d",size);
 	bool result = fileSeek(handle, 0,eSO_FileEnd);
 	return fileWrite(handle, buffer, size);
 }

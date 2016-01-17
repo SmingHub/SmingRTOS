@@ -43,6 +43,11 @@ bool FTPServer::checkUser(String login, String pass)
 	return users[login] == pass;
 }
 
+void FTPServer::setFlashDirectory(String reqFlashDirectory)
+{
+	flashDirectory = reqFlashDirectory;
+}
+
 bool FTPServer::onCommand(String cmd, String data, FTPServerConnection& connection)
 {
 	if (cmd == "FSFORMAT")

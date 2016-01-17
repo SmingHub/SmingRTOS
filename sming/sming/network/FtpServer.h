@@ -24,6 +24,8 @@ public:
 
 	void addUser(String login, String pass);
 	bool checkUser(String login, String pass);
+	void setFlashDirectory(String reqFlashDirectory);
+	String flashDirectory = "";
 
 protected:
 	virtual TcpConnection* createClient(tcp_pcb *clientTcp);
