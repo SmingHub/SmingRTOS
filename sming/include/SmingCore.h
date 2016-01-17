@@ -24,6 +24,7 @@
 #include "sming/core/Interrupts.h"
 //#include "DriverPWM.h"
 #include "sming/core/HardwarePWM.h"
+#include "sming/core/HardwareTimer.h"
 #include "sming/core/Timer.h"
 #include "sming/core/Wire.h"
 #include "sming/core/SPISoft.h"
