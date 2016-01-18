@@ -125,9 +125,8 @@ FW_BASE		= out/firmware
 # 0x01000    -> add size of one sector
 # 0x0a000    -> starting address of irom0 section   ----> needs to be identical in LD file !!
 # 0xFFFF000  -> from address to start of sector
-# 0x03000 	 -> added by in spiffs_sming.c
 
-SPIFF_START_OFFSET = $(shell printf '0x%X\n' $$(( (($$($(GET_FILESIZE) $(FW_BASE)/0x0a000.bin) + 0x01000 + 0x0a000) & 0xFFFF000)  + 0x03000 )) )
+SPIFF_START_OFFSET = $(shell printf '0x%X\n' $$(( (($$($(GET_FILESIZE) $(FW_BASE)/0x0a000.bin) + 0x01000 + 0x0a000) & 0xFFFF000) )) )
 
 #Firmware memory layout info files
 FW_MEMINFO_NEW = $(FW_BASE)/fwMeminfo.new
