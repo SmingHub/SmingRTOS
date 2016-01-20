@@ -14,6 +14,7 @@
 #include "../wiring/WString.h"
 #include "../services/cWebsocket/websocket.h"
 #include "../commandprocessing/CommandProcessingIncludes.h"
+#include "../core/DataSourceStream.h"
 
 HttpServer::HttpServer()
 {
@@ -73,6 +74,23 @@ bool HttpServer::processRequest(HttpServerConnection &connection, HttpRequest &r
 		bool res = initWebSocket(connection, request, response);
 		if (!res) response.badRequest();
 	}
+
+	if ((serverCommandEnabled) && (request.getRequestMethod() == "POST") )
+	{
+		String commandRequest = request.getPostParameter(serverCommandRequestParam);
+		if ( commandRequest != "" )
+		{
+			debugf("HttpPost CommandProcessing");
+			MemoryDataStream* requestMemoryDataStream = new MemoryDataStream();
+			CommandExecutor requestCommandExecutor(requestMemoryDataStream);
+			requestCommandExecutor.executorReceive(commandRequest);
+			requestCommandExecutor.executorReceive(commandHandler.getCommandEOL());
+			response.sendMemoryStream(requestMemoryDataStream);
+
+			return true;
+		}
+	}
+
 	String path = request.getPath();
 	if (path.length() > 1 && path.endsWith("/"))
 		path = path.substring(0, path.length() - 1);
@@ -118,7 +136,7 @@ bool HttpServer::initWebSocket(HttpServerConnection& connection, HttpRequest& re
     wsocks.addElement(sock);
     if (wsConnect) wsConnect(*sock);
 
-    if (wsCommandEnabled &&  (request.getQueryParameter(wsCommandRequestParam) == "true"))
+    if (serverCommandEnabled &&  (request.getQueryParameter(serverCommandRequestParam) == "true"))
     {
         debugf("WebSocket Commandprocessor started");
     	sock->enableCommand();
@@ -213,6 +231,6 @@ void HttpServer::enableWebSockets(bool enabled)
 
 void HttpServer::commandProcessing(bool reqEnabled, String reqRequestParam)
 {
-	wsCommandEnabled = reqEnabled;
-	wsCommandRequestParam = reqRequestParam;
+	serverCommandEnabled = reqEnabled;
+	serverCommandRequestParam = reqRequestParam;
 }

@@ -203,6 +203,19 @@ bool HttpResponse::sendJsonObject(JsonObjectStream* newJsonStreamInstance)
 	if (!hasHeader("Content-Type"))
 		setContentType(ContentType::JSON);
 }
+
+bool HttpResponse::sendMemoryStream(MemoryDataStream* newMemoryStreamInstance)
+{
+	if (stream != NULL)
+	{
+		SYSTEM_ERROR("Stream already created");
+		delete stream;
+		stream = NULL;
+	}
+
+	stream = newMemoryStreamInstance;
+}
+
 ///
 
 void HttpResponse::sendHeader(HttpServerConnection &connection)

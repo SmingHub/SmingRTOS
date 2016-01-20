@@ -41,6 +41,11 @@ CommandExecutor::CommandExecutor(WebSocket* reqSocket)
 
 }
 
+CommandExecutor::CommandExecutor(MemoryDataStream* reqMemoryStream)
+{
+	commandOutput = new CommandOutput(reqMemoryStream);
+}
+
 CommandExecutor::~CommandExecutor()
 {
 	delete commandOutput;

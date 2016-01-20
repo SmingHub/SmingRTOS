@@ -57,6 +57,9 @@ public:
 	// Build and send JSON string
 	bool sendJsonObject(JsonObjectStream* newJsonStreamInstance);
 	//***
+	// Send a pre-filled MemoryStream
+	bool sendMemoryStream(MemoryDataStream* newMemoryStreamInstance);
+	//***
 
 public:
 	void sendHeader(HttpServerConnection &connection);

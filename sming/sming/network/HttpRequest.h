@@ -37,6 +37,7 @@ public:
 
 	bool isAjax();
 	bool isWebSocket();
+	bool isCommandRequest();
 
 	String getQueryParameter(String parameterName, String defaultValue = "");
 	String getPostParameter(String parameterName, String defaultValue = "");

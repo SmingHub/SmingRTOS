@@ -66,7 +66,7 @@ void wsDisconnected(WebSocket& socket)
 
 void processApplicationCommands(String commandLine, CommandOutput* commandOutput)
 {
-	commandOutput->printf("This command is handle by the application\r\n");
+	commandOutput->printf("This command is handled by the application\r\n");
 }
 
 void StartServers()

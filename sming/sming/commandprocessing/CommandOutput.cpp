@@ -22,9 +22,13 @@ CommandOutput::CommandOutput(WebSocket* reqSocket)
 {
 }
 
+CommandOutput::CommandOutput(MemoryDataStream* reqMemoryStream)
+: outputMemoryStream(reqMemoryStream)
+{
+}
+
 CommandOutput::~CommandOutput()
 {
-	debugf("destruct");
 }
 
 size_t CommandOutput::write(uint8_t outChar)
@@ -49,6 +53,10 @@ size_t CommandOutput::write(uint8_t outChar)
 		{
 			tempSocket = tempSocket+String(char(outChar));
 		}
+	}
+	else if (outputMemoryStream)
+	{
+		outputMemoryStream->write(outChar);
 	}
 }
 

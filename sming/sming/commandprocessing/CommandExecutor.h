@@ -21,6 +21,7 @@ public:
 	CommandExecutor(TcpClient* cmdClient);
 	CommandExecutor(Stream* reqStream);
 	CommandExecutor(WebSocket* reqSocket);
+	CommandExecutor(MemoryDataStream* reqMemoryStream);
 	~CommandExecutor();
 
 	int executorReceive(char *recvData, int recvSize);
