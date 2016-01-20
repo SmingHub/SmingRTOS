@@ -1,62 +1,63 @@
 /**
  * Basic Servo test application
+ * A simplied servo demo based on the classical arduino Sweep
+ *
+ * v1.0 Robotiko
  *
 */
 
 #include <user_config.h>
-#include <SmingCore.h>
 #include <libraries/Servo/ServoChannel.h>
 
-#define noPins 1
+
 #define SERVO_PIN 2 // GPIO2
 
-ServoChannel *channel;
+#define SERVO_DELAY 20 //Delay in ms  between calls to new servo position
 
-Timer procTimer;
-TimerDelegate procDelegate;
+ServoChannel *servoChannel; //Servo instance
 
-uint16 centerdelay = 0;
-uint32 value = 0;
-int degree=0;
+Timer servoTimer; //Timer to call servo with new positions.
 
 
-void calcValue() {
-	// wait some time at middle of the servo range
-	if (value == 1000) {
-		centerdelay--;
-		if (centerdelay == 0) value +=10;	// restart after waiting
+
+int degree=0; //initial position
+bool countUp = true;//Initial movement direction
+
+
+/*
+ * This function is called by the timer to compute next position and move the servo.
+ * It moves the servo from one side to the other and back (sweep) continuously
+ * Min/Max values [-90,90] are servo library constrains but can also work with precise timings
+ */
+void doSweep()
+{
+
+	if(countUp){ //Check movement direction
+		degree++;
+		if(degree == 90){ //If reached max position, change direction
+			countUp = false;
+		}
 	}
-	else {										// linear ramp by increasing the value in steps
-		centerdelay=50;							// delay 50 times 200ms = 10s
-		value +=10;
+	else{
+		degree--;
+		if(degree == -90){ //If reached max position, change direction
+			countUp = true;
+		}
 	}
 
-
-	if (value >= 2000) value = 0;			// overflow and restart linear ramp
-
-	Serial.print(" Value: ");
-	Serial.print(value);
-	Serial.println();
-
-#ifdef raw
-	channel->setValue(value);				// set all values
-#else
-	if(degree++>90) degree=-90;
-	channel->setDegree(degree);
-#endif
+	servoChannel->setDegree(degree); //Move the servo
+	Serial.println(degree); //Output current servo position
 }
-
 
 void init()
 {
 	Serial.println("Init Basic Servo Sample");
 	System.setCpuFrequency(eCF_80MHz);
 
-	channel = new(ServoChannel);
-	channel->attach(SERVO_PIN);
+	servoChannel = new(ServoChannel); //Create the servo channel instance
+	servoChannel->attach(SERVO_PIN); //attach the servo channel to the servo gpio
 
-	procDelegate = calcValue;
-	procTimer.initializeMs(2000,procDelegate).start();
+	servoTimer.initializeMs(SERVO_DELAY, doSweep).start();//Lest call the servo movement
 
 }
 
