@@ -18,6 +18,7 @@
 #include "sming/core/Clock.h"
 #include "sming/core/SystemClock.h"
 #include "sming/core/Digital.h"
+#include "sming/core/Debug.h"
 #include "sming/core/ESP8266EX.h"
 #include "sming/core/FileSystem.h"
 #include "sming/core/HardwareSerial.h"

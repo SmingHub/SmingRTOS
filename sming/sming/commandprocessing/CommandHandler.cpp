@@ -135,7 +135,7 @@ void CommandHandler::procesStatusCommand(String commandLine, CommandOutput* comm
 	debugf("StatusCommand entered");
 	char tempBuf[64];
 	commandOutput->printf("System information : ESP8266 Sming Framework\r\n");
-	commandOutput->printf("Sming Framework Version : 1.2.0\r\n");
+	commandOutput->printf("Sming Framework Version : %s\r\n", SMING_VERSION);
 	commandOutput->printf("ESP SDK version : ");
 	commandOutput->print(system_get_sdk_version());
 	commandOutput->printf("\r\n");
