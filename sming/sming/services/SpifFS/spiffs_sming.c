@@ -46,7 +46,7 @@ spiffs_config spiffs_get_storage_config()
 	if (cfg.phys_addr == 0)
 		return cfg;
 	cfg.phys_addr += 0x3000;
-	cfg.phys_addr &= 0xFFFFC000;  // align to 4 sector.
+	cfg.phys_addr &= 0xFFFFF000;  // align to 4 sector.
 	cfg.phys_size = INTERNAL_FLASH_SIZE - ( ( u32_t )cfg.phys_addr - INTERNAL_FLASH_START_ADDRESS );
 	/*cfg.phys_addr = INTERNAL_FLASH_SIZE - SPIFFS_WORK_SIZE + INTERNAL_FLASH_START_ADDRESS;
 	cfg.phys_addr += 0x3000;
