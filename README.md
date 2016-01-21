@@ -23,6 +23,18 @@ Applications:
 - Application which includes HttpAjax & HWPwm example source.
 - HttpAjax -> works
 - HWPWm, -> compiles, not tested on hardware
+- Neopixel -> working
+- ScannerI2C -> working
+- WebSockets -> working
+- SDCard -> working
+- HCSR04 Ultrasonic -> working
+- DHT11-22 -> DHT11 tested and working , DHT22 untested
+- SSD1306 Screen -> i2c module tested and working, spi module untested
+- DS1820 -> working
+- SystemClock&NTP -> working
+- BMP180 Pressure -> working
+- RBoot -> working
+- PCD8544 LCD (Nokia 5110 LCD) -> working
 
 Spiffs/Spiffy
 
