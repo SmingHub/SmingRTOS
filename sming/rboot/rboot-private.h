@@ -20,8 +20,12 @@ typedef unsigned char uint8;
 #define ROM_MAGIC_NEW1 0xea
 #define ROM_MAGIC_NEW2 0x04
 
+#ifndef TRUE
 #define TRUE 1
+#endif
+#ifndef FALSE
 #define FALSE 0
+#endif
 
 // buffer size, must be at least 0x10 (size of rom_header_new structure)
 #define BUFFER_SIZE 0x100
