@@ -20,6 +20,7 @@ public:
 	CommandOutput(TcpClient* reqClient);
 	CommandOutput(Stream* reqStream);
 	CommandOutput(WebSocket* reqSocket);
+	CommandOutput(MemoryDataStream* reqMemoryStream);
 	virtual ~CommandOutput();
 
 	size_t write(uint8_t outChar);
@@ -27,6 +28,7 @@ public:
 	TcpClient* outputTcpClient = nullptr;
 	Stream*    outputStream = nullptr;
 	WebSocket* outputSocket = nullptr;
+	MemoryDataStream* outputMemoryStream = nullptr;
 	String tempSocket = "";
 };
 

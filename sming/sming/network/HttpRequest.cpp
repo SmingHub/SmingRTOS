@@ -241,3 +241,8 @@ bool HttpRequest::isWebSocket()
 	String req = getHeader("Upgrade");
 	return req.equalsIgnoreCase("websocket");
 }
+
+bool HttpRequest::isCommandRequest()
+{
+	return false;
+}

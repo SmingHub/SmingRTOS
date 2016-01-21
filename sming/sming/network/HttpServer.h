@@ -71,8 +71,8 @@ private:
 	WebSocketBinaryDelegate wsBinary;
 	WebSocketDelegate wsDisconnect;
 
-	bool wsCommandEnabled = false;
-	String wsCommandRequestParam;
+	bool serverCommandEnabled = false;
+	String serverCommandRequestParam;
 };
 
 #endif /* _SMING_CORE_HTTPSERVER_H_ */
