@@ -311,5 +311,10 @@ void RBoot::showRomInfo(CommandOutput* commandOutput)
 		}
 		commandOutput->printf("\r\n");
 	}
+
+	if (baseURL != "")
+	{
+		commandOutput->printf("\r\nbaseURL : %s\r\n",baseURL.c_str());
+	}
 }
 
