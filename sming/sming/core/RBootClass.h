@@ -42,6 +42,7 @@ public:
 
 	void OtaUpdateDelegate(bool result);
 	int getCurrentRom();
+	int getCurrentSpiffs();
 
 	int startRom(uint8 reqSlot);
 

@@ -7,6 +7,7 @@
 
 #include "RBootClass.h"
 #include "../platform/System.h"
+#include "../system/flashmem.h"
 
 RBoot::RBoot()
 {
@@ -20,6 +21,26 @@ RBoot::~RBoot()
 int RBoot::getCurrentRom()
 {
 	return rboot_get_current_rom();
+}
+
+int RBoot::getCurrentSpiffs()
+{
+	int retValue = -1;
+	if (SPIFFS_mounted(&_filesystemStorageHandle))
+	{
+		rboot_config bootconf;
+		bootconf = rboot_get_config();
+		int i = 0;
+		for (int i = 0; i< bootconf.count;i++)
+		{
+			if (_filesystemStorageHandle.cfg.phys_addr == bootconf.roms[i] )
+			{
+				retValue = i;
+				break;
+			}
+		}
+	}
+	return retValue;
 }
 
 int RBoot::startRom(uint8 reqRom )
@@ -59,7 +80,8 @@ int RBoot::loadRom(uint8 loadType, uint8 reqSlot, String reqURL)
 		debugf("Invalid rom");
 		return RBOOT_INVALID_ROM;
 	}
-	else if (reqSlot == bootconf.current_rom)
+	else if ( (reqSlot == bootconf.current_rom) ||
+		(SPIFFS_mounted(&_filesystemStorageHandle) && (_filesystemStorageHandle.cfg.phys_addr == bootconf.roms[reqSlot] )))
 	{
 		debugf("Current rom");
 		return RBOOT_INVALID_CURRENTROM;
@@ -89,7 +111,7 @@ bool RBoot::mountSpiffs(uint8 reqSlot)
 	};
 
 	debugf("trying to mount spiffs at %x, length %d", bootconf.roms[reqSlot], 65536);
-	spiffs_mount_manual(bootconf.roms[reqSlot] + 0x40200000, 65536);
+	spiffs_mount_manual(bootconf.roms[reqSlot], 65536);
 //	spiffs_mount_manual(bootconf.roms[reqSlot] , 65536);
 	return true;
 }
@@ -272,17 +294,20 @@ void RBoot::showRomInfo(CommandOutput* commandOutput)
 	commandOutput->printf("\r\nROM Information\r\n");
 	commandOutput->printf("Current ROM = %d\r\n",getCurrentRom());
 	commandOutput->printf("Rboot Version %d\r\n",bootconf.version);
-	commandOutput->printf("Monted = %s\r\n", SPIFFS_mounted(&_filesystemStorageHandle) ? "true" : "false");
-	commandOutput->printf("Spiffs Address : %x \r\n", _filesystemStorageHandle.cfg.phys_addr);
+
 	for (int i = 0; i < bootconf.count;i++)
 	{
-		commandOutput->printf("ROM%d : Address = %06x, %s", i, bootconf.roms[i], rboot_check_image(bootconf.roms[i]) ? "Application " : "            ");
+		commandOutput->printf("ROM%d : Address = %06x", i, bootconf.roms[i]) ;
 		if (i == bootconf.current_rom) {
-			commandOutput->printf("  --> CurrentRom,    Size = %x", _flash_code_end);
+			commandOutput->printf("  CurrentRom,    Size = %d Kb", (flashmem_get_first_free_block_address() - bootconf.roms[i]) /1024 );
 		}
-		if (SPIFFS_mounted(&_filesystemStorageHandle) && (_filesystemStorageHandle.cfg.phys_addr == bootconf.roms[i] ))
+		else if (i == getCurrentSpiffs())
 		{
-			commandOutput->printf("  --> CurrentSpiffs, Size = %x",_filesystemStorageHandle.cfg.phys_size );
+			commandOutput->printf("  CurrentSpiffs, Size = %d Kb",_filesystemStorageHandle.cfg.phys_size / 1024);
+		}
+		else if (rboot_check_image(bootconf.roms[i]))
+		{
+			commandOutput->printf("  Application");
 		}
 		commandOutput->printf("\r\n");
 	}
