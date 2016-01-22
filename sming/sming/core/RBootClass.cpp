@@ -262,6 +262,7 @@ void RBoot::showSpiffs(CommandOutput* commandOutput)
 
 }
 
+extern char _flash_code_end[];
 
 void RBoot::showRomInfo(CommandOutput* commandOutput)
 {
@@ -271,10 +272,19 @@ void RBoot::showRomInfo(CommandOutput* commandOutput)
 	commandOutput->printf("\r\nROM Information\r\n");
 	commandOutput->printf("Current ROM = %d\r\n",getCurrentRom());
 	commandOutput->printf("Rboot Version %d\r\n",bootconf.version);
+	commandOutput->printf("Monted = %s\r\n", SPIFFS_mounted(&_filesystemStorageHandle) ? "true" : "false");
+	commandOutput->printf("Spiffs Address : %x \r\n", _filesystemStorageHandle.cfg.phys_addr);
 	for (int i = 0; i < bootconf.count;i++)
 	{
 		commandOutput->printf("ROM%d : Address = %06x, %s", i, bootconf.roms[i], rboot_check_image(bootconf.roms[i]) ? "Application " : "            ");
-		commandOutput->printf("%s\r\n",(i == bootconf.current_rom) ?  " --> CurrentRom" : "");
+		if (i == bootconf.current_rom) {
+			commandOutput->printf("  --> CurrentRom,    Size = %x", _flash_code_end);
+		}
+		if (SPIFFS_mounted(&_filesystemStorageHandle) && (_filesystemStorageHandle.cfg.phys_addr == bootconf.roms[i] ))
+		{
+			commandOutput->printf("  --> CurrentSpiffs, Size = %x",_filesystemStorageHandle.cfg.phys_size );
+		}
+		commandOutput->printf("\r\n");
 	}
 }
 
