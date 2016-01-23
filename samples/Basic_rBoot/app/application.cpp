@@ -100,7 +100,7 @@ void ShowInfo() {
 void serialCallBack(Stream& stream, char arrivedChar, unsigned short availableCharsCount) {
 	
 
-	if (arrivedChar == '\n') {
+	if (arrivedChar == '\r') {
 		char str[availableCharsCount];
 		for (int i = 0; i < availableCharsCount; i++) {
 			str[i] = stream.read();
