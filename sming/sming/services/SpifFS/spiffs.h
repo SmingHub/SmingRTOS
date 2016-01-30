@@ -49,6 +49,11 @@ extern "C" {
 
 #define SPIFFS_ERR_FILE_EXISTS          -10030
 
+#define SPIFFS_ERR_NOT_A_FILE           -10031
+#define SPIFFS_ERR_RO_NOT_IMPL          -10032
+#define SPIFFS_ERR_RO_ABORTED_OPERATION -10033
+#define SPIFFS_ERR_PROBE_TOO_FEW_BLOCKS -10034
+#define SPIFFS_ERR_PROBE_NOT_A_FS       -10035
 #define SPIFFS_ERR_INTERNAL             -10050
 
 #define SPIFFS_ERR_TEST                 -10100
@@ -280,6 +285,40 @@ typedef struct {
 
 // functions
 
+#if SPIFFS_USE_MAGIC && SPIFFS_USE_MAGIC_LENGTH && SPIFFS_SINGLETON==0
+/**
+ * Special function. This takes a spiffs config struct and returns the number
+ * of blocks this file system was formatted with. This function relies on
+ * that following info is set correctly in given config struct:
+ *
+ * phys_addr, log_page_size, and log_block_size.
+ *
+ * Also, hal_read_f must be set in the config struct.
+ *
+ * One must be sure of the correct page size and that the physical address is
+ * correct in the probed file system when calling this function. It is not
+ * checked if the phys_addr actually points to the start of the file system,
+ * so one might get a false positive if entering a phys_addr somewhere in the
+ * middle of the file system at block boundary. In addition, it is not checked
+ * if the page size is actually correct. If it is not, weird file system sizes
+ * will be returned.
+ *
+ * If this function detects a file system it returns the assumed file system
+ * size, which can be used to set the phys_size.
+ *
+ * Otherwise, it returns an error indicating why it is not regarded as a file
+ * system.
+ *
+ * Note: this function is not protected with SPIFFS_LOCK and SPIFFS_UNLOCK
+ * macros. It returns the error code directly, instead of as read by
+ * SPIFFS_errno.
+ *
+ * @param config        essential parts of the physical and logical
+ *                      configuration of the file system.
+ */
+s32_t SPIFFS_probe_fs(spiffs_config *config);
+#endif // SPIFFS_USE_MAGIC && SPIFFS_USE_MAGIC_LENGTH && SPIFFS_SINGLETON==0
+
 /**
  * Initializes the file system dynamic parameters and mounts the filesystem.
  * If SPIFFS_USE_MAGIC is enabled the mounting may fail with SPIFFS_ERR_NOT_A_FS
@@ -326,14 +365,13 @@ s32_t SPIFFS_creat(spiffs *fs, const char *path, spiffs_mode mode);
  */
 spiffs_file SPIFFS_open(spiffs *fs, const char *path, spiffs_flags flags, spiffs_mode mode);
 
-
 /**
  * Opens a file by given dir entry.
  * Optimization purposes, when traversing a file system with SPIFFS_readdir
  * a normal SPIFFS_open would need to traverse the filesystem again to find
  * the file, whilst SPIFFS_open_by_dirent already knows where the file resides.
  * @param fs            the file system struct
- * @param path          the dir entry to the file
+ * @param e             the dir entry to the file
  * @param flags         the flags for the open command, can be combinations of
  *                      SPIFFS_APPEND, SPIFFS_TRUNC, SPIFFS_CREAT, SPIFFS_RD_ONLY,
  *                      SPIFFS_WR_ONLY, SPIFFS_RDWR, SPIFFS_DIRECT.
@@ -341,6 +379,22 @@ spiffs_file SPIFFS_open(spiffs *fs, const char *path, spiffs_flags flags, spiffs
  * @param mode          ignored, for posix compliance
  */
 spiffs_file SPIFFS_open_by_dirent(spiffs *fs, struct spiffs_dirent *e, spiffs_flags flags, spiffs_mode mode);
+
+/**
+ * Opens a file by given page index.
+ * Optimization purposes, opens a file by directly pointing to the page
+ * index in the spi flash.
+ * If the page index does not point to a file header SPIFFS_ERR_NOT_A_FILE
+ * is returned.
+ * @param fs            the file system struct
+ * @param page_ix       the page index
+ * @param flags         the flags for the open command, can be combinations of
+ *                      SPIFFS_APPEND, SPIFFS_TRUNC, SPIFFS_CREAT, SPIFFS_RD_ONLY,
+ *                      SPIFFS_WR_ONLY, SPIFFS_RDWR, SPIFFS_DIRECT.
+ *                      SPIFFS_CREAT will have no effect in this case.
+ * @param mode          ignored, for posix compliance
+ */
+spiffs_file SPIFFS_open_by_page(spiffs *fs, spiffs_page_ix page_ix, spiffs_flags flags, spiffs_mode mode);
 
 /**
  * Reads from given filehandle.
