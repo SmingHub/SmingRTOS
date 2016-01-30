@@ -120,10 +120,13 @@ void connectOk()
 
 void init()
 {
-	spiffs_mount(); // Mount file system, in order to work with files
+
 
 	Serial.begin(SERIAL_BAUD_RATE); // 115200 by default
 
+	int sr = spiffs_mount(); // Mount file system, in order to work with files
+
+	Serial.printf("Spiffs result = %d\r\n",sr);
 	commandHandler.registerSystemCommands();
 	Debug.setDebug(Serial);
 	Debug.initCommand();
