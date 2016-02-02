@@ -174,7 +174,8 @@ int TcpConnection::write(IDataSourceStream* stream)
 	bool space;
 	int available;
 	int total = 0;
-	char buffer[NETWORK_SEND_BUFFER_SIZE];
+	char* buffer = new char[NETWORK_SEND_BUFFER_SIZE];
+
 	do
 	{
 		space = (tcp_sndqueuelen(tcp) < TCP_SND_QUEUELEN);
@@ -210,6 +211,7 @@ int TcpConnection::write(IDataSourceStream* stream)
 	} while (repeat && space);
 
 	flush();
+	free(buffer);
 	return total;
 }
 
