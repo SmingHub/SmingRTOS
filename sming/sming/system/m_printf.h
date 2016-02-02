@@ -9,9 +9,15 @@ Descr: embedded very simple version of printf with float support
 #ifndef _M_PRINTF_
 #define _M_PRINTF_
 
-extern int m_vsnprintf(char *buf, size_t maxLen, const char *fmt, va_list args);
-extern int m_snprintf(char* buf, int length, const char *fmt, ...);
-extern int m_printf(const char *fmt, ...);
+#ifdef __cplusplus
+extern "C" {
+#endif
+int m_vsnprintf(char *buf, size_t maxLen, const char *fmt, va_list args);
+int m_snprintf(char* buf, int length, const char *fmt, ...);
+int m_printf(const char *fmt, ...);
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*_M_PRINTF_*/
 
