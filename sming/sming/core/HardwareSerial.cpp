@@ -23,6 +23,7 @@ xTaskHandle  HardwareSerial::serialDelegateTask = NULL;
 HardwareSerial::HardwareSerial(const int reqUart)
 	: uart(reqUart)
 {
+	rxBuffer = new CircularBuffer<int, char, 256>;
 	resetCallback();
 	hardwareSerialObjects[reqUart] = this;
 	if (!serialDelegateQueue){
@@ -53,6 +54,7 @@ HardwareSerial::HardwareSerial(const int reqUart)
 HardwareSerial::~HardwareSerial()
 {
 	hardwareSerialObjects[uart] = NULL;
+	delete rxBuffer;
 }
 
 void HardwareSerial::begin(const uint32_t baud/* = 9600*/)
@@ -77,7 +79,7 @@ size_t HardwareSerial::write(uint8_t oneChar)
 
 int HardwareSerial::available()
 {
-	return rxBuffer.Len();
+	return rxBuffer->Len();
 }
 
 int HardwareSerial::read()
@@ -85,7 +87,7 @@ int HardwareSerial::read()
 	char rcvChar;
 
 	noInterrupts();
-	if (!rxBuffer.Pop(rcvChar))
+	if (!rxBuffer->Pop(rcvChar))
 	{
 		rcvChar = -1;
 	}
@@ -99,7 +101,7 @@ int HardwareSerial::readMemoryBlock(char* buf, int max_len)
 	int numChar = 0;
 	char tempChar;
 	noInterrupts();
-	while ((rxBuffer.Pop(tempChar)) && (max_len-- > 0)) {
+	while ((rxBuffer->Pop(tempChar)) && (max_len-- > 0)) {
 		*buf = tempChar;		// Read data from Buffer
 		numChar++;						// Increase counter of read bytes
 		buf++;						// Increase Buffer pointer
@@ -114,7 +116,7 @@ int HardwareSerial::peek()
 	char peekChar;
 
 	noInterrupts();
-	if (!rxBuffer.Peek(peekChar))
+	if (!rxBuffer->Peek(peekChar))
 	{
 		peekChar = -1;
 	}
@@ -195,7 +197,7 @@ void HardwareSerial::uartReceiveInterruptHandler(void *para)
         /* you can add your handle code below.*/
       if (Self->useRxBuff)
       {
-    	Self->rxBuffer.Push(RcvChar);
+    	Self->rxBuffer->Push(RcvChar);
       }
 
       if ((Self->HWSDelegate) || (Self->commandExecutor))
@@ -203,7 +205,7 @@ void HardwareSerial::uartReceiveInterruptHandler(void *para)
     	  SerialDelegateMessage serialDelegateMessage;
     	  serialDelegateMessage.uart = Self->uart;
     	  serialDelegateMessage.rcvChar = RcvChar;
-    	  serialDelegateMessage.charCount = Self->rxBuffer.Len();
+    	  serialDelegateMessage.charCount = Self->rxBuffer->Len();
 
           if (Self->HWSDelegate)
 		  {
