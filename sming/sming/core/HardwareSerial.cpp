@@ -16,9 +16,6 @@
 #include "../system/uart.h"
 #include "../include/freertos_includes.h"
 
-//set m_printf callback
-extern void setMPrintfPrinterCbc(void (*callback)(char));
-
 HardwareSerial* HardwareSerial::hardwareSerialObjects[NUMBER_UARTS];
 xQueueHandle HardwareSerial::serialDelegateQueue = NULL;
 xTaskHandle  HardwareSerial::serialDelegateTask = NULL;
@@ -142,8 +139,8 @@ void HardwareSerial::flush()
 
 void HardwareSerial::systemDebugOutput(bool enabled)
 {
-//	if (uart == UART_ID_0)
-//		setMPrintfPrinterCbc(enabled ? uart_tx_one_char : NULL);
+	if (uart == UART_ID_0)
+		setMPrintfPrinterCbc(enabled ? uart_tx_one_char : NULL);
 	//else
 	//	os_install_putc1(enabled ? (void *)uart1_tx_one_char : NULL); //TODO: Debug serial
 }
