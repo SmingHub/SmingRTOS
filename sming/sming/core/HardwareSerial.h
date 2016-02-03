@@ -71,7 +71,7 @@ private:
 	StreamDataReceivedDelegate HWSDelegate = NULL;
 	bool useRxBuff = true;
 	CommandExecutor* commandExecutor = nullptr;
-	CircularBuffer<int, char, 256> rxBuffer;
+	CircularBuffer<int, char, 256>* rxBuffer;
 
 	static HardwareSerial* hardwareSerialObjects[NUMBER_UARTS];
 	static void DelegateTask(void *pvParameters);
