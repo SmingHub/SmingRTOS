@@ -15,6 +15,8 @@ extern "C" {
 int m_vsnprintf(char *buf, size_t maxLen, const char *fmt, va_list args);
 int m_snprintf(char* buf, int length, const char *fmt, ...);
 int m_printf(const char *fmt, ...);
+//set m_printf callback
+void setMPrintfPrinterCbc(STATUS (*callback)(uint8, uint8));
 #ifdef __cplusplus
 }
 #endif

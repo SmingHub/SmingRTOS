@@ -9,14 +9,13 @@ Descr: embedded very simple version of printf with float support
 #include <stdarg.h>
 #include "../include/sming_global.h"
 #include "../core/stringconversion.h"
-//#include "../../sming/SmingCore.h"
 #include "uart.h"
 
 #define MPRINTF_BUF_SIZE 256
 
 #define OVERFLOW_GUARD 24
 
-void (*cbc_printchar)(char ch) = uart0_write_char;
+STATUS (*cbc_printchar)(uint8 uart, uint8 ch) = uart_tx_one_char;
 
 #define SIGN    	(1<<1)	/* Unsigned/signed long */
 
@@ -30,7 +29,7 @@ static int skip_atoi(const char **s)
 	return i;
 }
 
-void setMPrintfPrinterCbc(void (*callback)(char))
+void setMPrintfPrinterCbc(STATUS (*callback)(uint8,uint8))
 {
 	cbc_printchar = callback;
 }
@@ -82,7 +81,7 @@ int m_printf(const char *fmt, ...)
 	p = buf;
 	while (*p)
 	{
-		cbc_printchar(*p);
+		cbc_printchar(0,*p);
 		n++;
 		p++;
 	}
