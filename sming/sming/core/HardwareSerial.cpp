@@ -57,20 +57,23 @@ HardwareSerial::~HardwareSerial()
 
 void HardwareSerial::begin(const uint32_t baud/* = 9600*/)
 {
-	UART_SetBaudrate(UART0,baud);
-    UART_intr_handler_register((void *) &uartReceiveInterruptHandler,NULL);
-    ETS_UART_INTR_ENABLE();
+	if (uart == 0)
+	{
+		UART_SetBaudrate(UART0,baud);
+		    UART_intr_handler_register((void *) &uartReceiveInterruptHandler,NULL);
+		    ETS_UART_INTR_ENABLE();
+	}
+	else
+	{
+		UART_SetBaudrate(UART1,baud);
+	}
+
 }
 
 size_t HardwareSerial::write(uint8_t oneChar)
 {
-	//if (oneChar == '\0') return 0;
 
-//	uart_tx_one_char(oneChar);
-//	LOCAL STATUS
- 	uart_tx_one_char(0, oneChar);
-//	uart0_write_char(oneChar);
-//	UART_ResetFifo(UART0);
+ 	uart_tx_one_char(uart, oneChar);
 
 	return 1;
 }
