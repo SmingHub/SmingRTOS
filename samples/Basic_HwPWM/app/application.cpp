@@ -20,7 +20,7 @@ HardwarePWM HW_pwm(pins, 8);
 
 Timer procTimer;
 int32 i = 0;
-int32 inc = 100;
+int32 inc = 1000;
 bool countUp = true;
 void doPWM() {
 	if (countUp == true) {
@@ -36,7 +36,7 @@ void doPWM() {
 			countUp = true;
 		}
 	}
-	HW_pwm.analogWrite(2, i);
+	HW_pwm.analogWrite(4, i);
 }
 
 void init() {

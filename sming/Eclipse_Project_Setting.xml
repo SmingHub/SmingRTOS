@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C Source File">
+<includepath>${SMING_HOME}/include</includepath>
+<includepath>${SDK_BASE}/include</includepath>
+<includepath>${SMING_HOME}</includepath>
+
+</language>
+<language name="C++ Source File">
+<includepath>${SMING_HOME}/include</includepath>
+<includepath>${SDK_BASE}/include</includepath>
+<includepath>${SMING_HOME}</includepath>
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+<includepath>${SMING_HOME}/include</includepath>
+<includepath>${SDK_BASE}/include</includepath>
+<includepath>${SMING_HOME}</includepath>
+
+</language>
+</section>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.Macros">
+<language name="C Source File">
+
+</language>
+<language name="C++ Source File">
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+</cdtprojectproperties>
