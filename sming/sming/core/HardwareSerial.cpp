@@ -59,20 +59,35 @@ HardwareSerial::~HardwareSerial()
 
 void HardwareSerial::begin(const uint32_t baud/* = 9600*/)
 {
-	UART_SetBaudrate(UART0,baud);
-    UART_intr_handler_register((void *) &uartReceiveInterruptHandler,NULL);
-    ETS_UART_INTR_ENABLE();
+	if (uart == 0)
+	{
+		UART_SetBaudrate(UART0,baud);
+		    UART_intr_handler_register((void *) &uartReceiveInterruptHandler,NULL);
+		    ETS_UART_INTR_ENABLE();
+	}
+	else
+	{
+	    UART_ConfigTypeDef uart_config;
+
+	    uart_config.data_bits     		= UART_WordLength_8b;
+	    uart_config.parity          	= USART_Parity_None;
+	    uart_config.stop_bits     		= USART_StopBits_1;
+	    uart_config.flow_ctrl      		= USART_HardwareFlowControl_None;
+	    uart_config.UART_RxFlowThresh 	= 120;
+	    uart_config.UART_InverseMask 	= UART_None_Inverse;
+
+	    uart_config.baud_rate    		= (UART_BautRate)baud;
+
+	    UART_ParamConfig(UART1, &uart_config);
+
+	}
+
 }
 
 size_t HardwareSerial::write(uint8_t oneChar)
 {
-	//if (oneChar == '\0') return 0;
 
-//	uart_tx_one_char(oneChar);
-//	LOCAL STATUS
- 	uart_tx_one_char(0, oneChar);
-//	uart0_write_char(oneChar);
-//	UART_ResetFifo(UART0);
+ 	uart_tx_one_char(uart, oneChar);
 
 	return 1;
 }
