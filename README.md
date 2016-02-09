@@ -1,22 +1,40 @@
-# Sming_RTOS_POC
+# Sming_RTOS Beta version
 
-Proof of Concept for Sming based on Espressif RTOS SDK.
+Sming based on Espressif RTOS SDK.
 
-Based on: Sming Develop branch 26/11/15
+Based on: Sming Develop, including commits until Sming 2.1.0 release
+Based on: Espressif RTOS_SDK 1.3.0
+
+Feedback:
+
+- When finding issues during conversion of applications -> Submit an issue on the Sming_RTOS repository.
 
 Requirements:
 - Espressif RTOS_SDK 1.3.0
 - UDK 2.0.9 for toolchain and SDK on Windows or esp-open-sdk on Linux
   - Be sure to have a "clean" sdk without previously applied updates
-- Tested on Windows and Linux, BSD/Mac untested but should work
-
+- esp-alt-sdk provides downloads for all platforms, @kireevco to supply links
+  
 Usage:
 
+- Beware : Some Environment variables names are identical to SMIND_NONOS !
+
 - Clone this repository.
+- SET environment variables valid for the location
 - Set SDK location in Makefile-<platform> or as environment variables
+	-> SDK_BASE = ....
 - Set WIFI_SSID & WIFI_PWD in environment variables
 - Compile & flash
-- Serial baudrate 115200 (when using example application)
+
+Additional needed software
+
+- Spiffy  : Source included in Sming repository
+- [ESPtool2] (https://github.com/raburton/esptool2) esptool2 
+
+Completeness:
+
+- All Core and Network functionality is ported to Sming_RTOS
+- Spiffy & Spiffs Filesystem functionality included
 
 Applications:
 
@@ -36,38 +54,36 @@ Applications:
 - RBoot -> working
 - PCD8544 LCD (Nokia 5110 LCD) -> working
 
-Spiffs/Spiffy
-
-Spiffs Filesystem is included in the POC
-
-The example is made for using on a 32MBit, 4Mbyte ESP.
-You need to adapt if using other.
-
-There is a make-target : flashspiffy
-This flashes both application & spiffs FS
-Spiffs : The file spiffs_rom.rom (beware of the .rom extension) to 0x300000
-In the application there is a mount_manual for a spiffs FS of 64K at this location.
-If you only update application, no need to flash spiffs again -> use flash target
-
-Known limitations : 
-
-- HardwareSerial -> only print(f)(ln).. and begin()
-- No AccessPoint
-- Interrupts not yet implemented
-- Only limited testing done
-
 Known RTOS/NONOS differences with application consequences
 
+Generic :
 - No WDT routines
 - Soft timer only on milli and not on micro level
 
-Additional needed software
-- Spiffy  : Source included in Sming repository
-- [ESPtool2] (https://github.com/raburton/esptool2) esptool2 
+Include files :
+- The user_config.h file does not contain any framework includes anymore.
+	-> Remove the NONOS user_config.h !
+	If not removed, there will be unresolved .h files 
+- The directory structure has changed.
+	The only include necessary is the #include "SmingCore.h"
+	When using libraries use #include "libraries/......"
+	For case sensitive systems : beware of naming
+	
+Spiffs
+- Spiffs FS'es created on NONOS are not supported -> Create a new spiffs using the RTOS supplied Spiffy !
+- When mounting the FS on Flash is checked for "Generic spiffy structure" (blocksize, FS length,..) 
+- spiffs_mount() and spiffs_mount_manual return bool based on mount result
+- When using spiffs_mount() the size of the spiffs FS is autodetected.
+- When using spiffs_mount_manual() 
+	- use the actual flash address : For conversion of current spiffs_mount_manual :  subtract 0x40200000 from start address 
+	- use filesize is 0 (zero) for autodetected size of FS
+	
+rBoot 
+	- Works as in Sming but ... See the above on spiffs_mount_manual ! 
 
-Open Conversion Questions
-
-- Should we make OneWire a Core functionality instead of library (other libs are dependent).
+HardwarePWM.
+	- Duty cycle is now independent on period.
+	- Values are from 0 - 1023
 
 
 
