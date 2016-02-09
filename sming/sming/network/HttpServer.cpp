@@ -85,7 +85,7 @@ bool HttpServer::processRequest(HttpServerConnection &connection, HttpRequest &r
 			CommandExecutor requestCommandExecutor(requestMemoryDataStream);
 			requestCommandExecutor.executorReceive(commandRequest);
 			requestCommandExecutor.executorReceive(commandHandler.getCommandEOL());
-			response.sendMemoryStream(requestMemoryDataStream);
+			response.sendDataStream(requestMemoryDataStream);
 
 			return true;
 		}

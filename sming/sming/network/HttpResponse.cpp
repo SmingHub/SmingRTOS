@@ -204,16 +204,21 @@ bool HttpResponse::sendJsonObject(JsonObjectStream* newJsonStreamInstance)
 		setContentType(ContentType::JSON);
 }
 
-bool HttpResponse::sendMemoryStream(MemoryDataStream* newMemoryStreamInstance)
+bool HttpResponse::sendDataStream( IDataSourceStream * newDataStream , String reqContentType /* = "" */)
 {
-	if (stream != NULL)
-	{
-		SYSTEM_ERROR("Stream already created");
-		delete stream;
-		stream = NULL;
-	}
+    if (stream != NULL)
+    {
+        SYSTEM_ERROR("Stream already created");
+        delete stream;
+        stream = NULL;
+    }
+    if (reqContentType != "")
+    {
+        setContentType(reqContentType);
+    }
+    stream = newDataStream;
 
-	stream = newMemoryStreamInstance;
+    return true;
 }
 
 ///

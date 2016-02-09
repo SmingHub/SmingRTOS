@@ -58,7 +58,7 @@ public:
 	bool sendJsonObject(JsonObjectStream* newJsonStreamInstance);
 	//***
 	// Send a pre-filled MemoryStream
-	bool sendMemoryStream(MemoryDataStream* newMemoryStreamInstance);
+	bool sendDataStream( IDataSourceStream * newDataStream , String reqContentType  = "");
 	//***
 
 public:
