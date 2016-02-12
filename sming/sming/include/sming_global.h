@@ -7,6 +7,8 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "limits.h"
+
 #include <espressif/c_types.h>
 #include <espressif/esp8266/ets_sys.h>
 #include <espressif/esp_libc.h>
