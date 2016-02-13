@@ -34,8 +34,8 @@ class HardwarePWM {
 public:
 	HardwarePWM(uint8 *pins, uint8 no_of_pins);
 	virtual ~HardwarePWM();
-	bool analogWrite(uint8 pin, uint32 duty);
-	bool setDuty(uint8 pin, uint32 duty);
+	bool analogWrite(uint8 pin, uint32 duty, bool start = true);
+	bool setDuty(uint8 pin, uint32 duty, bool start = true);
 	uint32 getDuty(uint8 pin);
 	void setPeriod(uint32 period);
 	uint32 getPeriod(void);

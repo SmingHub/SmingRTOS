@@ -73,8 +73,8 @@ uint8 HardwarePWM::getChannel(uint8 pin) {
  *             duty - duty cycle value
  * Default frequency is 1khz but can be varied by various function
  */
-bool HardwarePWM::analogWrite(uint8 pin, uint32 duty) {
-	return setDuty(pin, duty);
+bool HardwarePWM::analogWrite(uint8 pin, uint32 duty, bool start /* = true */) {
+	return setDuty(pin, duty, start);
 }
 
 /* Function Name: getDuty
@@ -92,13 +92,16 @@ uint32 HardwarePWM::getDuty(uint8 pin) {
  * Parameters: pin - pin number
  *             duty - duty cycle value
  */
-bool HardwarePWM::setDuty(uint8 pin, uint32 duty) {
+bool HardwarePWM::setDuty(uint8 pin, uint32 duty, bool start /* = true */) {
 	uint8 chan = getChannel(pin);
 	if (chan == PWM_BAD_CHANNEL) {
 		return false;
 	} else if (duty <= maxduty) {
 		pwm_set_duty(duty, chan);
-		pwm_start();
+		if (start)
+			{
+			pwm_start();
+			}
 		return true;
 	} else {
 		debugf("Duty cycle value too high for current period.");
