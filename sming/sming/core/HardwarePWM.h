@@ -41,6 +41,7 @@ public:
 	uint32 getPeriod(void);
 	uint8 getChannel(uint8 pin);
 	uint32 getMaxDuty();
+	void restart();
 protected:
 
 private:

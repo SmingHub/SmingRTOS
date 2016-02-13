@@ -134,3 +134,8 @@ void HardwarePWM::setPeriod(uint32 period) {
 	pwm_set_period(period);
 	pwm_start();
 }
+
+void HardwarePWM::restart()
+{
+	pwm_start();
+}
