@@ -51,6 +51,7 @@ void attachInterruptHandler(uint8_t pin, GPIO_INT_TYPE mode)
 	if (!_gpioInterruptsInitialied)
 	{
 		gpio_intr_handler_register((void*)interruptHandler, NULL); // Register interrupt handler
+		_xt_isr_unmask(1<<ETS_GPIO_INUM);
 		_gpioInterruptsInitialied = true;
 	}
 
