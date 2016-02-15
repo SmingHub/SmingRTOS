@@ -30,7 +30,7 @@ void pwm_start(void);
 }
 #endif
 
-HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins) {
+HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins, uint32 reqPeriod /* = 1000 */ ) {
 	channel_count = no_of_pins;
 	if (no_of_pins > 0) {
 		uint32 io_info[PWM_CHANNEL_NUM_MAX][3]; // pin information
@@ -42,9 +42,8 @@ HardwarePWM::HardwarePWM(uint8 *pins, uint8 no_of_pins) {
 			pwm_duty_init[i] = 0; // Start with zero output
 			channels[i] = pins[i];
 		}
-		pwm_init(1000, pwm_duty_init, no_of_pins, io_info);
+		pwm_init(reqPeriod, pwm_duty_init, no_of_pins, io_info);
 		pwm_start();
-		maxduty = 22222; // for period of 1000
 	}
 }
 
@@ -73,8 +72,8 @@ uint8 HardwarePWM::getChannel(uint8 pin) {
  *             duty - duty cycle value
  * Default frequency is 1khz but can be varied by various function
  */
-bool HardwarePWM::analogWrite(uint8 pin, uint32 duty) {
-	return setDuty(pin, duty);
+bool HardwarePWM::analogWrite(uint8 pin, uint32 duty, bool start /* = true */) {
+	return setDuty(pin, duty, start);
 }
 
 /* Function Name: getDuty
@@ -92,25 +91,21 @@ uint32 HardwarePWM::getDuty(uint8 pin) {
  * Parameters: pin - pin number
  *             duty - duty cycle value
  */
-bool HardwarePWM::setDuty(uint8 pin, uint32 duty) {
+bool HardwarePWM::setDuty(uint8 pin, uint32 duty, bool start /* = true */) {
 	uint8 chan = getChannel(pin);
 	if (chan == PWM_BAD_CHANNEL) {
 		return false;
-	} else if (duty <= maxduty) {
+	} else if (duty <= PWM_MAXDUTY) {
 		pwm_set_duty(duty, chan);
-		pwm_start();
+		if (start)
+			{
+			pwm_start();
+			}
 		return true;
 	} else {
 		debugf("Duty cycle value too high for current period.");
 		return false;
 	}
-}
-
-/* Function Name: getMaxDuty
- * Description: This function is used to get the max duty cycle for the currently set period
- */
-uint32 HardwarePWM::getMaxDuty() {
-	return maxduty;
 }
 
 /* Function Name: getPeriod
@@ -127,7 +122,11 @@ uint32 HardwarePWM::getPeriod() {
  *				Period / frequency will remain same for all pins.
  */
 void HardwarePWM::setPeriod(uint32 period) {
-	maxduty = (period * 1000) / 45;
 	pwm_set_period(period);
+	pwm_start();
+}
+
+void HardwarePWM::restart()
+{
 	pwm_start();
 }
