@@ -25,8 +25,8 @@ bool countUp = true;
 void doPWM() {
 	if (countUp == true) {
 		i += inc;
-		if (i >= 22222) {
-			i = 22222;
+		if (i >= PWM_MAXDUTY) {
+			i = PWM_MAXDUTY;
 			countUp = false;
 		}
 	} else {
@@ -36,7 +36,7 @@ void doPWM() {
 			countUp = true;
 		}
 	}
-	HW_pwm.analogWrite(4, i);
+	HW_pwm.analogWrite(4, i);  // restart is default value
 }
 
 void init() {
@@ -47,15 +47,17 @@ void init() {
 	WifiStation.enable(false);
 	WifiAccessPoint.enable(false);
 
-	// Setting PWM values on 8 different pins
-	HW_pwm.analogWrite(4, 22222);
-	HW_pwm.analogWrite(5, 11111);
-	HW_pwm.analogWrite(0, 22222);
-	HW_pwm.analogWrite(2, 11111);
-	HW_pwm.analogWrite(15, 22222);
-	HW_pwm.analogWrite(13, 11111);
-	HW_pwm.analogWrite(12, 22222);
-	HW_pwm.analogWrite(14, 11111);
+	// Setting PWM values on 8 different pins // only start when all are set
+	HW_pwm.analogWrite(4, 1023, false);
+	HW_pwm.analogWrite(5, 512, false);
+	HW_pwm.analogWrite(0, 256, false);
+	HW_pwm.analogWrite(2, 768, false);
+	HW_pwm.analogWrite(15, 128, false);
+	HW_pwm.analogWrite(13, 500, false);
+	HW_pwm.analogWrite(12, 900, false);
+	HW_pwm.analogWrite(14, 1000,false);
+
+	HW_pwm.restart();
 
 	debugf("PWM output set on all 8 Pins. Kindly check...");
 	debugf("Now Pin 2 will go from 0 to VCC to 0 in cycles.");

@@ -21,6 +21,7 @@
 
 #define PWM_CHANNEL_NUM_MAX 8
 #define PWM_BAD_CHANNEL 0xff
+#define PWM_MAXDUTY 1023
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +33,7 @@ extern "C" {
 
 class HardwarePWM {
 public:
-	HardwarePWM(uint8 *pins, uint8 no_of_pins);
+	HardwarePWM(uint8 *pins, uint8 no_of_pins, uint32 reqPeriod = 1000);
 	virtual ~HardwarePWM();
 	bool analogWrite(uint8 pin, uint32 duty, bool start = true);
 	bool setDuty(uint8 pin, uint32 duty, bool start = true);
@@ -40,14 +41,12 @@ public:
 	void setPeriod(uint32 period);
 	uint32 getPeriod(void);
 	uint8 getChannel(uint8 pin);
-	uint32 getMaxDuty();
 	void restart();
 protected:
 
 private:
 	uint8 channel_count;
 	uint8 channels[PWM_CHANNEL_NUM_MAX];
-	uint32 maxduty;
 };
 
 #endif	/* HARDWAREPWM_H */
