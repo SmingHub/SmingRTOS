@@ -9,16 +9,20 @@
 
 CommandDelegate::CommandDelegate()
 {
-
 }
 
-CommandDelegate::CommandDelegate(String reqName, String reqHelp, String reqGroup, commandFunctionDelegate reqFunction)
-: commandName(reqName), commandHelp(reqHelp), commandGroup(reqGroup), commandFunction(reqFunction)
+CommandDelegate::CommandDelegate(String reqName, String reqHelp, String reqGroup, CommandProcessDelegate reqProcessDelegate)
+: commandName(reqName), commandHelp(reqHelp), commandGroup(reqGroup), commandProcessDelegate(reqProcessDelegate)
 {
+}
+
+CommandDelegate::CommandDelegate(String reqName, String reqHelp, String reqGroup, commandFunctionDelegate reqFunctionDelegate)
+: commandName(reqName), commandHelp(reqHelp), commandGroup(reqGroup), commandFunction(reqFunctionDelegate)
+{
+
 }
 
 CommandDelegate::~CommandDelegate()
 {
-	// TODO Auto-generated destructor stub
 }
 

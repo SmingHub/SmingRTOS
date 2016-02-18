@@ -7,6 +7,7 @@
 
 #include "CommandHandler.h"
 #include "CommandDelegate.h"
+#include "Command.h"
 #include "../core/SystemClock.h"
 #include "../wiring/SplitString.h"
 #include "../wiring/WVector.h"
@@ -23,12 +24,12 @@ CommandHandler::~CommandHandler()
 
 void CommandHandler::registerSystemCommands()
 {
-	registerCommand(CommandDelegate("status", "Displays System Information", "system", commandFunctionDelegate(&CommandHandler::procesStatusCommand,this)));
-	registerCommand(CommandDelegate("echo", "Displays command entered", "system", commandFunctionDelegate(&CommandHandler::procesEchoCommand,this)));
-	registerCommand(CommandDelegate("help", "Displays all available commands", "system", commandFunctionDelegate(&CommandHandler::procesHelpCommand,this)));
-	registerCommand(CommandDelegate("debugon", "Set Serial debug on", "system", commandFunctionDelegate(&CommandHandler::procesDebugOnCommand,this)));
-	registerCommand(CommandDelegate("debugoff", "Set Serial debug off", "system", commandFunctionDelegate(&CommandHandler::procesDebugOffCommand,this)));
-	registerCommand(CommandDelegate("command","Use verbose/silent/prompt as command options","system", commandFunctionDelegate(&CommandHandler::processCommandOptions,this)));
+	registerCommand(CommandDelegate("status", "Displays System Information", "system", CommandProcessDelegate(&CommandHandler::procesStatusCommand,this)));
+	registerCommand(CommandDelegate("echo", "Displays command entered", "system", CommandProcessDelegate(&CommandHandler::procesEchoCommand,this)));
+	registerCommand(CommandDelegate("help", "Displays all available commands", "system", CommandProcessDelegate(&CommandHandler::procesHelpCommand,this)));
+	registerCommand(CommandDelegate("debugon", "Set Serial debug on", "system", CommandProcessDelegate(&CommandHandler::procesDebugOnCommand,this)));
+	registerCommand(CommandDelegate("debugoff", "Set Serial debug off", "system", CommandProcessDelegate(&CommandHandler::procesDebugOffCommand,this)));
+	registerCommand(CommandDelegate("command","Use verbose/silent/prompt as command options","system", CommandProcessDelegate(&CommandHandler::processCommandOptions,this)));
 }
 
 CommandDelegate CommandHandler::getCommandDelegate(String commandString)
@@ -41,7 +42,7 @@ CommandDelegate CommandHandler::getCommandDelegate(String commandString)
 	else
 	{
 		debugf("Command %s not recognized, returning NULL\r\n",commandString.c_str());
-		return CommandDelegate("","","",NULL);
+		return CommandDelegate();
 	}
 }
 
@@ -115,7 +116,7 @@ void CommandHandler::setCommandWelcomeMessage(String reqWelcomeMessage)
 	currentWelcomeMessage = reqWelcomeMessage;
 }
 
-void CommandHandler::procesHelpCommand(String commandLine, CommandOutput* commandOutput)
+void CommandHandler::procesHelpCommand(Command reqCommand, CommandOutput* commandOutput)
 {
 	debugf("HelpCommand entered");
 	commandOutput->printf("Commands available are : \r\n");
@@ -130,7 +131,7 @@ void CommandHandler::procesHelpCommand(String commandLine, CommandOutput* comman
 	}
 }
 
-void CommandHandler::procesStatusCommand(String commandLine, CommandOutput* commandOutput)
+void CommandHandler::procesStatusCommand(Command reqCcommand, CommandOutput* commandOutput)
 {
 	debugf("StatusCommand entered");
 	char tempBuf[64];
@@ -145,28 +146,29 @@ void CommandHandler::procesStatusCommand(String commandLine, CommandOutput* comm
 	commandOutput->printf("System Start Reason : %d\r\n", system_get_rst_info()->reason);
 }
 
-void CommandHandler::procesEchoCommand(String commandLine, CommandOutput* commandOutput)
+void CommandHandler::procesEchoCommand(Command reqCommand, CommandOutput* commandOutput)
 {
 	debugf("HelpCommand entered");
 	commandOutput->printf("You entered : '");
-	commandOutput->printf(commandLine.c_str());
+	commandOutput->printf(reqCommand.cmdString.c_str());
 	commandOutput->printf("'\r\n");
 }
 
-void CommandHandler::procesDebugOnCommand(String commandLine, CommandOutput* commandOutput)
+void CommandHandler::procesDebugOnCommand(Command reqCommand, CommandOutput* commandOutput)
 {
 	Serial.systemDebugOutput(true);
 	commandOutput->printf("Debug set to : On\r\n");
 }
 
-void CommandHandler::procesDebugOffCommand(String commandLine, CommandOutput* commandOutput)
+void CommandHandler::procesDebugOffCommand(Command reqCommand, CommandOutput* commandOutput)
 {
 	Serial.systemDebugOutput(false);
 	commandOutput->printf("Debug set to : Off\r\n");
 }
 
-void CommandHandler::processCommandOptions(String commandLine  ,CommandOutput* commandOutput)
+void CommandHandler::processCommandOptions(Command reqCommand  ,CommandOutput* commandOutput)
 {
+	String commandLine = reqCommand.cmdString;
 	Vector<String> commandToken;
 	int numToken = splitString(commandLine, ' ' , commandToken);
 	bool errorCommand = false;

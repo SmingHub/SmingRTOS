@@ -71,6 +71,10 @@ void startMqttClient()
 	// Assign a disconnect callback function
 	mqtt.setCompleteDelegate(checkMQTTDisconnect);
 	mqtt.subscribe("main/status/#");
+	mqtt.subscribe("command");
+
+	mqtt.commandProcessing(true,"command","cmdreply");
+
 }
 
 // Will be called when WiFi station was connected to AP
@@ -97,6 +101,7 @@ void init()
 {
 	Serial.begin(SERIAL_BAUD_RATE); // 115200 by default
 	Serial.systemDebugOutput(true); // Debug output to serial
+	commandHandler.registerSystemCommands();
 
 	WifiStation.config(WIFI_SSID, WIFI_PWD);
 	WifiStation.enable(true);

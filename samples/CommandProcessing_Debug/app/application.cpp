@@ -64,8 +64,12 @@ void wsDisconnected(WebSocket& socket)
 	Serial.printf("Socket disconnected");
 }
 
-void processApplicationCommands(String commandLine, CommandOutput* commandOutput)
+void processApplicationCommands(Command inputCommand , CommandOutput* commandOutput)
 {
+	if (inputCommand.getRoot().success())
+	{
+		Serial.printf("The command contains a valid Json string\r\n");
+	}
 	commandOutput->printf("This command is handled by the application\r\n");
 }
 
@@ -78,6 +82,9 @@ void StartServers()
 	// Web Sockets configuration
 	server.enableWebSockets(true);
 	server.commandProcessing(true,"command");
+
+//  All commands are processed by the "example" delegate, independent of cmdLine input
+//  server.commandProcessing(true,"command","example")
 
 	server.setWebSocketConnectionHandler(wsConnected);
 	server.setWebSocketMessageHandler(wsMessageReceived);

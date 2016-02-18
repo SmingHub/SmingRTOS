@@ -86,6 +86,17 @@ bool MqttClient::publish(String topic, String message, bool retained /* = false*
 	return res > 0;
 }
 
+#define MQTT_COMMAND_MAXSIZE  512 // needs to be relocated
+
+bool MqttClient::publish(String topic, MemoryDataStream reqDataStream, bool retained /* = false */)
+{
+	char* msgBuffer = new char[MQTT_COMMAND_MAXSIZE+1];
+	int msgSize = reqDataStream.readMemoryBlock(msgBuffer, MQTT_COMMAND_MAXSIZE);
+	msgBuffer[msgSize] = '\0';
+	int res = mqtt_publish(&broker, topic.c_str(), msgBuffer, retained);
+	return res > 0;
+}
+
 bool MqttClient::publishWithQoS(String topic, String message, int QoS, bool retained /* = false*/)
 {
 	int res = mqtt_publish_with_qos(&broker, topic.c_str(), message.c_str(), retained, QoS, NULL);
@@ -113,6 +124,14 @@ bool MqttClient::unsubscribe(String topic)
 	debugf("unsubscribing from '%s'", topic.c_str());
 	int res = mqtt_unsubscribe(&broker, topic.c_str(), &msgId);
 	return res > 0;
+}
+
+void MqttClient::commandProcessing(bool reqEnabled, String reqCommandTopic, String reqCommandResponse , String reqCommandName /* = "" */)
+{
+	mqttCommandEnabled = reqEnabled;
+	mqttCommandTopic = reqCommandTopic;
+	mqttCommandResponse = reqCommandResponse;
+	mqttCommandName = reqCommandName;
 }
 
 void MqttClient::debugPrintResponseType(int type, int len)
@@ -244,6 +263,19 @@ err_t MqttClient::onReceive(pbuf *buf)
 							msg.setString((char*)ptrMsg, lenMsg);
 							if (callback)
 								callback(topic, msg);
+							if ((mqttCommandEnabled) && (topic == mqttCommandTopic) )
+							{
+								Command commandRequest(mqttCommandName, msg);
+								if ( commandRequest.getCmdString() != "" )
+								{
+									debugf("Mqtt CommandProcessing");
+									MemoryDataStream *mqttMemoryDataStream = new MemoryDataStream();
+									CommandExecutor requestCommandExecutor(mqttMemoryDataStream);
+									requestCommandExecutor.executorReceive(commandRequest);
+									publish(mqttCommandResponse,*mqttMemoryDataStream);
+									delete mqttMemoryDataStream;
+								}
+							}
 						}
 						else
 						{

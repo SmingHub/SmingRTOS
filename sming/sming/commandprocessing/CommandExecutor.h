@@ -12,6 +12,7 @@
 #include "../network/TcpClient.h"
 #include "CommandHandler.h"
 #include "CommandOutput.h"
+#include "Command.h"
 
 #define MAX_COMMANDSIZE 64
 
@@ -26,16 +27,18 @@ public:
 
 	int executorReceive(char *recvData, int recvSize);
 	int executorReceive(char recvChar);
-	int executorReceive(String recvString);
+	int executorReceive(String recvString,  bool completeCommand  = false );
+	int executorReceive(Command reqCommand);
 	void setCommandPrompt(String reqPrompt);
 	void setCommandEOL(char reqEOL);
+
 
 private :
 	CommandExecutor();
 	void processCommandLine(String cmdString);
-	char commandBuf [MAX_COMMANDSIZE+1];
-	uint16_t commandIndex = 0;
+	void processCommand(Command cmdCommand);
 	CommandOutput* commandOutput;
+	Command recvCommand;
 };
 
 #endif /* SERVICES_COMMANDPROCESSING_COMMANDEXECUTOR_H_ */

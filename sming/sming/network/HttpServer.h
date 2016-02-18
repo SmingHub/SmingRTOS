@@ -42,7 +42,7 @@ public:
 
 	/// Web Sockets
 	void enableWebSockets(bool enabled);
-	void commandProcessing(bool enabled, String reqReqestParam);
+	void commandProcessing(bool enabled, String reqReqestParam, String reqCommandName = "");
 	__forceinline WebSocketsList& getActiveWebSockets() { return wsocks; }
 	void setWebSocketConnectionHandler(WebSocketDelegate handler);
 	void setWebSocketMessageHandler(WebSocketMessageDelegate handler);
@@ -72,7 +72,8 @@ private:
 	WebSocketDelegate wsDisconnect;
 
 	bool serverCommandEnabled = false;
-	String serverCommandRequestParam;
+	String serverCommandRequestParam = "";
+	String serverCommandName = "";
 };
 
 #endif /* _SMING_CORE_HTTPSERVER_H_ */
