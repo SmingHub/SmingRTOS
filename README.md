@@ -60,6 +60,10 @@ Generic :
 - No WDT routines
 - Soft timer only on milli and not on micro level
 
+SPI_SIZE
+- The espressif SDK is more restrictive on use of flash
+The SPI_SIZE needs to be set correct to prevent issues (especially Spiffs)
+
 Include files :
 - The user_config.h file does not contain any framework includes anymore.
 	-> Remove the NONOS user_config.h !
@@ -77,7 +81,7 @@ Spiffs
 - When using spiffs_mount_manual() 
 	- use the actual flash address : For conversion of current spiffs_mount_manual :  subtract 0x40200000 from start address 
 	- use filesize is 0 (zero) for autodetected size of FS
-	
+- See the remark above on SPI_SIZE. If set not correct the spiffs_mount and spiffs_mount_manual will fail.
 rBoot 
 	- Works as in Sming but ... See the above on spiffs_mount_manual ! 
 

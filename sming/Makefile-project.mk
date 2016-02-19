@@ -24,7 +24,7 @@ SPI_SPEED ?= 40
 # SPI_MODE: qio, qout, dio, dout
 SPI_MODE ?= qio
 # SPI_SIZE: 512K, 256K, 1M, 2M, 4M
-SPI_SIZE ?= 512K
+SPI_SIZE ?= 4M
 
 # Path to spiffy
 SPIFFY ?= $(SMING_HOME)/spiffy/spiffy
