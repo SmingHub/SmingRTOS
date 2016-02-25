@@ -9,9 +9,9 @@
 #define SMING_COMMANDPROCESSING_COMMAND_H_
 
 #include "../include/sming_global.h"
-#include "../Wiring/WString.h"
-#include "../Wiring/WVector.h"
-#include "../Services/ArduinoJson/include/ArduinoJson.h"
+#include "../wiring/WString.h"
+#include "../wiring/WVector.h"
+#include "../services/ArduinoJson/include/ArduinoJson.h"
 
 
 class Command
