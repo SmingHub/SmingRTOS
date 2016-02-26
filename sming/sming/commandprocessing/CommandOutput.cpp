@@ -31,8 +31,47 @@ CommandOutput::~CommandOutput()
 {
 }
 
+void CommandOutput::flush()
+{
+	if (cmdJsonBuffer) // There is a jsonObject created in the object.
+	{
+		cmdRoot->printTo(*this);
+	}
+
+	if (outputTcpClient)
+	{
+		outputTcpClient->sendString(outputString);
+	}
+	else if (outputStream)
+	{
+		outputStream->printf("%s",outputString.c_str());
+	}
+	else if (outputSocket)
+	{
+		outputSocket->sendString(tempSocket);
+	}
+	else if (outputMemoryStream)
+	{
+		outputMemoryStream->printf("%s",outputString.c_str());
+	}
+	outputString = "";
+}
+
+JsonObject& CommandOutput::getRoot()
+{
+	if (!cmdJsonBuffer)
+	{
+		cmdJsonBuffer = new DynamicJsonBuffer;
+		cmdRoot =  &cmdJsonBuffer->createObject();
+	}
+	return *cmdRoot;
+}
+
 size_t CommandOutput::write(uint8_t outChar)
 {
+	outputString = outputString+String(char(outChar));
+
+	/*
 	if (outputTcpClient)
 	{
 		char outBuf[1] = { outChar };
@@ -58,5 +97,6 @@ size_t CommandOutput::write(uint8_t outChar)
 	{
 		outputMemoryStream->write(outChar);
 	}
+	*/
 }
 

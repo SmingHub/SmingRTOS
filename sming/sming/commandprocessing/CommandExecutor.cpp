@@ -166,6 +166,7 @@ void CommandExecutor::processCommand(Command cmdCommand)
 		{
 			cmdDelegate.commandFunction(cmdCommand.cmdString,commandOutput);
 		}
+		commandOutput->flush();
 	}
 	if (commandHandler.getVerboseMode() == VERBOSE)
 	{

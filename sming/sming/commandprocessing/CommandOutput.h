@@ -24,12 +24,19 @@ public:
 	virtual ~CommandOutput();
 
 	size_t write(uint8_t outChar);
+	JsonObject& getRoot();
+	void flush();
 
+private:
 	TcpClient* outputTcpClient = nullptr;
 	Stream*    outputStream = nullptr;
 	WebSocket* outputSocket = nullptr;
 	MemoryDataStream* outputMemoryStream = nullptr;
 	String tempSocket = "";
+	String outputString = "";
+
+	DynamicJsonBuffer *cmdJsonBuffer = NULL;
+	JsonObject* cmdRoot = NULL;
 };
 
 #endif /* SERVICES_COMMANDPROCESSING_COMMANDOUTPUT_H_ */
