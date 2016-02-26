@@ -17,7 +17,7 @@ DebugClass::~DebugClass()
 
 void DebugClass::initCommand()
 {
-	commandHandler.registerCommand(CommandDelegate("debug","New debug in development","Debug",commandFunctionDelegate(&DebugClass::processDebugCommands,this)));
+	commandHandler.registerCommand(CommandDelegate("debug","New debug in development","Debug",CommandProcessDelegate(&DebugClass::processDebugCommands,this)));
 }
 
 void DebugClass::start()
@@ -88,8 +88,9 @@ size_t DebugClass::write(uint8_t c)
 	return 0;
 }
 
-void DebugClass::processDebugCommands(String commandLine, CommandOutput* commandOutput)
+void DebugClass::processDebugCommands(Command reqCommand, CommandOutput* commandOutput)
 {
+	String commandLine = reqCommand.getCmdString();
 	Vector<String> commandToken;
 	int numToken = splitString(commandLine, ' ' , commandToken);
 

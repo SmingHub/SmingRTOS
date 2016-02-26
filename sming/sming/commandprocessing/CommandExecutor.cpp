@@ -19,6 +19,7 @@ CommandExecutor::CommandExecutor(TcpClient* cmdClient) : CommandExecutor()
 	if (commandHandler.getVerboseMode() != SILENT)
 	{
 		commandOutput->printf("Welcome to the Tcp Command executor\r\n");
+		commandOutput->flush();
 	}
 }
 
@@ -28,6 +29,7 @@ CommandExecutor::CommandExecutor(Stream* reqStream) : CommandExecutor()
 	if (commandHandler.getVerboseMode() != SILENT)
 	{
 		commandOutput->printf("Welcome to the Stream Command executor\r\n");
+		commandOutput->flush();
 	}
 }
 
@@ -37,6 +39,7 @@ CommandExecutor::CommandExecutor(WebSocket* reqSocket)
 	if (commandHandler.getVerboseMode() != SILENT)
 	{
 		reqSocket->sendString("Welcome to the Websocket Command Executor");
+		commandOutput->flush();
 	}
 
 }
@@ -49,6 +52,11 @@ CommandExecutor::CommandExecutor(MemoryDataStream* reqMemoryStream)
 CommandExecutor::~CommandExecutor()
 {
 	delete commandOutput;
+}
+
+int CommandExecutor::executorReceive(Command reqCommand)
+{
+	processCommand(reqCommand);
 }
 
 int CommandExecutor::executorReceive(char *recvData, int recvSize)
@@ -65,15 +73,22 @@ int CommandExecutor::executorReceive(char *recvData, int recvSize)
 	return receiveReturn;
 }
 
-int CommandExecutor::executorReceive(String recvString)
+int CommandExecutor::executorReceive(String recvString, bool completeCommand /* = false */)
 {
-	int receiveReturn = 0;
-	for (int recvIdx=0;recvIdx<recvString.length();recvIdx++)
+	if (completeCommand)
 	{
-		receiveReturn = executorReceive(recvString[recvIdx]);
-		if (receiveReturn)
+		processCommand(Command(recvString));
+	}
+	else // only partly command -> split in chars and add to current commandLine
+	{
+		int receiveReturn = 0;
+		for (int recvIdx=0;recvIdx<recvString.length();recvIdx++)
 		{
-			break;
+			receiveReturn = executorReceive(recvString[recvIdx]);
+			if (receiveReturn)
+			{
+				break;
+			}
 		}
 	}
 }
@@ -82,61 +97,83 @@ int CommandExecutor::executorReceive(char recvChar)
 {
 	if (recvChar == 27) // ESC -> delete current commandLine
 	{
-		commandIndex = 0;
-		commandBuf[commandIndex] = 0;
+		recvCommand.clear();
 		if (commandHandler.getVerboseMode() == VERBOSE)
 		{
 			commandOutput->printf("\r\n%s",commandHandler.getCommandPrompt().c_str());
+			commandOutput->flush();
 		}
 	}
 	else if (recvChar == commandHandler.getCommandEOL())
 	{
-
-		processCommandLine(String(commandBuf));
-		commandIndex = 0;
+		processCommand(recvCommand);
+		recvCommand.clear();
 	}
 	else
 	{
-		if ((commandIndex < MAX_COMMANDSIZE) && (isprint(recvChar)))
+		if (isprint(recvChar))
 		{
-			commandBuf[commandIndex++] = recvChar;
-			commandBuf[commandIndex] = 0;
+			recvCommand.cmdString += recvChar;
 		}
-
 	}
 	return 0;
 }
 
-void CommandExecutor::processCommandLine(String cmdString)
+void CommandExecutor::processCommand(Command cmdCommand)
 {
-	debugf("Received full Command line, size = %d,cmd = %s",cmdString.length(),cmdString.c_str());
-	String cmdCommand;
-	int cmdLen = cmdString.indexOf(' ');
-	if (cmdLen == -1)
+	debugf("Received Command, size = %d,cmd = %s",cmdCommand.cmdString.length(),cmdCommand.cmdString.c_str());
+
+
+	if (cmdCommand.cmdName == "")
 	{
-		cmdCommand = cmdString;
+		// Need to extract command from inputline
+		// Check if we have a json input
+		DynamicJsonBuffer jsonBuffer;
+		JsonObject& root = jsonBuffer.parseObject(cmdCommand.cmdString);
+
+		if (root.success())
+		{
+		   Serial.printf("ParseObject() -> cmdString is Json object");
+		   cmdCommand.cmdName = root["command"].asString();
+		}
+		else	// First word of cmdString is cmdCommand
+		{
+			int cmdLen = cmdCommand.cmdString.indexOf(' ');
+			if (cmdLen == -1)
+			{
+				cmdCommand.cmdName = cmdCommand.cmdString;
+			}
+			else
+			{
+				cmdCommand.cmdName = cmdCommand.cmdString.substring(0,cmdLen);
+			}
+		}
 	}
-	else
-	{
-		cmdCommand = cmdString.substring(0,cmdLen);
-	}
 
-	debugf("CommandExecutor : executing command %s",cmdCommand.c_str());
+	debugf("CommandExecutor : executing command %s",cmdCommand.cmdName.c_str());
 
-	CommandDelegate cmdDelegate = commandHandler.getCommandDelegate(cmdCommand);
+	CommandDelegate cmdDelegate = commandHandler.getCommandDelegate(cmdCommand.cmdName);
 
-	if (!cmdDelegate.commandFunction)
+	if ((!cmdDelegate.commandProcessDelegate) && (!cmdDelegate.commandFunction))
 	{
 		commandOutput->printf("Command not found, cmd = '");
-		commandOutput->printf(cmdCommand.c_str());
+		commandOutput->printf(cmdCommand.cmdString.c_str());
 		commandOutput->printf("'\r\n");
 	}
 	else
 	{
-		cmdDelegate.commandFunction(cmdString.c_str(),commandOutput);
+		if (cmdDelegate.commandProcessDelegate)
+		{
+			cmdDelegate.commandProcessDelegate(cmdCommand,commandOutput);
+		}
+		else
+		{
+			cmdDelegate.commandFunction(cmdCommand.cmdString,commandOutput);
+		}
 	}
 	if (commandHandler.getVerboseMode() == VERBOSE)
 	{
 		commandOutput->printf(commandHandler.getCommandPrompt().c_str());
 	}
+	commandOutput->flush();
 }

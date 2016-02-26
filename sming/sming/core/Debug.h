@@ -44,7 +44,7 @@ private:
 	bool newDebugLine = true;
 	DebugOuputOptions debugOut;
 	void printPrefix();
-	void processDebugCommands(String commandLine, CommandOutput* commandOutput);
+	void processDebugCommands(Command reqCommand, CommandOutput* commandOutput);
 
 	size_t write(uint8_t);  /* implementation of write for Print Class */
 };

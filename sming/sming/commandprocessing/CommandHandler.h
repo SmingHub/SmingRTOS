@@ -39,12 +39,12 @@ public:
 
 private :
 	HashMap<String, CommandDelegate> *registeredCommands;
-	void procesHelpCommand(String commandLine, CommandOutput* commandOutput);
-	void procesStatusCommand(String commandLine, CommandOutput* commandOutput);
-	void procesEchoCommand(String commandLine, CommandOutput* commandOutput);
-	void procesDebugOnCommand(String commandLine, CommandOutput* commandOutput);
-	void procesDebugOffCommand(String commandLine, CommandOutput* commandOutput);
-	void processCommandOptions(String commandLine  ,CommandOutput* commandOutput);
+	void procesHelpCommand(Command reqCommand, CommandOutput* commandOutput);
+	void procesStatusCommand(Command reqCommand, CommandOutput* commandOutput);
+	void procesEchoCommand(Command reqCommand, CommandOutput* commandOutput);
+	void procesDebugOnCommand(Command reqCommand, CommandOutput* commandOutput);
+	void procesDebugOffCommand(Command reqCommand, CommandOutput* commandOutput);
+	void processCommandOptions(Command reqCommand  ,CommandOutput* commandOutput);
 
 	VerboseMode verboseMode = VERBOSE;
 	String currentPrompt = "Sming>";

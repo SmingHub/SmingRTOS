@@ -77,14 +77,13 @@ bool HttpServer::processRequest(HttpServerConnection &connection, HttpRequest &r
 
 	if ((serverCommandEnabled) && (request.getRequestMethod() == "POST") )
 	{
-		String commandRequest = request.getPostParameter(serverCommandRequestParam);
-		if ( commandRequest != "" )
+		Command commandRequest(serverCommandName, request.getPostParameter(serverCommandRequestParam));
+		if ( commandRequest.getCmdString() != "" )
 		{
 			debugf("HttpPost CommandProcessing");
 			MemoryDataStream* requestMemoryDataStream = new MemoryDataStream();
 			CommandExecutor requestCommandExecutor(requestMemoryDataStream);
 			requestCommandExecutor.executorReceive(commandRequest);
-			requestCommandExecutor.executorReceive(commandHandler.getCommandEOL());
 			response.sendDataStream(requestMemoryDataStream);
 
 			return true;
@@ -136,9 +135,13 @@ bool HttpServer::initWebSocket(HttpServerConnection& connection, HttpRequest& re
     wsocks.addElement(sock);
     if (wsConnect) wsConnect(*sock);
 
-    if (serverCommandEnabled &&  (request.getQueryParameter(serverCommandRequestParam) == "true"))
+    if (serverCommandEnabled &&  (request.getQueryParameter(serverCommandRequestParam) != ""))
     {
-        debugf("WebSocket Commandprocessor started");
+    	if (request.getQueryParameter(serverCommandRequestParam) != "true")
+    	{
+    		serverCommandName = request.getQueryParameter(serverCommandRequestParam);
+    	}
+    	debugf("WebSocket Commandprocessor started, RequestParam = %s, reqName = %s",serverCommandRequestParam.c_str(),serverCommandName.c_str() );
     	sock->enableCommand();
     }
 }
@@ -156,7 +159,11 @@ void HttpServer::processWebSocketFrame(pbuf *buf, HttpServerConnection& connecti
 		msg.setString((char*)data, size);
 		debugf("WS: %s", msg.c_str());
 		if (sock && wsMessage) wsMessage(*sock, msg);
-		if (sock && sock->commandExecutor) sock->commandExecutor->executorReceive(msg+"\r");
+		if (sock && sock->commandExecutor)
+			{
+				debugf("executing websocket command");
+				sock->commandExecutor->executorReceive(Command(serverCommandName,msg));
+			}
 	}
 	else if (frameType == WS_BINARY_FRAME)
 	{
@@ -229,8 +236,9 @@ void HttpServer::enableWebSockets(bool enabled)
 	}
 }
 
-void HttpServer::commandProcessing(bool reqEnabled, String reqRequestParam)
+void HttpServer::commandProcessing(bool reqEnabled, String reqRequestParam, String reqCommandName /* = "" */)
 {
 	serverCommandEnabled = reqEnabled;
 	serverCommandRequestParam = reqRequestParam;
+	serverCommandName = reqCommandName;
 }
