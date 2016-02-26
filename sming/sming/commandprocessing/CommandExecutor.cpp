@@ -19,6 +19,7 @@ CommandExecutor::CommandExecutor(TcpClient* cmdClient) : CommandExecutor()
 	if (commandHandler.getVerboseMode() != SILENT)
 	{
 		commandOutput->printf("Welcome to the Tcp Command executor\r\n");
+		commandOutput->flush();
 	}
 }
 
@@ -28,6 +29,7 @@ CommandExecutor::CommandExecutor(Stream* reqStream) : CommandExecutor()
 	if (commandHandler.getVerboseMode() != SILENT)
 	{
 		commandOutput->printf("Welcome to the Stream Command executor\r\n");
+		commandOutput->flush();
 	}
 }
 
@@ -37,6 +39,7 @@ CommandExecutor::CommandExecutor(WebSocket* reqSocket)
 	if (commandHandler.getVerboseMode() != SILENT)
 	{
 		reqSocket->sendString("Welcome to the Websocket Command Executor");
+		commandOutput->flush();
 	}
 
 }
@@ -98,6 +101,7 @@ int CommandExecutor::executorReceive(char recvChar)
 		if (commandHandler.getVerboseMode() == VERBOSE)
 		{
 			commandOutput->printf("\r\n%s",commandHandler.getCommandPrompt().c_str());
+			commandOutput->flush();
 		}
 	}
 	else if (recvChar == commandHandler.getCommandEOL())
@@ -166,10 +170,10 @@ void CommandExecutor::processCommand(Command cmdCommand)
 		{
 			cmdDelegate.commandFunction(cmdCommand.cmdString,commandOutput);
 		}
-		commandOutput->flush();
 	}
 	if (commandHandler.getVerboseMode() == VERBOSE)
 	{
 		commandOutput->printf(commandHandler.getCommandPrompt().c_str());
 	}
+	commandOutput->flush();
 }

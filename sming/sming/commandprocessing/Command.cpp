@@ -36,7 +36,7 @@ const String Command::operator[](unsigned int index)
 Command::~Command() {
 	delete cmdVector;
 	delete cmdJsonBuffer;
-//	delete cmdRoot;
+	delete &cmdRoot;
 }
 
 JsonObject& Command::getRoot()

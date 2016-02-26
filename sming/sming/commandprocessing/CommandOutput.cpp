@@ -44,17 +44,30 @@ void CommandOutput::flush()
 	}
 	else if (outputStream)
 	{
-		outputStream->printf("%s",outputString.c_str());
+//		outputStream->printf("%s",outputString.c_str());
+		for (int i = 0; i < outputString.length();i++)
+		{
+			char c = outputString[i];
+			outputStream->write(c);
+		}
 	}
 	else if (outputSocket)
 	{
-		outputSocket->sendString(tempSocket);
+		outputSocket->sendString(outputString);
 	}
 	else if (outputMemoryStream)
 	{
-		outputMemoryStream->printf("%s",outputString.c_str());
+		for (int i = 0; i < outputString.length();i++)
+		{
+			char c = outputString[i];
+			outputMemoryStream->write(c);
+		}
 	}
 	outputString = "";
+	delete &cmdRoot;
+	delete cmdJsonBuffer;
+	cmdRoot = NULL;
+	cmdJsonBuffer = NULL;
 }
 
 JsonObject& CommandOutput::getRoot()

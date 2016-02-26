@@ -32,9 +32,7 @@ private:
 	Stream*    outputStream = nullptr;
 	WebSocket* outputSocket = nullptr;
 	MemoryDataStream* outputMemoryStream = nullptr;
-	String tempSocket = "";
 	String outputString = "";
-
 	DynamicJsonBuffer *cmdJsonBuffer = NULL;
 	JsonObject* cmdRoot = NULL;
 };
