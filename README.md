@@ -17,7 +17,7 @@ Requirements:
   
 Usage:
 
-- Beware : Some Environment variables names are identical to SMIND_NONOS !
+- Beware : Some Environment variables names are identical to SMING_NONOS !
 
 - Clone this repository.
 - SET environment variables valid for the location
