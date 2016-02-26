@@ -69,6 +69,16 @@ Otherwise the first word of the inputline.
 For HttpPost, Websocket and MqttClient the commandProcessing() function has the optional parameter "defaultCommand"
 If this parameter is set, the CmdName will be set for each Command -> all commands will be delegated to the same ProcessFuction.
 
+
+##The CommandOutput class##
+The CommandOutput class provides the functionality to return data.
+The class is derived from Wiring Print class so it has all print/println/printf functions.
+Next to that, the getRoot() function gives access to a jsonObject.
+On finishing the CommandProcessingDelegate the data gathered is flushed to the originating channel.
+If the application wants to send multiple replies, the flush function can be called.
+The content of the jsonObject is appended when flushed.
+
+
 ##Example usage##
 The capabilities of CommandHandler are shown in the example `Commandprocessing_Debug`
 
