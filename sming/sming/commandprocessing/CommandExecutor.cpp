@@ -141,7 +141,10 @@ void CommandExecutor::processCommand(Command cmdCommand)
 		   }
 		   else
 		   {
-			   cmdCommand.cmdName = cmdRoot.begin()->key;
+			   if (cmdRoot.begin() != cmdRoot.end()) // There is at least one key
+			   {
+				   cmdCommand.cmdName = cmdRoot.begin()->key;
+			   }
 		   }
 		}
 		else	// First word of cmdString is cmdCommand
