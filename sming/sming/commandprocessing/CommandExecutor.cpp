@@ -129,12 +129,20 @@ void CommandExecutor::processCommand(Command cmdCommand)
 		// Need to extract command from inputline
 		// Check if we have a json input
 		DynamicJsonBuffer jsonBuffer;
-		JsonObject& root = jsonBuffer.parseObject(cmdCommand.cmdString);
+		JsonObject& cmdRoot = jsonBuffer.parseObject(cmdCommand.cmdString);
 
-		if (root.success())
+		if (cmdRoot.success())
 		{
-		   Serial.printf("ParseObject() -> cmdString is Json object");
-		   cmdCommand.cmdName = root["command"].asString();
+		   debugf("ParseObject() -> cmdString is Json object");
+
+		   if (cmdRoot.containsKey("cmd"))
+		   {
+			   cmdCommand.cmdName = cmdRoot["cmd"].asString();
+		   }
+		   else
+		   {
+			   cmdCommand.cmdName = cmdRoot.begin()->key;
+		   }
 		}
 		else	// First word of cmdString is cmdCommand
 		{
@@ -171,9 +179,10 @@ void CommandExecutor::processCommand(Command cmdCommand)
 			cmdDelegate.commandFunction(cmdCommand.cmdString,commandOutput);
 		}
 	}
+	commandOutput->flush();
 	if (commandHandler.getVerboseMode() == VERBOSE)
 	{
 		commandOutput->printf(commandHandler.getCommandPrompt().c_str());
+		commandOutput->flush();
 	}
-	commandOutput->flush();
 }

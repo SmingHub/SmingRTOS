@@ -63,8 +63,11 @@ Main interface are the functions :
 
 ##The detection of the cmdName##
 For all command channels
-If the inputline is valid json ->  The value of inputCommand.getRoot()["command"]
-Otherwise the first word of the inputline.
+If the inputline is valid json 
+-> The value of inputCommand.getRoot()["cmd"]
+-> If not present the key of the first json object
+
+If not valid json -> The first word of the inputline.
 
 For HttpPost, Websocket and MqttClient the commandProcessing() function has the optional parameter "defaultCommand"
 If this parameter is set, the CmdName will be set for each Command -> all commands will be delegated to the same ProcessFuction.
