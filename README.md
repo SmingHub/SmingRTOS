@@ -6,8 +6,8 @@ Based on :
 
 Sming Develop branch dd 26/11/15
 
-- Espressif RTOS_SDK 1.3.0
-- UDK 2.0.9 for toolchain and SDK (Be sure to have a "clean" espressif without updates.
+- Espressif RTOS_SDK 1.3.0 (https://github.com/espressif/ESP8266_RTOS_SDK)
+- UDK 2.0.9 for toolchain and SDK (Be sure to have a "clean" espressif without updates. (https://github.com/CHERTS/esp8266-devkit)
 - Only used on Windows, unknow Unix/Mac behavior
 
 Usage : 
