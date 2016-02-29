@@ -58,10 +58,11 @@ public:
 	StationClass();
 	~StationClass();
 
-	void enable(bool enabled);
+	void enable(bool enabled, bool save = false);
 	bool isEnabled();
 
 	bool config(String ssid, String password, bool autoConnectOnStartup = true);
+	void connect();
 	void disconnect();
 	bool isConnected();
 	bool isConnectionFailed();
