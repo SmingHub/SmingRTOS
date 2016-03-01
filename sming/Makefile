@@ -62,7 +62,7 @@ LIBS = microc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm
 
 # compiler flags using during compilation of source files
 #CFLAGS = -g -save-temps -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -mno-serialize-volatile -D__ets__ -DICACHE_FLASH
-CFLAGS = -Os -g -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)
+CFLAGS = -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)
 
 WIFI_SSID ?= ""
 WIFI_PWD ?= ""
@@ -76,6 +76,15 @@ endif
 CFLAGS += -DNDEBUG=1
 CFLAGS += -DLWIP_DEBUG=0
 # CXXFLAGS = $(CFLAGS) -std=c++11 -fno-rtti -fno-exceptions
+ifeq ($(ENABLE_GDB), 1)
+	CFLAGS += -Og -ggdb -DGDBSTUB_FREERTOS=1 -DENABLE_GDB=1
+	MODULES		 += gdbstub
+	EXTRA_INCDIR += gdbstub
+else
+	CFLAGS += -Os -g
+endif
+
+
 CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -felide-constructors -Wno-literal-suffix
 # linker flags used to generate the main object file
 LDFLAGS = -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static -Wl,-Map=$(BUILD_BASE)/firmware.map
@@ -97,6 +106,7 @@ SDK_INCDIR += include/lwip/ipv6
 SDK_INCDIR += include/freertos
 
 # select which tools to use as compiler, librarian and linker
+AS	:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 CC  := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 CXX := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-g++
 AR  := $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-ar
@@ -111,10 +121,20 @@ USER_LIBDIR := compiler/lib
 SDK_LIBDIR  := $(addprefix $(SDK_BASE)/,$(SDK_LIBDIR))
 SDK_INCDIR  := $(addprefix -I$(SDK_BASE)/,$(SDK_INCDIR))
 
+
+AS_SRC=
+ifeq ($(ENABLE_GDB), 1)
+	AS_SRC += $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.S)) 
+endif
 SRC     := $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.c*))
 C_OBJ   := $(patsubst %.c,%.o,$(SRC))
 CXX_OBJ := $(patsubst %.cpp,%.o,$(C_OBJ))
 OBJ     := $(patsubst %.o,$(BUILD_BASE)/%.o,$(CXX_OBJ))
+AS_OBJ=
+ifeq ($(ENABLE_GDB), 1)
+	AS_OBJ += $(patsubst %.S,%.o,$(AS_SRC))
+	OBJ    += $(patsubst %.o,$(BUILD_BASE)/%.o,$(AS_OBJ))
+endif
 LIBS    := $(addprefix -l,$(LIBS))
 APP_AR  := $(addprefix $(BUILD_BASE)/,$(TARGET).a)
 
@@ -135,8 +155,16 @@ endif
 
 vpath %.c $(SRC_DIR)
 vpath %.cpp $(SRC_DIR)
+ifeq ($(ENABLE_GDB), 1)
+	vpath %.S $(SRC_DIR)
+endif
 
 define compile-objects
+ifeq ($(ENABLE_GDB), 1)	
+$1/%.o: %.S
+	$(vecho) "AS $$<"
+	$(Q) $(AS) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
+endif	
 $1/%.o: %.c
 	$(vecho) "CC $$<" 
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS)  -c $$< -o $$@
