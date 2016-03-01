@@ -43,6 +43,7 @@ public:
 	String getPostParameter(String parameterName, String defaultValue = "");
 	String getHeader(String headerName, String defaultValue = "");
 	String getCookie(String cookieName, String defaultValue = "");
+	char* getBody();
 
 public:
 	HttpParseResult parseHeader(HttpServer *server, pbuf* buf);
@@ -50,6 +51,7 @@ public:
 	bool extractParsingItemsList(pbuf* buf, int startPos, int endPos,
 			char delimChar, char endChar,
 			HashMap<String, String> *resultItems);
+	void parseRawData(HttpServer *server, pbuf* buf);
 
 private:
 	String method;
@@ -60,6 +62,7 @@ private:
 	HashMap<String, String> *cookies;
 	int postDataProcessed;
 	bool combinePostFrag;
+	char *bodyBuf;
 
 	friend class TemplateFileStream;
 };
