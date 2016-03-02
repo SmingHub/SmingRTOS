@@ -17,6 +17,7 @@ script:
   - export SDK_BASE=$TRAVIS_BUILD_DIR/opt/esp-rtos-sdk/sdk
   - cd $SMING_HOME
   - make test
+  - make clean
   - export ENABLE_GDB=1
   - make test
 
