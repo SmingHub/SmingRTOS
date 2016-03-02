@@ -34,6 +34,7 @@
 #include "sming/platform/System.h"
 #include "sming/platform/Station.h"
 #include "sming/platform/AccessPoint.h"
+#include "sming/platform/WifiEvents.h"
 
 #include "sming/network/HttpClient.h"
 #include "sming/network/MqttClient.h"

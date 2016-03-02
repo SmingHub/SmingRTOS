@@ -19,7 +19,7 @@ public:
 	AccessPointClass();
 	virtual ~AccessPointClass() {}
 
-	void enable(bool enabled);
+	void enable(bool enabled, bool save = false);
 	bool isEnabled();
 
 	bool config(String ssid, String password, AUTH_MODE mode, bool hidden = false, int channel = 7, int beaconInterval = 200);
