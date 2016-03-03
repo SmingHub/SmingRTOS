@@ -165,21 +165,21 @@ void NetUtils::debugPrintTcpList()
 	debugf("********** Lwip Active PCB states:");
 	bool prt_none = true;
 	for(pcb = tcp_active_pcbs; pcb != NULL; pcb = pcb->next) {
-		debugf("LWIP_DEBUG: Port %u | %u flg:%02x tmr:%04x %s", pcb->local_port, pcb->remote_port, pcb->flags, pcb->tmr, deb_tcp_state_str[pcb->state]);
+		debugf("LWIP_DEBUG: Port %u | %u flg:%x tmr:%x %s", pcb->local_port, pcb->remote_port, pcb->flags, pcb->tmr, deb_tcp_state_str[pcb->state]);
 		prt_none = false;
 	}
 	if(prt_none) debugf("LWIP_DEBUG: none");
 	debugf("********** Lwip Listen PCB states:");
 	prt_none = true;
 	for(pcb = (struct tcp_pcb *)tcp_listen_pcbs.pcbs; pcb != NULL; pcb = pcb->next) {
-		debugf("LWIP_DEBUG: Port %u | %u flg:%02x tmr:%04x %s", pcb->local_port, pcb->remote_port, pcb->flags, pcb->tmr, deb_tcp_state_str[pcb->state]);
+		debugf("LWIP_DEBUG: Port %u | %u flg:%x tmr:%x State : %s", pcb->local_port, pcb->remote_port, pcb->flags, pcb->tmr, deb_tcp_state_str[pcb->state]);
 		prt_none = false;
 	}
 	if(prt_none) debugf("LWIP_DEBUG: none\r\n");
 	debugf("********** Lwip TIME-WAIT PCB states:\r\n");
 	prt_none = true;
 	for(pcb = tcp_tw_pcbs; pcb != NULL; pcb = pcb->next) {
-		debugf("LWIP_DEBUG: Port %u | %u flg:%02x tmr:%04x %s", pcb->local_port, pcb->remote_port, pcb->flags, pcb->tmr, deb_tcp_state_str[pcb->state]);
+		debugf("LWIP_DEBUG: Port %u | %u flg:%x tmr:%x %s", pcb->local_port, pcb->remote_port, pcb->flags, pcb->tmr, deb_tcp_state_str[pcb->state]);
 		prt_none = false;
 	}
 	if(prt_none) debugf("LWIP_DEBUG: none");
