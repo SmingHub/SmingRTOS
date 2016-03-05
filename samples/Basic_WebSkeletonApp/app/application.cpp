@@ -50,8 +50,9 @@ void STADisconnect(String ssid, uint8_t ssid_len, uint8_t bssid[6], uint8_t reas
 void STAGotIP(IPAddress ip, IPAddress mask, IPAddress gateway)
 {
 	debugf("GOTIP - IP: %s, MASK: %s, GW: %s\n", ip.toString().c_str(),
-																mask.toString().c_str(),
-																gateway.toString().c_str());
+	
+	mask.toString().c_str(),
+	gateway.toString().c_str());
 
 	if (WifiAccessPoint.isEnabled())
 	{
