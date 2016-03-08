@@ -36,6 +36,7 @@
 #include "sming/platform/AccessPoint.h"
 #include "sming/platform/WifiEvents.h"
 
+#include "sming/network/DNSServer.h"
 #include "sming/network/HttpClient.h"
 #include "sming/network/MqttClient.h"
 #include "sming/network/NtpClient.h"
