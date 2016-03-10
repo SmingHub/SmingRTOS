@@ -3,14 +3,14 @@
 
 
 #define LEDB_PIN 2 // GPIO2
-#define LEDR_PIN 15 // GPI15
+#define LEDR_PIN 15 // GPIO15
 
 
 bool state = true;
 bool stateR = true;
 
 //
-//  actualy "portTICK_RATE_MS"  (RTOS tick fro ESP8266) is set to 10 ms
+//  actualy "portTICK_RATE_MS"  (base RTOS tick for ESP8266) is set to 10 ms
 //
 
 //  ******************************
@@ -27,7 +27,8 @@ void ledB_task(void *pvParameters)
 	//
 	// Perform other action here.
 	//
-	vTaskDelay(500/portTICK_RATE_MS);   //Pause operation for 50 tiks (500 ms)
+	
+     vTaskDelay(500/portTICK_RATE_MS);   //Pause operation for 50 ticks (500 ms)
 	                      //create opportunities to launch another task with the same priority
   }
 
@@ -46,7 +47,8 @@ void ledR_task(void *pvParameters)
 	//
 	// Perform other action here.
 	//
-	vTaskDelay(250/portTICK_RATE_MS);   //Pause operation for 25 tiks (250 ms)
+	
+	vTaskDelay(250/portTICK_RATE_MS);   //Pause operation for 25 ticks (250 ms)
 						  //create opportunities to launch another task with the same priority
   }
 
