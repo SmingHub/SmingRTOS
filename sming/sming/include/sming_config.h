@@ -11,4 +11,7 @@
   #define SERIAL_BAUD_RATE 115200
 #endif
 
+// For Sming framework always enable RTC
+#define BOOT_RTC_ENABLED
+
 #endif

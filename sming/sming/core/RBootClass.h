@@ -8,6 +8,7 @@
 #ifndef SMINGCORE_RBOOT_H_
 #define SMINGCORE_RBOOT_H_
 
+#include "../include/sming_config.h"
 
 #include "../Network/rBootHttpUpdate.h"
 

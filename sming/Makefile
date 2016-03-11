@@ -47,6 +47,7 @@ MODULES += sming/wiring
 MODULES += sming/platform
 MODULES += sming/network 
 MODULES += sming/commandprocessing
+MODULES += rboot/appcode
 MODULES += $(filter %/, $(wildcard sming/services/*/))  
 MODULES += $(filter %/, $(wildcard libraries/*/))
 

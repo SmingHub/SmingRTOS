@@ -284,8 +284,6 @@ void RBoot::showSpiffs(CommandOutput* commandOutput)
 
 }
 
-extern char _flash_code_end[];
-
 void RBoot::showRomInfo(CommandOutput* commandOutput)
 {
 
@@ -312,9 +310,22 @@ void RBoot::showRomInfo(CommandOutput* commandOutput)
 		commandOutput->printf("\r\n");
 	}
 
+	rboot_rtc_data rbootRTC;
+
+	if (!rboot_get_rtc_data(&rbootRTC))
+	{
+		commandOutput->printf("No valid rBoot RTC data \r\n");
+	}
+	else
+	{
+		commandOutput->printf("rBoot RTC = Next mode : %d, Last mode : %d, Last rom : %d, Temp rom %d\r\n",rbootRTC.next_mode,rbootRTC.last_mode,rbootRTC.last_rom,rbootRTC.temp_rom);
+	}
+
 	if (baseURL != "")
 	{
 		commandOutput->printf("\r\nbaseURL : %s\r\n",baseURL.c_str());
 	}
+
+
 }
 
