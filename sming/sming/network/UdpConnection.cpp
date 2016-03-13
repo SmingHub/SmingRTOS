@@ -87,7 +87,7 @@ void UdpConnection::sendString(const String data)
 
 void UdpConnection::sendTo(IPAddress remoteIP, uint16_t remotePort, const char* data, int length)
 {
-	remotePort = 1000;
+	//remotePort = 1000;
 	pbuf* p = pbuf_alloc(PBUF_TRANSPORT, length, PBUF_RAM);
 	memcpy(p->payload, data, length);
 	udp_sendto(udp, p, remoteIP, remotePort);
