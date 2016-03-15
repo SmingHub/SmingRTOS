@@ -47,7 +47,6 @@ MODULES += sming/wiring
 MODULES += sming/platform
 MODULES += sming/network 
 MODULES += sming/commandprocessing
-MODULES += rboot/appcode
 MODULES += $(filter %/, $(wildcard sming/services/*/))  
 MODULES += $(filter %/, $(wildcard libraries/*/))
 
@@ -64,6 +63,8 @@ LIBS = microc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm
 # compiler flags using during compilation of source files
 #CFLAGS = -g -save-temps -Os -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals -mno-serialize-volatile -D__ets__ -DICACHE_FLASH
 CFLAGS = -Os -g -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)
+# enable rBoot rtc data communication
+CFLAGS += -DBOOT_RTC_ENABLED
 
 WIFI_SSID ?= ""
 WIFI_PWD ?= ""

@@ -52,11 +52,11 @@ int RBoot::startRom(uint8 reqRom )
 	if (reqRom >= bootconf.count)
 	{
 		return RBOOT_INVALID_ROM;
-	};
+	}
 	if (rboot_check_image(bootconf.roms[reqRom]) == 0)
 	{
 		return RBOOT_INVALID_APPL;
-	};
+	}
 	if (bootconf.current_rom == reqRom)
 	{
 		return RBOOT_INVALID_CURRENTROM;

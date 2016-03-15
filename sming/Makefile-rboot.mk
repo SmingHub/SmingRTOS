@@ -166,6 +166,10 @@ else
 	LIBMAIN = main
 	LIBMAIN_DST = $()
 endif
+
+# enable rBoot rtc data communication
+CFLAGS += -DBOOT_RTC_ENABLED
+
 # libraries used in this project, mainly provided by the SDK
 USER_LIBDIR = $(SMING_HOME)/compiler/lib/
 LIBS		= microc gcc hal phy pp net80211 wpa crypto $(LIBMAIN) freertos lwip minic pwm sming $(EXTRA_LIBS)

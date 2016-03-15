@@ -1,5 +1,5 @@
 /*
- * RBoot.h
+ * RBootClass.h
  *
  *  Created on: 5 nov. 2015
  *      Author: Herman
@@ -10,11 +10,11 @@
 
 #include "../include/sming_config.h"
 
-#include "../Network/rBootHttpUpdate.h"
+#include "../network/rBootHttpUpdate.h"
 
-#include "../Wiring/WiringFrameworkDependencies.h"
-#include "../CommandProcessing/CommandProcessingIncludes.h"
-#include "../../rboot/appcode/rboot-api.h"
+#include "../wiring/WiringFrameworkDependencies.h"
+#include "../commandprocessing/CommandProcessingIncludes.h"
+#include "rboot/appcode/rboot-api.h"
 #include "../services/rboot_sming/rboot_sming.h"
 #include "FileSystem.h"
 
