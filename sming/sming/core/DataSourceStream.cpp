@@ -24,6 +24,7 @@ MemoryDataStream::~MemoryDataStream()
 	buf = NULL;
 	pos = NULL;
 	size = 0;
+	debugf("Memorydatastream destructor");
 }
 
 size_t MemoryDataStream::write(uint8_t charToWrite)
@@ -55,6 +56,7 @@ size_t MemoryDataStream::write(const uint8_t* data, size_t len)
 	}
 	pos = buf;
 	size += len;
+	debugf("Memorydatastream write size = %d",size);
 	return len;
 }
 

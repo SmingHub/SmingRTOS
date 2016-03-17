@@ -63,10 +63,11 @@ public:
 	virtual bool seek(int len);
 	virtual bool isFinished();
 
+	int size;
 private:
 	char* buf;
 	char* pos;
-	int size;
+//	int size;
 	int capacity;
 };
 

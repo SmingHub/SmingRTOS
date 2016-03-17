@@ -1,19 +1,54 @@
 #include <user_config.h>
 #include <SmingCore.h>
 
-#define LED_PIN 2 // GPIO2
+#ifndef WIFI_SSID
+    #define WIFI_SSID "" // Put you SSID and Password here
+    #define WIFI_PWD ""
+#endif
 
-Timer procTimer;
-bool state = true;
+HttpClient myhttpclient;
 
-void blink()
+void onSecondRequest (HttpClient& client, bool successful)
 {
-	digitalWrite(LED_PIN, state);
-	state = !state;
+    if (!successful) { Serial.println("Failed"); return; }
+
+    String response = client.getResponseString();
+    Serial.println("onSecondRequest - Server response: '" + response.substring(1,30) + "'\n\r");
 }
 
-void init()
-{
-	pinMode(LED_PIN, OUTPUT);
-	procTimer.initializeMs(1000, blink).start();
+void onFirstRequest(HttpClient& client, bool successful) {
+    if (!successful) { Serial.println("Failed"); return; }
+
+    String response = client.getResponseString();
+    Serial.println("onFirstRequest - Server response: '" + response.substring(1,30) + "'\n\r");
+
+
+    /*********This will show that it has finished processing*************/
+    Serial.println ("onFirstRequest - isProcessing: " + String(client.isProcessing() ));
+
+
+
+    /*********The following request will cause exception***********/
+    Serial.println("Sending second request");
+    myhttpclient.downloadString("http://mail.tauri.nl", onSecondRequest);
+}
+
+
+void connectOk() {
+    Serial.println("Sending first request");
+    myhttpclient.downloadString("http://mail.tauri.nl", onFirstRequest);
+}
+
+
+
+void init() {
+    Serial.begin(SERIAL_BAUD_RATE);
+    Serial.systemDebugOutput(true);
+
+    WifiAccessPoint.enable(false);
+
+    WifiStation.enable(true);
+    WifiStation.config(WIFI_SSID, WIFI_PWD); // Put you SSID and Password here
+
+    WifiStation.waitConnection(connectOk);
 }

@@ -76,10 +76,15 @@ bool TcpClient::sendString(String data, bool forceCloseAfterSent /* = false*/)
 
 bool TcpClient::send(const char* data, uint16_t len, bool forceCloseAfterSent /* = false*/)
 {
+	debugf("TcpClient send %d bytes",len);
 	if (state != eTCS_Connecting && state != eTCS_Connected) return false;
 
 	if (stream == NULL)
+	{
 		stream = new MemoryDataStream();
+		debugf("tcpclient stream created");
+	}
+
 
 	stream->write((const uint8_t*)data, len);
 	asyncTotalLen += len;
@@ -147,6 +152,8 @@ void TcpClient::onReadyToSendData(TcpConnectionEvent sourceEvent)
 
 void TcpClient::close()
 {
+	TcpConnection::close();
+	debugf("tcpclient state = %d, Len = %d, Sent = %d",state,asyncTotalLen,asyncTotalSent );
 	if (state != eTCS_Successful && state != eTCS_Failed)
 	{
 		state = (asyncTotalSent == asyncTotalLen) ? eTCS_Successful : eTCS_Failed;
@@ -156,12 +163,14 @@ void TcpClient::close()
 	}
 
 	// Close connection only after processing
-	TcpConnection::close();
+
 }
 
 void TcpClient::pushAsyncPart()
 {
+	debugf("TcpClient push async part");
 	if (stream == NULL) return;
+	debugf("TcpClient write stream to tcp");
 
 	write(stream);
 
@@ -177,6 +186,7 @@ void TcpClient::pushAsyncPart()
 err_t TcpClient::onSent(uint16_t len)
 {
 	asyncTotalSent += len;
+	debugf("Tcp client onsent asyncTotalSent = %d",asyncTotalSent);
 
 	if (stream == NULL && asyncCloseAfterSent)
 	{
@@ -203,11 +213,23 @@ void TcpClient::onError(err_t err)
 void TcpClient::onFinished(TcpClientState finishState)
 {
 	if (stream != NULL)
-		delete stream; // Free memory now!
-	stream = NULL;
+	{
+//		delete stream; // Free memory now!
+		debugf("TcpClient : stream not deleted");
+		asyncTotalLen = stream->size;
+	}
+	else
+	{
+		asyncTotalLen = 0;
+	}
+
+//	stream = NULL;
 	// Initialize async variables for next connection
 	asyncTotalSent = 0;
-	asyncTotalLen = 0;
+//	asyncTotalLen = 0;
+//	asyncTotalLen = stream->size;
+//	asyncTotalLen = 39;
+	debugf("TcpClient onFinished Sent = 0, Len = %d, stream = %x",asyncTotalLen, stream);
 
 	if (completed)
 		completed(*this, state == eTCS_Successful);
