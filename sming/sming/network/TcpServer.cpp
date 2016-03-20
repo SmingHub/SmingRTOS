@@ -14,6 +14,13 @@
 #include "../core/Digital.h"
 #include "../core/Timer.h"
 
+void sys_arch_assert(const char *file, int line)
+{
+    os_printf("\nAssertion: %d in %s\n", line, file);
+
+    while(1);
+}
+
 int16_t TcpServer::totalConnections = 0;
 
 TcpServer::TcpServer() : TcpConnection(false)
@@ -123,6 +130,7 @@ err_t TcpServer::onAccept(tcp_pcb *clientTcp, err_t err)
 	if (client == NULL) return ERR_MEM;
 	client->setTimeOut(timeOut);
 	onClient((TcpClient*)client);
+	tcp_accepted(tcp);
 
 	return ERR_OK;
 }
