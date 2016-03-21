@@ -73,6 +73,7 @@ private:
 	MqttStringSubscriptionCallback callback;
 	int keepAlive = 60;
         int PingRepeatTime = 20;
+        unsigned long lastMessage;
 
 	String mqttCommandEnabled = "";
 	String mqttCommandTopic = "";
