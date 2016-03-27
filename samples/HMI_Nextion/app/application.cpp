@@ -63,7 +63,7 @@ void init()
 	Serial.begin(115200); // 115200 by default
 	Serial.systemDebugOutput(false); // Disable debug output to serial
 
-	Serial.print("\nNeoPixel demo will start\n");
+	Serial.print("\nNextion demo will start\n");
 	system_uart_swap();
 	nexInit();
 
