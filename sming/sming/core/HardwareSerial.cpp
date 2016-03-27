@@ -39,7 +39,7 @@ HardwareSerial::HardwareSerial(const int reqUart)
 	}
 	if (!serialDelegateTask)
 	{
-		xTaskCreate( DelegateTask, (const signed char*)"DelegateTask", 256, NULL, tskIDLE_PRIORITY, &serialDelegateTask);
+		xTaskCreate( DelegateTask, (const signed char*)"DelegateTask", 512, NULL, tskIDLE_PRIORITY, &serialDelegateTask);
 		if (!serialDelegateTask)
 		{
 			debugf("HardwareSerial uart %d, serialTask creation failed ",reqUart);
