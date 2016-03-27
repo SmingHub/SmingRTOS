@@ -8,7 +8,7 @@
 #ifndef SMING_CORE_QUEUEDINTERRUPT_H_
 #define SMING_CORE_QUEUEDINTERRUPT_H_
 
-#include "../include/smingIncludes.h"
+#include "../include/SmingIncludes.h"
 #include "QueuedDelegate.h"
 
 typedef struct
