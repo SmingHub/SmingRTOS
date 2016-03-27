@@ -14,7 +14,7 @@ MODULES = app
 
 ## SMING_HOME sets the path where Sming framework is located.
 ## Windows:
-SMING_HOME=C:/tools/SmingRTOS/sming
+#SMING_HOME=C:/tools/SmingRTOS/sming
 
 # MacOS / Linux
 # SMING_HOME = /opt/sming/Sming
