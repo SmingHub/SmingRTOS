@@ -33,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "Adafruit_GFX.h"
 
-#include <cstdlib>
+//#include <cstdlib>
 
 #include "glcdfont.c"
 #if defined(__AVR__)
