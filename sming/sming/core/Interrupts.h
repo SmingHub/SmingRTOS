@@ -35,7 +35,7 @@ void noInterrupts();
 // Enable interrupts
 void interrupts();
 
-#define digitalPinToInterrupt(pin)  ( (p) < ESP_MAX_INTERRUPTS ? (p) : -1 )
+#define digitalPinToInterrupt(pin)  ( (pin) < ESP_MAX_INTERRUPTS ? (pin) : -1 )
 
 #define cli() noInterrupts()
 #define sei() interrupts()

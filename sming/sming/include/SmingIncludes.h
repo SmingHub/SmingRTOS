@@ -26,6 +26,7 @@
 #include "sming/core/Timer.h"
 #include "sming/core/Wire.h"
 #include "sming/core/SPISoft.h"
+#include "sming/core/SPI.h"
 
 #include "sming/platform/System.h"
 #include "sming/platform/Station.h"
