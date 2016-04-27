@@ -1,22 +1,21 @@
 #include <user_config.h>
 #include <SmingCore.h>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 
-#include "espressif/smartconfig.h"
+// Will be called when WiFi station was connected to AP
+void connectOk()
+{
+	printf("I'm CONNECTED\n");
+}
 
+// Will be called when WiFi station timeout was reached
+void connectFail()
+{
+	printf("I'm NOT CONNECTED. Need help :(\n");
+	// .. some you code for device configuration ..
+}
 
-#define LED_PIN 2 // GPIO2
-
-Timer procTimer;
-bool state = true;
-
-#define server_ip "192.168.101.142"
-#define server_port 9669
-
-void ICACHE_FLASH_ATTR
-smartconfig_done(sc_status status, void *pdata)
+void smartconfig_done(sc_status status, void *pdata)
 {
     switch(status) {
         case SC_STATUS_WAIT:
@@ -25,8 +24,7 @@ smartconfig_done(sc_status status, void *pdata)
         case SC_STATUS_FIND_CHANNEL:
             printf("SC_STATUS_FIND_CHANNEL\n");
             break;
-        case SC_STATUS_GETTING_SSID_PSWD:
-        	{
+        case SC_STATUS_GETTING_SSID_PSWD: {
 				printf("SC_STATUS_GETTING_SSID_PSWD\n");
 				sc_type *type = (sc_type *) pdata;
 				if (*type == SC_TYPE_ESPTOUCH) {
@@ -36,14 +34,20 @@ smartconfig_done(sc_status status, void *pdata)
 				}
 				break;
         	}
-        case SC_STATUS_LINK:
-			{
+        case SC_STATUS_LINK: {
 				printf("SC_STATUS_LINK\n");
 				struct station_config *sta_conf = (station_config *) pdata;
+
+				printf("Trying to connect to %s\n", sta_conf->ssid);
+				printf("Using password to %s\n", sta_conf->password);
 
 				wifi_station_set_config(sta_conf);
 				wifi_station_disconnect();
 				wifi_station_connect();
+
+				// Run our method when station was connected to AP (or not connected)
+				WifiStation.waitConnection(connectOk, 20, connectFail); // We recommend 20+ seconds for connection timeout at start
+
 				break;
 			}
         case SC_STATUS_LINK_OVER:
@@ -61,8 +65,7 @@ smartconfig_done(sc_status status, void *pdata)
 }
 
 
-void ICACHE_FLASH_ATTR
-smartconfig_task(void *pvParameters)
+void smartconfig_task(void *pvParameters)
 {
     smartconfig_start(smartconfig_done);
 
@@ -74,7 +77,10 @@ void init()
 {
 
 	Serial.begin(115200); // 115200 by default
-	Serial.systemDebugOutput(true); // Allow debug output to serial
+	Serial.systemDebugOutput(false); // Allow debug output to serial
+
+	WifiAccessPoint.enable(false);
+	WifiStation.enable(true);
 
     printf("SDK version:%s\n", system_get_sdk_version());
 
@@ -82,6 +88,5 @@ void init()
     wifi_set_opmode(STATION_MODE);
 
     xTaskCreate(smartconfig_task, (const signed char*) "smartconfig_task", 256, NULL, 2, NULL);
-
 
 }
