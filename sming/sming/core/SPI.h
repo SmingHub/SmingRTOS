@@ -106,6 +106,24 @@ public:
 	virtual unsigned short transfer16(unsigned short val) {
 		return transfer32((uint32)val, 16);
 	};
+        
+	/** @brief 	transfer32()
+	 * @param	short to send
+	 * @retval	short received
+	 *
+	 * calls private method transfer32(byte) to send/recv one uint32_t
+	 * input/output casted to rightdta type
+	 *
+	 * SPI transfer is based on a simultaneous send and receive:
+	 * the received data is returned in receivedVal (or receivedVal16).
+	 *
+	 * 		receivedVal = SPI.transfer(val)	        : single byte
+	 * 		receivedVal32 = SPI.transfer32(val32)	: single uint32_t
+	 */
+	virtual uint32_t transfer32(uint32_t val) {
+		return transfer32((uint32_t) val, 32);
+	};
+        
 
 	/** @brief 	transfer(uint8 *buffer, size_t numberBytes)
 	 * @param	buffer in/out
@@ -168,9 +186,10 @@ private:
 	uint32_t getFrequency(int freq, int &pre, int clk);
 	void setFrequency(int freq);
 
-	SPISettings _SPISettings;
-	uint8	_isTX = false;
-	uint8	_init = false;
+	SPISettings 	_SPISettings;
+	uint8		_isTX = false;
+	uint8		_init = false;
+	uint32_t	_userReg = 0;
 
 };
 

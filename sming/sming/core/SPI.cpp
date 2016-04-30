@@ -88,6 +88,10 @@ void SPIClass::beginTransaction(SPISettings mySettings) {
 #ifdef SPI_DEBUG
 	debugf("SPIhw::beginTransaction(SPISettings mySettings)");
 #endif
+	
+	// store SPI user register
+	_userReg = READ_PERI_REG(SPI_USER(SPI_NO));
+
 	// check if we need to change settings
 	if (this->_SPISettings == mySettings)
 		return;
@@ -108,6 +112,10 @@ void SPIClass::endTransaction() {
 #ifdef SPI_DEBUG
 	debugf("SPIhw::endTransaction()");
 #endif
+	
+	// restore SPI user register
+        WRITE_PERI_REG(SPI_USER(SPI_NO), _userReg);
+	_userReg = 0;
 };
 
 /* @defgroup SPI hardware implementation
@@ -125,7 +133,7 @@ void SPIClass::endTransaction() {
 uint32 SPIClass::transfer32(uint32 data, uint8 bits)
 {
 	// restore inital SPI_USER register
-	uint32_t regvalue = _SPISettings._user_regvalue;
+	uint32_t regvalue = READ_PERI_REG(SPI_USER(SPI_NO));
 
 	while(READ_PERI_REG(SPI_CMD(SPI_NO))&SPI_USR);
 
@@ -193,7 +201,7 @@ void SPIClass::transfer(uint8 *buffer, size_t numberBytes) {
 		num_bits = bufLenght * 8;
 
 		// restore inital SPI_USER register
-		uint32_t regvalue = _SPISettings._user_regvalue;
+		uint32_t regvalue = READ_PERI_REG(SPI_USER(SPI_NO));
 
 		while(READ_PERI_REG(SPI_CMD(SPI_NO))&SPI_USR);
 
@@ -242,9 +250,9 @@ void SPIClass::prepare(SPISettings mySettings) {
 	debugf("SPIClass::prepare(SPISettings mySettings)");
 	mySettings.print("mySettings");
 #endif
-
+	
 	// check if we need to change settings
-	if (_init & _SPISettings == mySettings)
+	if (_init && _SPISettings == mySettings)
 		return;
 
 	//  setup clock
@@ -261,7 +269,6 @@ void SPIClass::prepare(SPISettings mySettings) {
 #endif
 
 	_SPISettings = mySettings;
-	mySettings._user_regvalue = SPI_USER(SPI_NO);
 	_init = true;
 };
 
@@ -441,7 +448,7 @@ void SPIClass::setFrequency(int freq) {
 	int _CPU_freq = system_get_cpu_freq() * 10000000UL;
 
 	// dont run code if there are no changes
-	if (_init & freq == _SPISettings._speed) return;
+	if (_init && freq == _SPISettings._speed) return;
 
 	// run full speed -> do not use any dividers
 	if (freq == _CPU_freq) {

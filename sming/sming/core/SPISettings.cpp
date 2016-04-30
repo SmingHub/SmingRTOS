@@ -21,7 +21,6 @@ SPISettings::SPISettings() {
 	_speed = 4000000;
 	_byteOrder = MSBFIRST;
 	_dataMode = SPI_MODE0;
-	_user_regvalue = 0;
 }
 
 /*
@@ -38,7 +37,6 @@ SPISettings::SPISettings(int speed, uint8 byteOrder, uint8 dataMode) {
 	_speed = speed;
 	_byteOrder = byteOrder;
 	_dataMode = dataMode;
-	_user_regvalue = 0;
 }
 
 

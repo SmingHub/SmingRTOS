@@ -67,7 +67,6 @@ private:
 	int 	_speed;
 	uint8	_byteOrder;
 	uint8	_dataMode;
-	uint32_t _user_regvalue;
 
 	// overload operator to check wheter the settings are equal
 	bool operator==(const SPISettings &other) const;
