@@ -103,7 +103,7 @@ class FTPDataStore : public FTPDataStream
 public:
 	FTPDataStore(FTPServerConnection* connection, String fileName) : FTPDataStream(connection)
 	{
-		debugf("%s",connection->server->flashDirectory);
+		debugf("%s",connection->server->flashDirectory.c_str());
 		if ((connection->server->flashDirectory != "") && (fileName.startsWith(connection->server->flashDirectory + "/!")))
 		{
 			// It is a rom location
