@@ -4,4 +4,4 @@ firmware
 **/language.settings.xml
 .settings
 nbproject
-
+.*.swp
