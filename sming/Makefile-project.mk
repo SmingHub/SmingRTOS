@@ -159,7 +159,7 @@ USER_LIBDIR = $(SMING_HOME)/compiler/lib/
 LIBS		= microc gcc hal phy pp net80211 wpa crypto main freertos lwip minic pwm smartconfig sming
 
 # compiler flags using during compilation of source files
-CFLAGS		= -Os -g -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 $(USER_CFLAGS)
+CFLAGS		= -Os -g -Wpointer-arith -Wundef -Werror -Wl,-EL -nostdlib -mlongcalls -mtext-section-literals -finline-functions -fdata-sections -ffunction-sections -D__ets__ -DICACHE_FLASH -DARDUINO=106 -DCOM_SPEED_SERIAL=$(COM_SPEED_SERIAL) $(USER_CFLAGS)
 CXXFLAGS	= $(CFLAGS) -fno-rtti -fno-exceptions -std=c++11 -felide-constructors -Wno-literal-suffix
 
 # we will use global WiFi settings from Eclipse Environment Variables, if possible
