@@ -19,10 +19,10 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "twi.h"
-#include "pins_arduino.h"
+#include "../../core/pins_arduino.h"
 #include "wiring_private.h"
 #include "esp8266_peri.h"
-#include "../wiring/wconstants.h"
+#include "../../wiring/wconstants.h"
 
 void pinMode(uint16_t pin, uint8_t mode);
 

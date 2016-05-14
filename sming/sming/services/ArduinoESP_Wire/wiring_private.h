@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "Arduino.h"
+#include "../../wiring/Arduino.h"
 
 #ifdef __cplusplus
 extern "C" {

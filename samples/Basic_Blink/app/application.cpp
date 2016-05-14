@@ -2,6 +2,7 @@
 #include <SmingCore.h>
 
 #include "Arduino_I2C_Port_Expander.h"
+#include <libraries/Adafruit_SSD1306/Adafruit_SSD1306.h>
 
 #define LED_PIN 2 // GPIO2
 
@@ -48,18 +49,55 @@ void scanBus()
 	Serial.println("done\n");
 }
 
+Adafruit_SSD1306 display(16);
+
+void Demo2()
+{
+	Serial.println("Display: some text");
+	display.clearDisplay();
+	// text display tests
+	display.setTextSize(1);
+	display.setTextColor(WHITE);
+	display.setCursor(0,0);
+	display.println("Sming Framework");
+	display.setTextColor(BLACK, WHITE); // 'inverted' text
+	display.setCursor(104, 7);
+	display.println("v1.0");
+	//----
+	display.setTextColor(WHITE);
+	display.println("Let's do smart things");
+	display.setTextSize(3);
+	display.print("IoT");
+	display.display();
+}
+
+void Demo1()
+{
+        Serial.println("Display: circle");
+	// Clear the buffer.
+	display.clearDisplay();
+	// draw a circle, 10 pixel radius
+	display.fillCircle(display.width()/2, display.height()/2, 10, WHITE);
+	display.display();
+}
+
+
 
 EXPAND Arduino(3);
+
+EXPAND A(2);
 
 
 
 void blink()
 {
 	state = !state;
-//	Arduino = new EXPAND(3);
-	Wire.beginTransmission(3);
-	int error = Wire.endTransmission();
-	Serial.printf("Errorcode = %d\r\n", error);
+
+	if (state) {Demo1();} else {Demo2();}
+	//	Arduino = new EXPAND(3);
+//	Wire.beginTransmission(3);
+//	int error = Wire.endTransmission();
+//	Serial.printf("Errorcode = %d\r\n", error);
 	uint16_t val = Arduino.analogRead(24);
 	Serial.printf("Val = %d\r\n",val);
 //	delete Arduino;
@@ -78,9 +116,12 @@ void init()
 {
 	Serial.begin(74880);
 //	Wire.pins(4,5);
-	Wire.begin();
+	Wire.begin(4,5);
 
-	scanBus();
+//	scanBus();
+	Serial.println("Display: start");
+	display.begin(SSD1306_SWITCHCAPVCC);
+	display.display();
 
 	procTimer.initializeMs(1000, blink).start();
 }

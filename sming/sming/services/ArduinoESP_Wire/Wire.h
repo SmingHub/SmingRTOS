@@ -25,7 +25,7 @@
 #define TwoWire_h
 
 #include <inttypes.h>
-#include "../Wiring/Stream.h"
+#include "../../wiring/Stream.h"
 
 
 

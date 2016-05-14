@@ -27,7 +27,6 @@
 #include "sming/core/HardwarePWM.h"
 #include "sming/core/HardwareTimer.h"
 #include "sming/core/Timer.h"
-#include "sming/core/Wire.h"
 #include "sming/core/SPISoft.h"
 #include "sming/core/SPI.h"
 #include "sming/core/QueuedDelegate.h"
@@ -59,5 +58,6 @@
 #include "sming/services/ArduinoJson/include/ArduinoJson.h"
 #include "sming/services/libemqtt/libemqtt.h"
 #include "sming/services/FATFS/ff.h"
+#include "sming/services/ArduinoESP_Wire/Wire.h"
 
 #endif
