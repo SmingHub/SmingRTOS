@@ -4,12 +4,47 @@
 #include "c_types.h"
 #include "espressif/esp8266/eagle_soc.h"
 
+#define min(a,b) ((a)<(b)?(a):(b))
+
+
 // #include "c_types_compatible.h"
 
 // Based on NodeMCU platform_flash
 // https://github.com/nodemcu/nodemcu-firmware
 
 extern char _flash_code_end[];
+
+uint32_t flashmem_erase_write( const void *from, uint32_t toaddr, uint32_t size)
+{
+
+	uint8_t* curData = (uint8_t*)from;
+
+	uint32_t curToAddress = toaddr;
+	uint32_t curSize = size;
+
+	while (curSize > 0)
+	{
+		if ((curToAddress % INTERNAL_FLASH_SECTOR_SIZE) == 0)
+		{
+
+			// erase sector
+			uint32_t start;
+			uint32_t stop;
+			uint32_t sectorNum = flashmem_find_sector( curToAddress, &start, &stop );
+			flashmem_erase_sector( sectorNum );
+//			debugf("erasing sector at address %x, sector = %d, ss= %x, se = %x",curToAddress, sectorNum,start,stop);
+		}
+		int partLen = min(curSize,(INTERNAL_FLASH_SECTOR_SIZE - (curToAddress % INTERNAL_FLASH_SECTOR_SIZE)));
+
+		flashmem_write(curData,curToAddress,partLen);
+//		debugf("writing data at %x, len = %d", curToAddress,partLen);
+		curData += partLen;
+		curToAddress += partLen;
+		curSize -= partLen;
+	}
+	//TODO make use of flashmem write return
+	return size;
+}
 
 uint32_t flashmem_write( const void *from, uint32_t toaddr, uint32_t size )
 {

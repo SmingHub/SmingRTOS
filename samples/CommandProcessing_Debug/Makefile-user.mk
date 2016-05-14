@@ -36,4 +36,5 @@
 ## SPIFFS options
 # DISABLE_SPIFFS = 1
 # SPIFF_FILES = files
+RBOOT_ENABLED ?= 1
 

@@ -302,7 +302,7 @@ err_t TcpConnection::staticOnConnected(void *arg, tcp_pcb *tcp, err_t err)
 
 err_t TcpConnection::staticOnReceive(void *arg, tcp_pcb *tcp, pbuf *p, err_t err)
 {
-	debugf("Static OnReceive buf = %d", tcp_sndbuf(tcp));
+//	debugf("Static OnReceive buf = %d", tcp_sndbuf(tcp));
 	TcpConnection* con = (TcpConnection*)arg;
 	err_t ret_err;
 	//Serial.println("echo_recv!");

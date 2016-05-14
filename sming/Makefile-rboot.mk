@@ -309,7 +309,7 @@ $1/%.o: %.cpp
 	$(Q) $(CXX) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CXXFLAGS) -c $$< -o $$@
 endef
 
-.PHONY: all checkdirs spiff_update spiff_clean clean
+.PHONY: all checkdirs spiff_update spiff_clean clean ftp_0x00200
 
 all: checkdirs $(LIBMAIN_DST) $(RBOOT_BIN) $(RBOOT_ROM_0) $(RBOOT_ROM_1) $(SPIFF_BIN_OUT) $(FW_FILE_1) $(FW_FILE_2)
 
@@ -392,5 +392,25 @@ clean:
 #remove build artifacts
 	$(Q) rm -rf $(BUILD_BASE)
 	$(Q) rm -rf $(FW_BASE)
+
+ftp_0x002000: all
+	$(eval FLASH_FILE = $(RBOOT_ROM_0))
+	$(eval FLASH_TARGET = !0x002000)
+	$(FLASH_ROM)
+
+ftp_0x202000 : all
+	$(eval FLASH_FILE = $(RBOOT_ROM_0))
+	$(eval FLASH_TARGET = !0x202000)
+	$(FLASH_ROM)
+
+spiffs_0x100000 : all
+	$(eval FLASH_FILE = $(SPIFF_BIN_OUT))
+	$(eval FLASH_TARGET = !0x100000)
+	$(FLASH_ROM)
+
+spiffs_0x300000 : all
+	$(eval FLASH_FILE = $(SPIFF_BIN_OUT))
+	$(eval FLASH_TARGET = !0x300000)
+	$(FLASH_ROM)
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
