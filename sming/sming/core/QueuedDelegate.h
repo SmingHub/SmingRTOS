@@ -12,6 +12,7 @@
 
 #include "../include/sming_global.h"
 #include "Delegate.h"
+#include "../include/freertos_includes.h"
 
 template<typename ParamType>
 class QueuedDelegate
