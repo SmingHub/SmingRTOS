@@ -14,6 +14,7 @@
 #include "../wiring/WiringFrameworkDependencies.h"
 #include "../include/sming_global.h"
 #include "espressif/esp_timer.h"
+#include "QueuedDelegate.h"
 
 
 
@@ -26,6 +27,14 @@
 #define MAX_OS_TIMER_INTERVAL_US 268435000
 
 typedef Delegate<void()> TimerDelegate;
+
+typedef struct
+{
+   uint32 timerMicros;
+} QueuedTimerMessage;
+
+typedef Delegate<void(QueuedTimerMessage)> QueuedTimerDelegate;
+
 
 class Timer
 {
@@ -77,6 +86,9 @@ private:
     void IRAM_ATTR setIntervalUs(uint64_t microseconds = 1000000);
 	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, InterruptCallback callback = NULL); // Init in Microseconds.
 	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, TimerDelegate delegateFunction = NULL); // Init in Microseconds.
+
+	QueuedDelegate<QueuedTimerMessage> * qd;
+	void queueHandler(QueuedTimerMessage queuedTimerMessage);
 
 };
 

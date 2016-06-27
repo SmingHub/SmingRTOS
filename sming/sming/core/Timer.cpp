@@ -9,11 +9,13 @@
 
 Timer::Timer()
 {
+	qd = new QueuedDelegate<QueuedTimerMessage>(QueuedTimerDelegate(&Timer::queueHandler,this));
 }
 
 Timer::~Timer()
 {
 	stop();
+	delete qd;
 }
 
 Timer& Timer::initializeMs(uint32_t milliseconds, InterruptCallback callback/* = NULL*/)
@@ -189,6 +191,13 @@ void Timer::processing(void *arg)
 			}
 		}
 
+		if ((ptimer->callback) || (ptimer->delegate_func))
+		{
+			QueuedTimerMessage queuedTimerMessage;
+			queuedTimerMessage.timerMicros = 0; // should be micros()
+			ptimer->qd->sendQueue(queuedTimerMessage);
+		}
+/*
 		if (ptimer->callback)
 		{
 			ptimer->callback();
@@ -197,6 +206,18 @@ void Timer::processing(void *arg)
 		{
 			ptimer->delegate_func();
 		}
+*/
 	}
+}
 
+void Timer::queueHandler(QueuedTimerMessage queuedTimerMessage)
+{
+	if (callback)
+	{
+		callback();
+	}
+	else if (delegate_func)
+	{
+		delegate_func();
+	}
 }
