@@ -10,7 +10,7 @@
 QueuedInterrupt::QueuedInterrupt(int reqPin, GPIO_INT_TYPE reqInterruptType,QueuedInterruptDelegate reqDelegate)
 : QueuedDelegate(reqDelegate), interruptPin(reqPin), interruptType(reqInterruptType)
 {
-	attachInterrupt(interruptPin,Delegate<void()>(&QueuedInterrupt::delegatedInterrupt,this), (GPIO_INT_TYPE)GPIO_PIN_INTR_ANYEDGE);
+	attachInterrupt(interruptPin,Delegate<void()>(&QueuedInterrupt::delegatedInterrupt,this), reqInterruptType);
 }
 
 QueuedInterrupt::~QueuedInterrupt() {
