@@ -14,9 +14,7 @@
 #include "../wiring/WiringFrameworkDependencies.h"
 #include "../include/sming_global.h"
 #include "espressif/esp_timer.h"
-
-
-
+#include "QueuedDelegate.h"
 
 // According to documentation maximum value of interval for ms
 // timer after doing system_timer_reinit is 268435ms.
@@ -27,10 +25,18 @@
 
 typedef Delegate<void()> TimerDelegate;
 
+typedef struct
+{
+   uint32 timerMicros;
+} QueuedTimerMessage;
+
+typedef Delegate<void(QueuedTimerMessage)> QueuedTimerDelegate;
+
 class Timer
 {
 public:
 	Timer();
+	Timer(bool reqQueued);
 	~Timer();
 
 	// It return value for Method Chaining (return "this" reference)
@@ -38,46 +44,43 @@ public:
 	// We provide both versions: Delegate and classic c-style callback function for performance reason (for high-frequency timers)
 	// Usually only Delegate needed
 
-	Timer& IRAM_ATTR initializeMs(uint32_t milliseconds, InterruptCallback callback = NULL); // Init in Milliseconds.
+	Timer& initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction, bool reqQueued); // Init in Milliseconds.
+	Timer& initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction = NULL); // Init in Milliseconds.
 
-	Timer& IRAM_ATTR initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction = NULL); // Init in Milliseconds.
-
-	void IRAM_ATTR start(bool repeating = true);
-	void __forceinline IRAM_ATTR startOnce() { start(false); }
-	void IRAM_ATTR stop();
-	void IRAM_ATTR restart();
+	void start(bool repeating = true);
+	void startOnce() { start(false); }
+	void stop();
+	void restart();
 	bool isStarted();
+
+	bool isQueued = false;
 
 	uint64_t getIntervalUs();
 	uint32_t getIntervalMs();
 
-    void IRAM_ATTR setIntervalMs(uint32_t milliseconds = 1000000);
-
-    void IRAM_ATTR setCallback(InterruptCallback interrupt = NULL);
-    void IRAM_ATTR setCallback(TimerDelegate delegateFunction);
+    void setIntervalMs(uint32_t milliseconds = 1000000);
+    void setCallback(TimerDelegate delegateFunction);
+    void setCallback(TimerDelegate delegateFunction, bool reqQueued);
+    void setQueued(bool reqQueued);
 
 protected:
     static void IRAM_ATTR processing(void *arg);
 
-
 private:
     os_timer_t timer;
     uint64_t interval = 0;
-    InterruptCallback callback = nullptr;
     TimerDelegate delegate_func = nullptr;
     bool repeating = false;
     bool started = false;
     
     // Because of the limitation in Espressif SDK a workaround
     // was added to allow for longer timer intervals.
+    void setIntervalUs(uint64_t microseconds = 1000000);
     uint16_t long_intvl_cntr = 0;
     uint16_t long_intvl_cntr_lim = 0;
 
-    // Due to limitations of RTOS SDK make Us calls private to prevent accidental usage
-    void IRAM_ATTR setIntervalUs(uint64_t microseconds = 1000000);
-	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, InterruptCallback callback = NULL); // Init in Microseconds.
-	Timer& IRAM_ATTR initializeUs(uint32_t microseconds, TimerDelegate delegateFunction = NULL); // Init in Microseconds.
-
+    QueuedDelegate<QueuedTimerMessage> * qd;
+	void queueHandler(QueuedTimerMessage queuedTimerMessage);
 };
 
 #endif /* _SMING_CORE_Timer_H_ */

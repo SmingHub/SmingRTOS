@@ -11,23 +11,40 @@ Timer::Timer()
 {
 }
 
+Timer::Timer(bool reqQueued) : isQueued(reqQueued)
+{
+	setQueued(isQueued);
+}
+
+void Timer::setQueued(bool reqQueued)
+{
+	if (reqQueued)
+	{
+		if (!qd)
+		{
+			qd = new QueuedDelegate<QueuedTimerMessage>(QueuedTimerDelegate(&Timer::queueHandler,this));
+		}
+	}
+	else
+	{
+		if (qd)
+		{
+			delete qd;
+		}
+	}
+}
+
 Timer::~Timer()
 {
 	stop();
+	if (qd) delete qd;
 }
 
-Timer& Timer::initializeMs(uint32_t milliseconds, InterruptCallback callback/* = NULL*/)
+Timer& Timer::initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction, bool reqQueued)
 {
-	setCallback(callback);
-	setIntervalMs(milliseconds);
-	return *this;
-}
+	setQueued(reqQueued);
+	initializeMs(milliseconds,delegateFunction);
 
-Timer& Timer::initializeUs(uint32_t microseconds, InterruptCallback callback/* = NULL*/)
-{
-	setCallback(callback);
-	setIntervalUs(microseconds);
-	return *this;
 }
 
 Timer& Timer::initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction)
@@ -37,18 +54,11 @@ Timer& Timer::initializeMs(uint32_t milliseconds, TimerDelegate delegateFunction
 	return *this;
 }
 
-Timer& Timer::initializeUs(uint32_t microseconds, TimerDelegate delegateFunction)
-{
-	setCallback(delegateFunction);
-	setIntervalUs(microseconds);
-	return *this;
-}
-
 void Timer::start(bool repeating/* = true*/)
 {
 	this->repeating = repeating;
 	stop();
-	if(interval == 0 || (!callback && !delegate_func)) 
+	if(interval == 0 || (!delegate_func))
 		return;
 
 	os_timer_setfn(&timer, (os_timer_func_t *)processing, this);
@@ -137,23 +147,15 @@ void Timer::setIntervalMs(uint32_t milliseconds/* = 1000000*/)
 	setIntervalUs(((uint64_t)milliseconds) * 1000);
 }
 
-void Timer::setCallback(InterruptCallback interrupt/* = NULL*/)
+void Timer::setCallback(TimerDelegate delegateFunction, bool reqQueued)
 {
-//	ETS_INTR_LOCK();
-	callback = interrupt;
-	delegate_func = nullptr;
-//	ETS_INTR_UNLOCK();
-
-	if (!interrupt)
-		stop();
+	setQueued(reqQueued);
+	setCallback(delegateFunction);
 }
 
 void Timer::setCallback(TimerDelegate delegateFunction)
 {
-//	ETS_INTR_LOCK();
-	callback = nullptr;
 	delegate_func = delegateFunction;
-//	ETS_INTR_UNLOCK();
 
 	if (!delegateFunction)
 		stop();
@@ -189,14 +191,26 @@ void Timer::processing(void *arg)
 			}
 		}
 
-		if (ptimer->callback)
+		if (ptimer->delegate_func)
 		{
-			ptimer->callback();
-		}
-		else if (ptimer->delegate_func)
-		{
-			ptimer->delegate_func();
+			if (!ptimer->qd)
+			{
+				ptimer->delegate_func();
+			}
+			else
+			{
+				QueuedTimerMessage queuedTimerMessage;
+				queuedTimerMessage.timerMicros = 0; // should be micros()
+				ptimer->qd->sendQueue(queuedTimerMessage);
+			}
 		}
 	}
+}
 
+void Timer::queueHandler(QueuedTimerMessage queuedTimerMessage)
+{
+	if (delegate_func)
+	{
+		delegate_func();
+	}
 }
