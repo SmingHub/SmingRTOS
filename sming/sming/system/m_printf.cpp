@@ -76,7 +76,7 @@ int m_printf(const char *fmt, ...)
 	int n = 0;
 
 	va_start(args, fmt);
-	m_vsnprintf(buf, sizeof(buf), fmt, args);
+	m_vsnprintf(buf, MPRINTF_BUF_SIZE, fmt, args);
 	va_end(args);
 
 	p = buf;
