@@ -79,7 +79,7 @@ private:
     uint16_t long_intvl_cntr = 0;
     uint16_t long_intvl_cntr_lim = 0;
 
-    QueuedDelegate<QueuedTimerMessage> * qd;
+    QueuedDelegate<QueuedTimerMessage> * qd = NULL;
 	void queueHandler(QueuedTimerMessage queuedTimerMessage);
 };
 
