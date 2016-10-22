@@ -23,7 +23,7 @@ static s32_t api_spiffs_write(u32_t addr, u32_t size, u8_t *src)
 
 static s32_t api_spiffs_erase(u32_t addr, u32_t size)
 {
-  debugf("api_spiffs_erase");
+  debugf("api_spiffs_erase, addr = %x",addr);
   u32_t sect_first = flashmem_get_sector_of_address(addr);
   u32_t sect_last = sect_first;
   while( sect_first <= sect_last )

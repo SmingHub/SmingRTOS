@@ -10,6 +10,37 @@
 #include "../network/HttpRequest.h"
 #include "../wiring/WiringFrameworkDependencies.h"
 
+DelegateStream::DelegateStream(StreamDelegate reqStreamDelegate)
+: streamDelegate(reqStreamDelegate)
+{
+}
+
+DelegateStream::~DelegateStream()
+{
+}
+
+uint16_t DelegateStream::readMemoryBlock(char* data, int bufSize)
+{
+	int delegateReturn = 0;
+	if (streamDelegate)
+	{
+		delegateReturn = streamDelegate(data,bufSize);
+		if (delegateReturn < 0)
+		{
+			finished = true;
+			delegateReturn = 0;
+		}
+	}
+	return(delegateReturn);
+}
+
+bool DelegateStream::isFinished()
+{
+	return finished;
+}
+
+
+
 FlashStream::FlashStream()
 {
 }
