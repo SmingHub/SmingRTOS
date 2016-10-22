@@ -10,6 +10,7 @@
 
 #include "../include/sming_config.h"
 #include "../core/FileSystem.h"
+#include "../core/Delegate.h"
 #include "../services/ArduinoJson/include/ArduinoJson.h"
 #include "../wiring/WString.h"
 #include "../wiring/WHashMap.h"
@@ -28,6 +29,7 @@ enum StreamType
 	eSST_JsonObject,
 	eSST_User,
 	eSST_Flash,
+	eSST_Callback,
 	eSST_Unknown
 };
 
@@ -46,6 +48,25 @@ public:
 	virtual size_t write(const uint8_t* data, size_t len) {return 0;}
 	virtual bool seek(int len) {return false;};
 	virtual bool isFinished() {return false;};
+};
+
+typedef Delegate<int(char* data, int bufSize)> StreamDelegate;
+
+class DelegateStream : public Print, public IDataSourceStream
+{
+public:
+	DelegateStream(StreamDelegate reqStreamDelegate);
+	virtual ~DelegateStream();
+
+	virtual StreamType getStreamType() { return eSST_Callback; }
+	virtual size_t write(uint8_t charToWrite) {return 0;};
+	virtual uint16_t readMemoryBlock(char* data, int bufSize);
+	virtual bool isFinished();
+
+private:
+	StreamDelegate streamDelegate = NULL;
+	bool finished = false;
+
 };
 
 class FlashStream : public Print, public IDataSourceStream
