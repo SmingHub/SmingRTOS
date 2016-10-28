@@ -58,6 +58,8 @@ public:
 	void flush();
 	size_t write(uint8_t oneChar);
 
+	using Stream::write;
+
 	//void printf(const char *fmt, ...);
 	void systemDebugOutput(bool enabled);
 	void commandProcessing(bool reqEnable);
