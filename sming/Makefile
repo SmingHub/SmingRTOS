@@ -180,9 +180,9 @@ clean:
 	$(Q) $(MAKE) --no-print-directory -C spiffy V=$(V) clean
 
 
-test: all spiffy recurse-samples
+test: all spiffy samples
 
-samples: Basic_Blink HttpServer_Bootstrap Basic_rBoot
+samples: Basic_Blink HttpServer_WebSockets Basic_rBoot
 
 recurse-samples: $(SAMPLES_DIRS)
 

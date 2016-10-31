@@ -4,6 +4,7 @@ Sming based on Espressif RTOS SDK.
 
 Based on: Sming Develop, including commits until Sming 2.1.0 release
 Based on: Espressif RTOS_SDK 1.3.0
+[![Build](https://travis-ci.org/SmingHub/SmingRTOS.svg?branch=master)](https://travis-ci.org/SmingHub/SmingRTOS)
 
 Feedback:
 
