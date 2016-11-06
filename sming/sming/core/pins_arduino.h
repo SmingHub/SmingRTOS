@@ -18,23 +18,23 @@
 #define PB 2
 #define PC 3
 
-#define GPIO_REG_TYPE uint8_t
+#define GPIO_REG_TYPE uint32_t
 
 // We use maximum compatibility to standard Arduino logic.
 
 // Conversion disabled for now
 #define digitalPinToTimer(P) ( NOT_ON_TIMER )
 
-#define digitalPinToPort(P) ( P < 0 ? NOT_A_PIN : ( (int)P < 8 ? PA : ( (int)P < 16 ? PB : ( (int)P == 16 ? PC : NOT_A_PIN ) ) ) )
-#define digitalPinToBitMask(P) ( (int)P < 8 ? _BV((int)P) : ( P < 16 ? _BV( (int)P-8 ) : 1) )
+#define digitalPinToPort(P) ( P < 0 ? NOT_A_PIN : ( (int)P < 8 ? PA : ( (int)P < 16 ? PB : ( (int)P == 16 ? PC : NOT_A_PORT ) ) ) )
+#define digitalPinToBitMask(P) ( (int)P < 16 ? _BV((int)P) : 1 )
 
 #define STD_GPIO_OUT (PERIPHS_GPIO_BASEADDR + GPIO_OUT_ADDRESS)
 #define STD_GPIO_IN (PERIPHS_GPIO_BASEADDR + GPIO_IN_ADDRESS)
 #define STD_GPIO_ENABLE (PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_ADDRESS)
 
-#define portOutputRegister(P) ( ((volatile uint8_t*)(P != PC ? STD_GPIO_OUT : RTC_GPIO_OUT)) + ( ( ((int)P) == PB ) ? 1 : 0) )
-#define portInputRegister(P)  ( ((volatile uint8_t*)(P != PC ? STD_GPIO_IN : RTC_GPIO_IN_DATA)) + ( ( ((int)P) == PB ) ? 1 : 0) )
-#define portModeRegister(P)	  ( ((volatile uint8_t*)(P != PC ? STD_GPIO_ENABLE : RTC_GPIO_ENABLE)) + ( ( ((int)P) == PB ) ? 1 : 0) ) // Stored bits: 0=In, 1=Out
+#define portOutputRegister(P) ((volatile GPIO_REG_TYPE*)(P != PC ? STD_GPIO_OUT : RTC_GPIO_OUT))
+#define portInputRegister(P)  ((volatile GPIO_REG_TYPE*)(P != PC ? STD_GPIO_IN : RTC_GPIO_IN_DATA))
+#define portModeRegister(P)	  ((volatile GPIO_REG_TYPE*)(P != PC ? STD_GPIO_ENABLE : RTC_GPIO_ENABLE)) // Stored bits: 0=In, 1=Out
 
 
 #endif /* WIRING_PINS_ARDUINO_H_ */
