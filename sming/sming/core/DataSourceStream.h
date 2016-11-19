@@ -67,6 +67,7 @@ private:
 	StreamDelegate streamDelegate = NULL;
 	bool finished = false;
 
+	DelegateStream(const DelegateStream&) = delete;
 };
 
 class FlashStream : public Print, public IDataSourceStream
@@ -89,6 +90,8 @@ private:
 	uint32 startAddress = 0;
 	uint32 currentOffset = 0;
 	uint32 streamSize = 0;
+
+	FlashStream(const FlashStream&) = delete;
 };
 
 class MemoryDataStream : public Print, public IDataSourceStream
@@ -113,6 +116,8 @@ private:
 	char* pos;
 	int size;
 	int capacity;
+
+	MemoryDataStream(const MemoryDataStream&) = delete;
 };
 
 class FileStream : public IDataSourceStream
@@ -140,6 +145,8 @@ private:
 	file_t handle;
 	int pos;
 	int size;
+
+	FileStream(const FileStream&) = delete;
 };
 
 enum TemplateExpandState
@@ -172,6 +179,8 @@ private:
 	int skipBlockSize;
 	int varDataPos;
 	int varWaitSize;
+
+	TemplateFileStream(const TemplateFileStream&) = delete;
 };
 
 class JsonObjectStream : public MemoryDataStream
@@ -190,6 +199,8 @@ private:
 	DynamicJsonBuffer buffer;
 	JsonObject &rootNode;
 	bool send;
+
+	JsonObjectStream(const JsonObjectStream&) = delete;
 };
 
 

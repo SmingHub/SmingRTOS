@@ -43,7 +43,7 @@ public:
 	__forceinline TcpClientState getConnectionState() { return TcpClient::getConnectionState(); }
 
 	bool publish(String topic, String message, bool retained = false);
-	bool publish(String topic, MemoryDataStream reqDataStream, bool retained = false);
+	bool publish(String topic, MemoryDataStream& reqDataStream, bool retained = false);
 	bool publishWithQoS(String topic, String message, int QoS, bool retained = false);
 
 

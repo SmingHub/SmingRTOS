@@ -92,12 +92,13 @@ bool MqttClient::publish(String topic, String message, bool retained /* = false*
 
 #define MQTT_COMMAND_MAXSIZE  512 // needs to be relocated
 
-bool MqttClient::publish(String topic, MemoryDataStream reqDataStream, bool retained /* = false */)
+bool MqttClient::publish(String topic, MemoryDataStream& reqDataStream, bool retained /* = false */)
 {
 	char* msgBuffer = new char[MQTT_COMMAND_MAXSIZE+1];
 	int msgSize = reqDataStream.readMemoryBlock(msgBuffer, MQTT_COMMAND_MAXSIZE);
 	msgBuffer[msgSize] = '\0';
 	int res = mqtt_publish(&broker, topic.c_str(), msgBuffer, retained);
+	delete [] msgBuffer;
 	return res > 0;
 }
 
