@@ -36,7 +36,6 @@ const String Command::operator[](unsigned int index)
 Command::~Command() {
 	delete cmdVector;
 	delete cmdJsonBuffer;
-	delete &cmdRoot;
 }
 
 JsonObject& Command::getRoot()
@@ -64,7 +63,6 @@ void Command::clear()
 	cmdName = "";
 	delete cmdVector;
 	delete cmdJsonBuffer;
-//	delete cmdRoot;
 	cmdVector = NULL;
 	cmdJsonBuffer = NULL;
 	cmdRoot = NULL;
