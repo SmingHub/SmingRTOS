@@ -60,6 +60,8 @@ TcpServer::TcpServer(TcpClientDataDelegate clientReceiveDataHandler)
 
 TcpServer::~TcpServer()
 {
+	tcp_close(tcp);
+	tcp = NULL;
 }
 
 TcpConnection* TcpServer::createClient(tcp_pcb *clientTcp)
