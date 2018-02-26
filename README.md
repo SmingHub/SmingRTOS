@@ -1,5 +1,8 @@
 # Sming_RTOS Beta version
 
+
+# !!! Warning: This project is no longer mainained. You can take a look at the original [Sming](https://github.com/SmingHub/Sming) project which is actively developed. !!! #
+
 Sming based on Espressif RTOS SDK.
 
 Based on: Sming Develop, including commits until Sming 2.1.0 release
