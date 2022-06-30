@@ -64,7 +64,6 @@ void CommandOutput::flush()
 		}
 	}
 	outputString = "";
-	delete &cmdRoot;
 	delete cmdJsonBuffer;
 	cmdRoot = NULL;
 	cmdJsonBuffer = NULL;
